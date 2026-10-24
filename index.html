@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SHOWMAQERS — Wedding &amp; Event Planners, Delhi NCR</title>
+<meta name="description" content="SHOWMAQERS is a full-service wedding, destination and corporate event production house in Delhi NCR — décor, stage fabrication, artists, manpower and every little detail, pan India.">
+<link rel="icon" href="images/logo-3.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* ── Layout concept ────────────────────────────────────────────────────────────
+   A lit stage after dark. Deep plum void, two swaying spotlight beams, bokeh in
+   the air, and a ring of event photographs orbiting behind the headline. Every
+   surface above it is frosted glass with a gradient hairline edge; one lavender
+   daylight band breaks the dark halfway down.                                  */
+:root{
+  /* colour */
+  --void:#0A0117; --ink:#13042A; --ink-2:#1B0739;
+  --mist:#F7F0FF; --dim:#BBA4DF; --dim-2:#8E78B5;
+  --lav:#C9A2FF; --violet:#8B5CFF; --pink:#FF3D9A; --magenta:#E652E0; --gold:#FFD08A;
+  --silk:#F4EBFF; --plum:#2E1150;
+  --grad:linear-gradient(100deg,#FF3D9A 0%,#E652E0 42%,#8B5CFF 100%);
+  --grad-foil:linear-gradient(100deg,#FFE9C4 0%,#FFD08A 38%,#FFA9CE 72%,#C9A2FF 100%);
+  --line:rgba(214,180,255,.2);
+  /* type */
+  --display:"Bodoni Moda",'Didot','Times New Roman',serif;
+  --body:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,'SF Mono',Menlo,monospace;
+  /* shape */
+  --r:28px; --r-sm:16px; --stage:1200px;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--void); color:var(--mist); overflow-x:hidden;
+  font:400 clamp(15px,1.05vw,17px)/1.72 var(--body);
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%; display:block}
+a{color:inherit; text-decoration:none}
+button,input,select,textarea{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--gold); outline-offset:4px; border-radius:8px}
+::selection{background:var(--pink); color:#fff}
+
+/* ── atmosphere ───────────────────────────────────────────────────────────── */
+#bokeh{position:fixed; inset:0; z-index:-3; pointer-events:none}
+.aurora{position:fixed; inset:-25vh -15vw; z-index:-4; pointer-events:none; filter:blur(100px); overflow:hidden}
+.aurora i{position:absolute; border-radius:50%; mix-blend-mode:screen; display:block}
+.aurora i:nth-child(1){width:58vw; height:58vw; left:-10vw; top:-8vh; background:radial-gradient(circle,rgba(139,92,255,.85),transparent 64%); animation:drift 28s ease-in-out infinite}
+.aurora i:nth-child(2){width:50vw; height:50vw; right:-8vw; top:2vh; background:radial-gradient(circle,rgba(255,61,154,.8),transparent 64%); animation:drift 34s ease-in-out infinite reverse}
+.aurora i:nth-child(3){width:46vw; height:46vw; left:24vw; top:58vh; background:radial-gradient(circle,rgba(255,208,138,.5),transparent 64%); animation:drift 42s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate3d(0,0,0) scale(1)}33%{transform:translate3d(7vw,9vh,0) scale(1.18)}66%{transform:translate3d(-6vw,-7vh,0) scale(.88)}}
+.grain{position:fixed; inset:0; z-index:70; pointer-events:none; opacity:.055; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.cursor,.cursor-ring{position:fixed; top:0; left:0; z-index:80; pointer-events:none; border-radius:50%; mix-blend-mode:screen}
+.cursor{width:7px; height:7px; background:var(--gold); box-shadow:0 0 14px var(--gold)}
+.cursor-ring{width:34px; height:34px; border:1px solid rgba(255,208,138,.55); transition:width .25s,height .25s,border-color .25s,background .25s}
+.cursor-ring.hot{width:58px; height:58px; border-color:transparent; background:radial-gradient(circle,rgba(255,61,154,.3),transparent 70%)}
+@media (hover:none),(pointer:coarse){.cursor,.cursor-ring{display:none}}
+.progress{position:fixed; inset:env(safe-area-inset-top,0px) auto auto 0; height:2px; width:0; z-index:65; background:var(--grad); box-shadow:0 0 14px rgba(255,61,154,.8)}
+
+/* ── frosted glass recipe ─────────────────────────────────────────────────── */
+.glass{
+  position:relative; border-radius:var(--r); isolation:isolate;
+  background:linear-gradient(158deg,rgba(255,255,255,.11),rgba(255,255,255,.028) 46%,rgba(255,255,255,.07));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.26), inset 0 -1px 0 rgba(255,255,255,.07),
+             0 34px 70px -34px rgba(0,0,0,.92);
+}
+.glass::before{  /* gradient hairline edge */
+  content:""; position:absolute; inset:0; border-radius:inherit; padding:1px; pointer-events:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.62),rgba(255,61,154,.42) 32%,rgba(139,92,255,.34) 66%,rgba(255,255,255,.1));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); mask-composite:exclude;
+}
+.blur{backdrop-filter:blur(26px) saturate(165%); -webkit-backdrop-filter:blur(26px) saturate(165%)}
+.sheen{position:absolute; inset:0; border-radius:inherit; opacity:0; transition:opacity .45s; pointer-events:none; z-index:1;
+  background:radial-gradient(460px circle at var(--px,50%) var(--py,0%),rgba(255,255,255,.17),transparent 58%)}
+.glass:hover .sheen{opacity:1}
+
+/* ── shell ────────────────────────────────────────────────────────────────── */
+.wrap{width:100%; max-width:var(--stage); margin-inline:auto;
+  padding-left:max(20px,env(safe-area-inset-left,0px)); padding-right:max(20px,env(safe-area-inset-right,0px))}
+section{position:relative}
+.band{padding-block:clamp(80px,10vw,152px)}
+.band--silk{background:
+   radial-gradient(900px 500px at 12% -10%,rgba(255,61,154,.16),transparent 60%),
+   radial-gradient(900px 600px at 95% 110%,rgba(139,92,255,.2),transparent 60%),
+   linear-gradient(180deg,#F8F2FF,#EDE2FF); color:var(--plum);
+   border-radius:clamp(30px,4vw,60px); overflow:hidden;
+   box-shadow:0 -40px 90px -50px rgba(255,61,154,.7), 0 40px 90px -50px rgba(139,92,255,.7)}
+.band--silk h2,.band--silk h3{color:#240b40}
+.eyebrow{font:500 .72rem/1 var(--mono); letter-spacing:.24em; text-transform:uppercase; color:var(--lav);
+  display:flex; align-items:center; gap:.75rem; margin:0 0 1.2rem}
+.eyebrow::before{content:""; width:30px; height:2px; border-radius:2px; background:var(--grad)}
+.eyebrow::after{content:""; width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 12px var(--gold); animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25; transform:scale(.7)}}
+.band--silk .eyebrow{color:#8233c9}
+h2{font:400 clamp(2.2rem,5vw,4rem)/1.05 var(--display); margin:0 0 .45em; letter-spacing:-.02em; text-wrap:balance}
+h2 em,h1 em{font-style:italic; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent}
+.foil{background:var(--grad-foil); -webkit-background-clip:text; background-clip:text; color:transparent}
+.lede{max-width:60ch; color:var(--dim); font-size:1.05rem}
+.band--silk .lede{color:#5c4285}
+.sec-head{display:flex; flex-wrap:wrap; gap:1.5rem 3.5rem; align-items:flex-end; justify-content:space-between; margin-bottom:clamp(2.4rem,4.5vw,3.8rem)}
+.sec-head > *{min-width:0; flex:1 1 400px}
+.ghost{position:absolute; right:2%; top:-2.5rem; font:400 clamp(7rem,18vw,15rem)/1 var(--display);
+  color:transparent; -webkit-text-stroke:1px rgba(201,162,255,.1); pointer-events:none; user-select:none; z-index:-1}
+.band--silk .ghost{-webkit-text-stroke-color:rgba(139,92,255,.16)}
+
+/* ── buttons ──────────────────────────────────────────────────────────────── */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:.6rem; border:0; cursor:pointer; white-space:nowrap;
+  padding:.95rem 1.6rem; border-radius:99px; font:600 .93rem/1 var(--body); position:relative; overflow:hidden; isolation:isolate;
+  transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s, filter .3s}
+.btn--hot{background:var(--grad); color:#fff; background-size:200% 100%; box-shadow:0 14px 40px -14px rgba(255,61,154,.95), inset 0 1px 0 rgba(255,255,255,.4)}
+.btn--hot:hover{background-position:100% 0; filter:brightness(1.08)}
+.btn--hot::after{content:""; position:absolute; inset:0; z-index:-1; translate:-130% 0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent); transition:translate .7s}
+.btn--hot:hover::after{translate:130% 0}
+.btn--glass{background:rgba(255,255,255,.07); color:var(--mist); backdrop-filter:blur(14px);
+  box-shadow:inset 0 0 0 1px rgba(214,180,255,.32), inset 0 1px 0 rgba(255,255,255,.18)}
+.btn--glass:hover{background:rgba(255,255,255,.13)}
+.btn:hover{transform:translateY(-3px)}
+.btn:active{transform:translateY(-1px)}
+
+/* ── nav ──────────────────────────────────────────────────────────────────── */
+.nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:60; transition:padding .35s}
+.nav-in{display:flex; align-items:center; gap:1rem; padding:.55rem .6rem .55rem 1rem; margin-top:14px; border-radius:99px;
+  transition:background .4s, box-shadow .4s, backdrop-filter .4s, margin .35s}
+.nav.is-stuck .nav-in{background:rgba(16,4,34,.62); backdrop-filter:blur(22px) saturate(170%);
+  box-shadow:inset 0 0 0 1px rgba(214,180,255,.18), inset 0 1px 0 rgba(255,255,255,.14), 0 20px 50px -34px #000; margin-top:8px}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:61; background:rgba(10,1,23,.9)}
+.brand{display:flex; align-items:center; gap:.7rem; margin-right:auto; min-width:0}
+.brand img{width:40px; height:40px; object-fit:contain; filter:drop-shadow(0 4px 16px rgba(255,61,154,.65))}
+.brand b{font:700 1rem/1 var(--body); letter-spacing:.17em}
+.brand small{display:block; font:400 .56rem/1.5 var(--mono); letter-spacing:.22em; color:var(--dim-2); text-transform:uppercase}
+.nav-links{display:flex; gap:.15rem; align-items:center}
+.nav-links a{padding:.6rem .95rem; border-radius:99px; font-size:.9rem; color:var(--dim); position:relative; transition:color .25s}
+.nav-links a::before{content:""; position:absolute; inset:auto 50% .35rem; height:2px; width:0; border-radius:2px; background:var(--grad); transition:width .3s, inset-inline .3s}
+.nav-links a:hover{color:var(--mist)}
+.nav-links a:hover::before{width:46%; inset-inline:27%}
+.burger{display:none; background:none; border:0; padding:.7rem; cursor:pointer}
+.burger i{display:block; width:22px; height:2px; background:var(--mist); border-radius:2px; transition:.3s}
+.burger i+i{margin-top:5px}
+.burger[aria-expanded="true"] i:first-child{transform:translateY(7px) rotate(45deg)}
+.burger[aria-expanded="true"] i:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] i:last-child{transform:translateY(-7px) rotate(-45deg)}
+
+/* ── hero ─────────────────────────────────────────────────────────────────── */
+.hero{min-height:clamp(660px,94svh,1020px); display:grid; place-items:center; overflow:hidden; padding-block:clamp(40px,6vw,70px)}
+.hero::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse 76% 64% at 50% 46%,transparent 34%,rgba(10,1,23,.78) 78%)}
+.beams{position:absolute; inset:0; overflow:hidden; pointer-events:none}
+.beam{position:absolute; top:-45%; left:50%; width:58vw; height:150%; transform-origin:50% 0; filter:blur(18px);
+  background:conic-gradient(from 180deg at 50% 0%,transparent 43%,rgba(255,61,154,.2) 50%,transparent 57%);
+  animation:sway 15s ease-in-out infinite alternate}
+.beam:nth-child(2){background:conic-gradient(from 180deg at 50% 0%,transparent 43%,rgba(139,92,255,.22) 50%,transparent 57%); animation-duration:19s; animation-delay:-6s}
+.beam:nth-child(3){background:conic-gradient(from 180deg at 50% 0%,transparent 44%,rgba(255,208,138,.14) 50%,transparent 56%); animation-duration:23s; animation-delay:-11s}
+@keyframes sway{from{transform:translateX(-50%) rotate(-19deg)}to{transform:translateX(-50%) rotate(19deg)}}
+
+.ring-tilt{position:absolute; inset:0; display:grid; place-items:center; perspective:1500px; pointer-events:none}
+.ring{position:relative; width:1px; height:1px; transform-style:preserve-3d; transform:rotateX(-7deg);
+  animation:orbit 52s linear infinite; --r:clamp(230px,31vw,430px)}
+.ring-wrap{transform-style:preserve-3d; transform:rotateX(var(--trx,0deg)) rotateY(var(--try,0deg)); transition:transform .8s cubic-bezier(.2,.7,.3,1)}
+@keyframes orbit{to{transform:rotateX(-7deg) rotateY(-360deg)}}
+.ring figure{position:absolute; margin:0; left:0; top:0; width:clamp(128px,15vw,206px); aspect-ratio:3/4.3;
+  translate:-50% -50%; transform:rotateY(var(--a)) translateZ(var(--r)); backface-visibility:hidden;
+  border-radius:18px; overflow:hidden; box-shadow:0 40px 70px -30px #000, 0 0 0 1px rgba(255,255,255,.18), 0 0 60px -14px rgba(255,61,154,.5)}
+.ring figure img{width:100%; height:100%; object-fit:cover}
+.ring figure::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(255,61,154,.08),rgba(10,1,23,.3))}
+
+.hero-copy{position:relative; z-index:3; text-align:center; max-width:960px; margin-inline:auto; padding-inline:4px}
+.hero-copy::before{content:""; position:absolute; inset:-28% -16%; z-index:-1; pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(10,1,23,.78) 30%,rgba(10,1,23,.4) 56%,transparent 74%)}
+.hero .eyebrow{justify-content:center}
+h1{font:400 clamp(3rem,9vw,7.2rem)/.94 var(--display); margin:0 0 1.1rem; letter-spacing:-.03em; text-wrap:balance}
+h1 .line{display:block; overflow:hidden}
+h1 .line > span{display:block}
+.anim h1 .line > span{animation:rise 1s cubic-bezier(.19,1,.22,1) backwards}
+.anim h1 .line:nth-child(2) > span{animation-delay:.12s}
+.anim h1 .line:nth-child(3) > span{animation-delay:.24s}
+@keyframes rise{from{transform:translateY(105%) rotate(4deg)}}
+.hero .lede{margin-inline:auto; color:#D6C7EE}
+.hero-cta{display:flex; flex-wrap:wrap; gap:.9rem; justify-content:center; margin-top:2.2rem}
+.proof{display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center; margin-top:2.6rem}
+.proof span{display:inline-flex; align-items:center; gap:.5rem; padding:.6rem 1.05rem; border-radius:99px;
+  font:500 .74rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--dim);
+  background:rgba(255,255,255,.055); backdrop-filter:blur(12px); box-shadow:inset 0 0 0 1px rgba(214,180,255,.2)}
+.proof b{color:var(--mist); font:600 .88rem/1 var(--body); letter-spacing:0; font-variant-numeric:tabular-nums}
+.scroll-cue{position:absolute; left:50%; bottom:1.4rem; translate:-50% 0; z-index:3; font:400 .62rem/1 var(--mono);
+  letter-spacing:.3em; text-transform:uppercase; color:var(--dim-2); display:grid; gap:.6rem; justify-items:center}
+.scroll-cue::after{content:""; width:1px; height:46px; background:linear-gradient(var(--lav),transparent); animation:cue 2.2s ease-in-out infinite}
+@keyframes cue{0%,100%{opacity:.25; transform:scaleY(.5); transform-origin:top}50%{opacity:1; transform:scaleY(1)}}
+
+/* ── client marquee ───────────────────────────────────────────────────────── */
+.marquee{overflow:hidden; padding-block:46px 40px; perspective:800px;
+  border-block:1px solid var(--line); mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.marquee-track{display:flex; gap:20px; width:max-content; animation:slide 38s linear infinite; transform:rotateX(11deg)}
+.marquee:hover .marquee-track{animation-play-state:paused}
+@keyframes slide{to{transform:rotateX(11deg) translateX(-50%)}}
+.logo-chip{flex:0 0 auto; width:146px; height:72px; border-radius:var(--r-sm); background:rgba(255,255,255,.93);
+  display:grid; place-items:center; padding:11px; filter:grayscale(1); opacity:.7; transition:.35s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 18px 40px -26px #000}
+.logo-chip img{max-height:100%; width:auto; object-fit:contain}
+.logo-chip:hover{filter:none; opacity:1; transform:translateY(-7px) scale(1.06); box-shadow:0 28px 50px -24px rgba(255,61,154,.75)}
+
+/* ── service cards ────────────────────────────────────────────────────────── */
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(1.2rem,2.2vw,1.9rem)}
+.card{overflow:hidden; transform-style:preserve-3d; transition:transform .5s cubic-bezier(.2,.7,.3,1), box-shadow .5s}
+.card:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 50px 90px -40px rgba(255,61,154,.6)}
+.card-media{aspect-ratio:16/10; overflow:hidden; position:relative; border-radius:var(--r) var(--r) 0 0}
+.card-media img{width:100%; height:100%; object-fit:cover; transition:transform .9s cubic-bezier(.2,.7,.3,1)}
+.card:hover .card-media img{transform:scale(1.09)}
+.card-media::after{content:""; position:absolute; inset:0; background:linear-gradient(to top,rgba(19,4,42,.98),rgba(19,4,42,.08) 70%)}
+.card-tag{position:absolute; top:1.1rem; left:1.1rem; z-index:2; transform:translateZ(70px);
+  background:rgba(10,1,23,.55); backdrop-filter:blur(12px); border-radius:99px; padding:.42rem .85rem;
+  font:500 .62rem/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--gold);
+  box-shadow:inset 0 0 0 1px rgba(255,208,138,.4)}
+.card-body{padding:1.6rem 1.7rem 1.9rem; transform:translateZ(45px); position:relative; z-index:2}
+.card h3{font:600 1.45rem/1.2 var(--body); margin:0 0 1rem; letter-spacing:-.015em}
+.card ul{list-style:none; margin:0 0 1.5rem; padding:0; display:flex; flex-direction:column; gap:.5rem}
+.card li{font-size:.94rem; color:var(--dim); display:flex; gap:.65rem; align-items:baseline}
+.card li::before{content:""; flex:0 0 auto; width:6px; height:6px; border-radius:50%; background:var(--grad);
+  translate:0 -2px; box-shadow:0 0 10px rgba(255,61,154,.9)}
+.more{font:500 .78rem/1 var(--mono); letter-spacing:.16em; text-transform:uppercase;
+  display:inline-flex; gap:.55rem; align-items:center; background:var(--grad-foil);
+  -webkit-background-clip:text; background-clip:text; color:transparent}
+.more::after{content:"→"; color:var(--gold); transition:translate .3s}
+.card:hover .more::after{translate:6px 0}
+
+/* ── stats ────────────────────────────────────────────────────────────────── */
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:clamp(.9rem,1.6vw,1.3rem)}
+.stat{padding:2.1rem 1.4rem 1.8rem; text-align:center; transition:transform .5s cubic-bezier(.2,.7,.3,1), box-shadow .5s}
+.stat:hover{transform:translateY(-8px) rotateX(7deg); box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 44px 70px -40px rgba(139,92,255,.9)}
+.stat b{display:block; font:400 clamp(2.8rem,5.4vw,4.3rem)/1 var(--display); background:var(--grad-foil);
+  -webkit-background-clip:text; background-clip:text; color:transparent; font-variant-numeric:tabular-nums}
+.stat span{display:block; margin-top:.6rem; font:500 .68rem/1.4 var(--mono); letter-spacing:.24em; text-transform:uppercase; color:var(--dim)}
+.stat::after{content:""; position:absolute; inset:auto 30% 0; height:1px; background:var(--grad); opacity:.65}
+
+/* ── roster ───────────────────────────────────────────────────────────────── */
+.roster{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:.7rem}
+.role{display:flex; align-items:center; gap:.9rem; padding:.9rem 1rem; border-radius:var(--r-sm); min-width:0;
+  background:rgba(255,255,255,.045); box-shadow:inset 0 0 0 1px rgba(214,180,255,.14);
+  transition:transform .4s cubic-bezier(.2,.7,.3,1), background .4s, box-shadow .4s}
+.role:hover{background:rgba(255,255,255,.1); transform:perspective(800px) rotateX(-9deg) translateY(-4px) scale(1.03);
+  box-shadow:inset 0 0 0 1px rgba(255,208,138,.5), 0 26px 46px -28px rgba(255,61,154,.85)}
+.role .no{font:400 .68rem/1 var(--mono); color:var(--gold); opacity:.8; flex:0 0 auto}
+.role .nm{font-size:.93rem; line-height:1.3; min-width:0}
+.role .ct{margin-left:auto; font:500 .56rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase;
+  color:var(--dim-2); flex:0 0 auto}
+.chips{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:2.4rem}
+.chips span{border-radius:99px; padding:.55rem 1.05rem; font-size:.87rem; color:var(--dim);
+  background:rgba(255,255,255,.05); box-shadow:inset 0 0 0 1px rgba(214,180,255,.18); transition:.3s}
+.chips span:hover{color:var(--mist); box-shadow:inset 0 0 0 1px rgba(255,208,138,.55); transform:translateY(-2px)}
+.band--silk .chips span{background:rgba(139,92,255,.08); box-shadow:inset 0 0 0 1px rgba(139,92,255,.24); color:#5d4382}
+
+/* ── gallery ──────────────────────────────────────────────────────────────── */
+.gal{display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(.7rem,1.3vw,1.1rem); perspective:1400px}
+.gal figure{position:relative; margin:0; border-radius:var(--r-sm); overflow:hidden; min-width:0; aspect-ratio:1; cursor:pointer;
+  transform-style:preserve-3d; transition:transform .6s cubic-bezier(.2,.7,.3,1), box-shadow .6s}
+.gal figure:nth-child(1),.gal figure:nth-child(8){grid-row:span 2; aspect-ratio:auto}
+.gal img{width:100%; height:100%; object-fit:cover; transition:transform .9s cubic-bezier(.2,.7,.3,1)}
+.gal figure::after{content:""; position:absolute; inset:0; opacity:0; transition:opacity .5s;
+  background:linear-gradient(to top,rgba(255,61,154,.35),transparent 55%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.gal figure:hover{transform:translateZ(60px) rotateX(6deg) rotateY(-6deg); box-shadow:0 50px 80px -34px #000, 0 0 60px -18px rgba(255,61,154,.8); z-index:2}
+.gal figure:hover::after{opacity:1}
+.gal figure:hover img{transform:scale(1.12)}
+figcaption{position:absolute; inset:auto 0 0; z-index:2; padding:1.8rem .95rem .85rem;
+  background:linear-gradient(to top,rgba(10,1,23,.95),transparent);
+  font:500 .66rem/1.3 var(--mono); letter-spacing:.16em; text-transform:uppercase}
+
+/* lightbox */
+.lb{position:fixed; inset:0; z-index:85; display:grid; place-items:center; padding:max(20px,env(safe-area-inset-left,0px));
+  background:rgba(6,0,14,.86); backdrop-filter:blur(22px); opacity:0; visibility:hidden; transition:opacity .35s,visibility .35s}
+.lb.on{opacity:1; visibility:visible}
+.lb figure{margin:0; max-width:min(1000px,100%); border-radius:var(--r); overflow:hidden; position:relative;
+  transform:scale(.88) rotateX(10deg); transition:transform .5s cubic-bezier(.2,.9,.3,1);
+  box-shadow:0 60px 120px -40px #000, 0 0 0 1px rgba(255,255,255,.2)}
+.lb.on figure{transform:none}
+.lb img{max-height:78svh; width:auto; margin-inline:auto; object-fit:contain}
+.lb-btn{position:absolute; z-index:86; width:52px; height:52px; border-radius:50%; border:0; cursor:pointer;
+  background:rgba(255,255,255,.1); backdrop-filter:blur(14px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);
+  font-size:1.3rem; display:grid; place-items:center; transition:.3s}
+.lb-btn:hover{background:var(--grad); transform:scale(1.08)}
+.lb-prev{left:3vw} .lb-next{right:3vw} .lb-close{top:3vh; right:3vw}
+
+/* ── about ────────────────────────────────────────────────────────────────── */
+.duo{display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:clamp(1.2rem,2.4vw,2rem); align-items:start}
+.panel{background:rgba(255,255,255,.72); backdrop-filter:blur(18px); border-radius:var(--r); padding:clamp(1.7rem,2.8vw,2.6rem);
+  min-width:0; box-shadow:inset 0 1px 0 #fff, 0 30px 60px -42px rgba(46,17,80,.75), 0 0 0 1px rgba(139,92,255,.14);
+  transition:transform .5s cubic-bezier(.2,.7,.3,1), box-shadow .5s}
+.panel:hover{transform:translateY(-6px); box-shadow:inset 0 1px 0 #fff, 0 44px 70px -40px rgba(139,92,255,.8), 0 0 0 1px rgba(139,92,255,.28)}
+.panel h3{font:600 1.35rem/1.3 var(--body); margin:0 0 .9rem}
+.panel p{color:#5a4181; margin:0 0 1rem; font-size:.99rem}
+.panel p:last-child{margin-bottom:0}
+.big-num{font:400 clamp(3.6rem,8vw,6rem)/1 var(--display); background:var(--grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent; display:block}
+.quotes{display:grid; grid-template-columns:repeat(auto-fit,minmax(275px,1fr)); gap:1.3rem; margin-top:clamp(2.2rem,4vw,3.2rem)}
+.quote{background:rgba(255,255,255,.8); backdrop-filter:blur(16px); border-radius:var(--r); padding:1.9rem 1.8rem; min-width:0; position:relative;
+  box-shadow:inset 0 1px 0 #fff, 0 26px 54px -40px rgba(46,17,80,.7), 0 0 0 1px rgba(139,92,255,.12);
+  transition:transform .5s cubic-bezier(.2,.7,.3,1), box-shadow .5s}
+.quote:hover{transform:perspective(900px) rotateY(5deg) translateZ(24px); box-shadow:0 46px 80px -44px rgba(139,92,255,.9), 0 0 0 1px rgba(255,61,154,.35)}
+.quote::before{content:"“"; position:absolute; top:-.2em; right:.3em; font:400 6rem/1 var(--display); color:rgba(139,92,255,.14)}
+.quote p{margin:0 0 1.2rem; color:#3e2660; font-size:.99rem; position:relative}
+.stars{color:#E8A33D; letter-spacing:.22em; font-size:.78rem; margin-bottom:.9rem}
+.quote cite{font-style:normal; font:500 .7rem/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:#8233c9}
+
+/* ── cities ───────────────────────────────────────────────────────────────── */
+.cities{display:grid; grid-template-columns:1.3fr .7fr; gap:clamp(2rem,4vw,3.8rem); align-items:center}
+.map{border-radius:var(--r); overflow:hidden; padding:1rem; background:rgba(255,255,255,.05)}
+.map img{filter:hue-rotate(-12deg) saturate(1.3) brightness(1.05)}
+
+/* ── contact ──────────────────────────────────────────────────────────────── */
+.contact{display:grid; grid-template-columns:.88fr 1.12fr; gap:clamp(2rem,4vw,3.6rem); align-items:start}
+.lines{margin:2.2rem 0 0; display:flex; flex-direction:column; gap:1.6rem}
+.lines dt{font:500 .64rem/1 var(--mono); letter-spacing:.22em; text-transform:uppercase; color:var(--lav); margin-bottom:.6rem}
+.lines dd{margin:0}
+.lines a{display:block; font-size:1.04rem; width:fit-content; transition:color .25s, transform .25s}
+.lines a:hover{color:var(--pink); transform:translateX(4px)}
+.socials{display:flex; gap:.7rem; margin-top:2.2rem}
+.socials a{width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px rgba(214,180,255,.26); transition:.35s cubic-bezier(.2,.8,.2,1)}
+.socials a:hover{background:var(--grad); transform:translateY(-4px) rotate(-8deg); box-shadow:0 18px 34px -16px rgba(255,61,154,.9)}
+.socials svg{width:19px; height:19px; fill:currentColor}
+form{padding:clamp(1.5rem,2.8vw,2.4rem); display:grid; gap:1.1rem; min-width:0}
+.field{display:grid; gap:.5rem; min-width:0; position:relative; z-index:2}
+.field label{font:500 .64rem/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2)}
+.field input,.field select,.field textarea{background:rgba(10,1,23,.45); border:0; border-radius:14px; padding:.9rem 1rem; font-size:.96rem; width:100%;
+  box-shadow:inset 0 0 0 1px rgba(214,180,255,.24); transition:box-shadow .3s, background .3s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:0; background:rgba(10,1,23,.7);
+  box-shadow:inset 0 0 0 1px var(--pink), 0 0 0 4px rgba(255,61,154,.18)}
+.field textarea{resize:vertical; min-height:96px}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem}
+form small{color:var(--dim-2); font-size:.78rem; position:relative; z-index:2}
+
+/* ── lights divider + footer ──────────────────────────────────────────────── */
+.lights{display:block; width:100%; height:60px; overflow:visible}
+.lights circle{fill:var(--gold); filter:drop-shadow(0 0 7px rgba(255,208,138,.95)); animation:twinkle 3.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.25}}
+footer{border-top:1px solid var(--line); padding-block:2.8rem}
+.foot{display:flex; flex-wrap:wrap; gap:1.4rem 2.5rem; align-items:center; justify-content:space-between}
+.foot nav{display:flex; flex-wrap:wrap; gap:1.3rem; font-size:.88rem; color:var(--dim)}
+.foot nav a:hover{color:var(--pink)}
+.foot p{margin:0; font:400 .74rem/1.6 var(--mono); color:var(--dim-2)}
+
+/* ── reveal (visible by default so a JS failure never blanks the page) ────── */
+.anim .reveal{opacity:0; transform:perspective(1000px) translateY(42px) rotateX(9deg)}
+.anim .reveal.in{opacity:1; transform:none;
+  transition:opacity .9s ease, transform 1s cubic-bezier(.2,.7,.3,1); transition-delay:calc(var(--i,0)*70ms)}
+
+/* ── responsive ───────────────────────────────────────────────────────────── */
+@media (max-width:1000px){
+  .cities,.contact{grid-template-columns:1fr}
+  .map{max-width:470px; margin-inline:auto}
+  .gal{grid-template-columns:repeat(2,1fr)}
+  .nav-links{display:none}
+  .nav-links.open{display:flex; position:fixed; inset:0; flex-direction:column; justify-content:center; gap:.5rem;
+    background:rgba(10,1,23,.96); backdrop-filter:blur(24px); z-index:59; padding:max(20px,env(safe-area-inset-left,0px))}
+  .nav-links.open a{font-size:1.35rem; padding:.75rem 1.5rem}
+  .burger{display:block; z-index:62}
+  .ring{--r:clamp(190px,34vw,300px)}
+}
+@media (max-width:620px){
+  .nav-in .brand small,.nav-in .btn--hot .num,.scroll-cue{display:none}
+  .nav-in{padding-left:.75rem; gap:.5rem}
+  .nav-in .brand{gap:.5rem}
+  .nav-in .brand img{width:34px; height:34px}
+  .nav-in .brand b{font-size:.78rem; letter-spacing:.1em}
+  .nav-in .btn--hot{padding:.72rem 1.05rem; font-size:.84rem}
+  .hero-copy::before{inset:-30% -22%; background:radial-gradient(ellipse at center,rgba(10,1,23,.92) 42%,rgba(10,1,23,.6) 66%,transparent 82%)}
+  .gal figure:nth-child(1),.gal figure:nth-child(8){grid-row:span 1}
+  .row2{grid-template-columns:1fr}
+  .hero-cta .btn{flex:1 1 100%}
+  .ring figure{width:122px}
+  .lb-prev{left:1rem} .lb-next{right:1rem} .lb-close{right:1rem}
+  .roster{grid-template-columns:1fr 1fr}
+  .role .ct{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+  .anim .reveal{opacity:1; transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas id="bokeh" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <div class="nav-in">
+      <a class="brand" href="#top">
+        <img src="images/logo-3.png" alt="SHOWMAQERS logo">
+        <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
+      </a>
+      <nav class="nav-links" id="menu" aria-label="Main">
+        <a href="#services">Services</a>
+        <a href="#roster">Artists</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#about">About</a>
+        <a href="#cities">Cities</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="btn btn--hot" href="tel:+919811788643">Call<span class="num">&nbsp;98117 88643</span></a>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="beams" aria-hidden="true"><span class="beam"></span><span class="beam"></span><span class="beam"></span></div>
+    <div class="ring-tilt" aria-hidden="true"><div class="ring-wrap" id="ringWrap"><div class="ring" id="ring"></div></div></div>
+
+    <div class="wrap hero-copy">
+      <p class="eyebrow">Delhi NCR · Pan India · 12 years on the floor</p>
+      <h1>
+        <span class="line"><span>The people</span></span>
+        <span class="line"><span>who <em>make</em></span></span>
+        <span class="line"><span><em>the show</em>.</span></span>
+      </h1>
+      <p class="lede">
+        Weddings, destination celebrations and corporate productions — theme and colour scheme, venue and décor,
+        stage fabrication, artists, manpower and F&amp;B. One certified planner stays with you from the first call
+        to the final encore.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn--hot" href="#contact">Plan my event</a>
+        <a class="btn btn--glass" href="#gallery">See the work</a>
+      </div>
+      <div class="proof">
+        <span><b>100+</b> weddings</span>
+        <span><b>22</b> artist roles</span>
+        <span><b>36</b> cities</span>
+        <span><b>10,000+</b> smiles</span>
+      </div>
+    </div>
+    <div class="scroll-cue" aria-hidden="true">Scroll</div>
+  </section>
+
+  <!-- CLIENTS -->
+  <div class="marquee" aria-label="Brands we have worked with">
+    <div class="marquee-track" id="track"></div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="band" id="services">
+    <div class="wrap">
+      <span class="ghost" aria-hidden="true">01</span>
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow reveal">Services we provide</p>
+          <h2 class="reveal" style="--i:1">Three floors, <em>one production desk</em>.</h2>
+        </div>
+        <p class="lede reveal" style="--i:2">Corporate event management is no longer a once-a-year job for the PR team. Theme, venue, F&amp;B, entertainment — every detail sits with people who do it every week.</p>
+      </div>
+
+      <div class="cards">
+        <article class="card glass reveal tilt" style="--i:1">
+          <span class="card-tag">01 · Celebrations</span>
+          <div class="card-media"><img src="images/wedding-planners-delhi-gurgaon-noida-7.jpg" alt="Wedding mandap décor" loading="lazy"></div>
+          <div class="card-body">
+            <h3>Wedding &amp; Events</h3>
+            <ul>
+              <li>Destination weddings</li>
+              <li>Wedding ceremony</li>
+              <li>Birthday party</li>
+              <li>Anniversary party</li>
+              <li>College fest</li>
+            </ul>
+            <a class="more" href="#contact">Know more</a>
+          </div>
+          <span class="sheen"></span>
+        </article>
+
+        <article class="card glass reveal tilt" style="--i:2">
+          <span class="card-tag">02 · Corporate</span>
+          <div class="card-media"><img src="images/360-degree-solution.jpeg" alt="Corporate stage and branding setup" loading="lazy"></div>
+          <div class="card-body">
+            <h3>Corporate Events</h3>
+            <ul>
+              <li>Brand promotion</li>
+              <li>Product launch</li>
+              <li>Meetings &amp; conferences</li>
+              <li>Seminars &amp; annual awards</li>
+              <li>Road shows &amp; BTL activity</li>
+            </ul>
+            <a class="more" href="#contact">Know more</a>
+          </div>
+          <span class="sheen"></span>
+        </article>
+
+        <article class="card glass reveal tilt" style="--i:3">
+          <span class="card-tag">03 · On call</span>
+          <div class="card-media"><img src="images/entertainment.jpeg" alt="Anchors and performers at an event" loading="lazy"></div>
+          <div class="card-body">
+            <h3>Manpower &amp; Artists</h3>
+            <ul>
+              <li>Promoters, hostesses, models</li>
+              <li>Anchors &amp; emcees</li>
+              <li>Dance troupes &amp; singers</li>
+              <li>Stand-up comedians, TV/film celebs</li>
+              <li>Bouncers &amp; security, speakers</li>
+            </ul>
+            <a class="more" href="#roster">Know more</a>
+          </div>
+          <span class="sheen"></span>
+        </article>
+      </div>
+
+      <div class="chips reveal" style="--i:4">
+        <span>Wedding decoration</span><span>Flower decoration</span><span>Stage fabrication</span>
+        <span>Games &amp; activities</span><span>Manpower</span><span>Exhibitions</span>
+        <span>Consumer shows</span><span>Sports events</span><span>Road shows</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section>
+    <div class="wrap stats">
+      <div class="stat glass blur reveal"><b data-count="100">0</b><span>Weddings</span></div>
+      <div class="stat glass blur reveal" style="--i:1"><b data-count="500">0</b><span>Parties</span></div>
+      <div class="stat glass blur reveal" style="--i:2"><b data-count="1000">0</b><span>Promotions</span></div>
+      <div class="stat glass blur reveal" style="--i:3"><b data-count="10000" data-suffix="+">0</b><span>Smiles</span></div>
+    </div>
+  </section>
+
+  <!-- ROSTER -->
+  <section class="band" id="roster">
+    <div class="wrap">
+      <span class="ghost" aria-hidden="true">02</span>
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow reveal">Manpower &amp; artists</p>
+          <h2 class="reveal" style="--i:1">Tonight's <em>call sheet</em>.</h2>
+        </div>
+        <p class="lede reveal" style="--i:2">Twenty-two roles we book, brief and run on site — costumes, call times and back-up artists included.</p>
+      </div>
+      <div class="roster" id="roster-grid"></div>
+      <div class="chips reveal">
+        <a class="btn btn--hot" href="tel:+919910772449">Book artists · 99107 72449</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="band" id="gallery" style="padding-top:0">
+    <div class="wrap">
+      <span class="ghost" aria-hidden="true">03</span>
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow reveal">Gallery</p>
+          <h2 class="reveal" style="--i:1">Nights we <em>built</em>.</h2>
+        </div>
+        <p class="lede reveal" style="--i:2">Mandaps, flower walls, reception stages and brand activations across Delhi, Gurugram and Noida. Tap any frame.</p>
+      </div>
+      <div class="gal reveal" id="gal"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="band band--silk" id="about">
+    <div class="wrap">
+      <span class="ghost" aria-hidden="true">04</span>
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow reveal">About us</p>
+          <h2 class="reveal" style="--i:1">A planner who <em>stays till the lights go out</em>.</h2>
+        </div>
+        <div class="reveal" style="--i:2; flex:0 0 auto">
+          <span class="big-num">12</span>
+          <span style="font:500 .68rem/1.4 var(--mono); letter-spacing:.22em; text-transform:uppercase; color:#8233c9">Years combined experience</span>
+        </div>
+      </div>
+
+      <div class="duo">
+        <article class="panel reveal" style="--i:1">
+          <h3>Who we are</h3>
+          <p>SHOWMAQERS is a nationally recognised, full wedding planning, destination wedding, social and corporate event organisation, with a focus on specialised events and destination management.</p>
+          <p>Innovative planning, unmatched creativity and extraordinary attention to detail — combined with a professional track record — make us one of the premier event companies in Delhi &amp; NCR. Quality, personalised service is our speciality.</p>
+          <p>Every package comes with a dedicated, certified meeting professional assigned to you, from the inception of your event through its conclusion.</p>
+        </article>
+        <article class="panel reveal" style="--i:2">
+          <h3>Mission &amp; vision</h3>
+          <p>Our vision is client satisfaction and loyalty — that you are so thrilled with the experience that you remember us first for your next event.</p>
+          <p>Our mission is to serve our clientele in every facet of the hospitality and meeting-planning industry. We offer trained eyes on every detail of the event.</p>
+          <div class="chips" style="margin-top:1.5rem">
+            <span>Certified planner per client</span><span>Single point of contact</span><span>Pan-India execution</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="quotes">
+        <figure class="quote reveal" style="--i:1; margin:0">
+          <div class="stars">★★★★★</div>
+          <p>Fabulous work — very creative and completely fulfils the expectations! Well done and keep going.</p>
+          <cite>Princy Sharma</cite>
+        </figure>
+        <figure class="quote reveal" style="--i:2; margin:0">
+          <div class="stars">★★★★★</div>
+          <p>Your work is awesome. I can't find better event organisers than you — I appreciate your work.</p>
+          <cite>Priya Singh</cite>
+        </figure>
+        <figure class="quote reveal" style="--i:3; margin:0">
+          <div class="stars">★★★★★</div>
+          <p>Hired Showmaqers for my brother's wedding reception. The staff were extremely accommodating and handled every request with ease. Flowers by them were beautiful and affordable. I'd recommend them to anyone.</p>
+          <cite>Awani Srivastava</cite>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- CITIES -->
+  <section class="band" id="cities">
+    <div class="wrap cities">
+      <div>
+        <span class="ghost" aria-hidden="true">05</span>
+        <p class="eyebrow reveal">Where we work</p>
+        <h2 class="reveal" style="--i:1">Delhi NCR, and <em>wherever the venue is</em>.</h2>
+        <p class="lede reveal" style="--i:2">Crews, décor and artists dispatched across the capital region, Haryana, west UP and Rajasthan's wedding belt.</p>
+        <div class="chips reveal" style="--i:3" id="cityChips"></div>
+      </div>
+      <div class="map glass blur reveal" style="--i:2">
+        <img src="images/ncr.png" alt="Map of the Delhi National Capital Region" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="band" id="contact" style="padding-top:0">
+    <div class="wrap contact">
+      <div>
+        <span class="ghost" aria-hidden="true">06</span>
+        <p class="eyebrow reveal">Contact</p>
+        <h2 class="reveal" style="--i:1">Tell us the date. <em>We'll take the floor.</em></h2>
+        <dl class="lines reveal" style="--i:2">
+          <div>
+            <dt>Phone</dt>
+            <dd>
+              <a href="tel:+919910772449">+91 99107 72449</a>
+              <a href="tel:+919811788643">+91 98117 88643</a>
+              <a href="tel:+919627573060">+91 96275 73060</a>
+            </dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd>
+              <a href="mailto:info@showmaqers.com">info@showmaqers.com</a>
+              <a href="mailto:support@showmaqers.com">support@showmaqers.com</a>
+            </dd>
+          </div>
+          <div>
+            <dt>Office</dt>
+            <dd style="color:var(--dim)">160, Dhappa Colony, Raipur Khurd,<br>Chattarpur, near Trivoli Garden,<br>New Delhi 110068</dd>
+          </div>
+        </dl>
+        <div class="socials reveal" style="--i:3">
+          <a href="https://www.facebook.com/showmaker77/" aria-label="Facebook" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h3l1-3h-4v-2a1 1 0 0 1 1-1z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/showmaqers/" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 2c2.7 0 3.1 0 4.1.1 1 0 1.7.2 2.3.4.6.3 1.1.6 1.6 1.1s.8 1 1.1 1.6c.2.6.4 1.3.4 2.3.1 1 .1 1.4.1 4.1s0 3.1-.1 4.1c0 1-.2 1.7-.4 2.3-.3.6-.6 1.1-1.1 1.6s-1 .8-1.6 1.1c-.6.2-1.3.4-2.3.4-1 .1-1.4.1-4.1.1s-3.1 0-4.1-.1c-1 0-1.7-.2-2.3-.4-.6-.3-1.1-.6-1.6-1.1s-.8-1-1.1-1.6c-.2-.6-.4-1.3-.4-2.3C2 15.1 2 14.7 2 12s0-3.1.1-4.1c0-1 .2-1.7.4-2.3.3-.6.6-1.1 1.1-1.6s1-.8 1.6-1.1c.6-.2 1.3-.4 2.3-.4C8.9 2 9.3 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6zM17.8 5.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/channel/UCDQoZkwEa0tXH6jdIWjloEA" aria-label="YouTube" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M21.6 7.2c-.2-.9-.9-1.6-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4c-.9.2-1.6.9-1.8 1.8C2 8.8 2 12 2 12s0 3.2.4 4.8c.2.9.9 1.6 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15.5v-7l6 3.5-6 3.5z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <form class="glass blur reveal" style="--i:2" id="enq" novalidate>
+        <div class="field">
+          <label for="f-name">Your name</label>
+          <input id="f-name" name="name" required placeholder="Aryan Singh">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="f-phone">Phone</label>
+            <input id="f-phone" name="phone" type="tel" required placeholder="98xxxxxxxx">
+          </div>
+          <div class="field">
+            <label for="f-date">Event date</label>
+            <input id="f-date" name="date" type="date">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-type">What are we planning?</label>
+          <select id="f-type" name="type">
+            <option>Wedding / destination wedding</option>
+            <option>Birthday or anniversary party</option>
+            <option>Corporate event / product launch</option>
+            <option>Brand promotion / road show</option>
+            <option>College fest</option>
+            <option>Artists &amp; manpower only</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-msg">Guest count, city, anything else</label>
+          <textarea id="f-msg" name="msg" placeholder="350 guests, Chattarpur farmhouse, need mandap décor + anchor + dhol"></textarea>
+        </div>
+        <button class="btn btn--hot" type="submit">Send enquiry on WhatsApp</button>
+        <small id="enq-note">Opens WhatsApp with your details filled in. Prefer to talk? Call +91 98117 88643.</small>
+        <span class="sheen"></span>
+      </form>
+    </div>
+  </section>
+
+  <svg class="lights" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 8 Q 300 56 600 8 T 1200 8" fill="none" stroke="rgba(214,180,255,.28)" stroke-width="1"/>
+    <g id="bulbs"></g>
+  </svg>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#top">
+      <img src="images/logo-3.png" alt="">
+      <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
+    </a>
+    <nav aria-label="Footer">
+      <a href="#services">Services</a><a href="#roster">Artists</a><a href="#gallery">Gallery</a>
+      <a href="#about">About</a><a href="#cities">Cities</a><a href="#contact">Contact</a>
+    </nav>
+    <p>SHOWMAQERS · All rights reserved</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!calm) root.classList.add('anim');
+
+  /* ── content lists (kept here so they stay editable in one place) ───────── */
+  const img = f => 'images/' + f;
+
+  const clients = {'jio-logo':'Jio','honda-logo':'Honda','yamaha-logo-1':'Yamaha','radio-mirchi-logo':'Radio Mirchi',
+    'ambience-mall-logo':'Ambience Mall','Clovia-logo':'Clovia','gigabyte-logo':'Gigabyte','lava-logo-1':'Lava','supertech-logo':'Supertech'};
+  document.getElementById('track').innerHTML = Object.entries(clients)
+    .map(([f, n]) => `<div class="logo-chip"><img src="${img(f + '.jpg')}" alt="${n}" loading="lazy"></div>`).join('').repeat(2);
+
+  const ringPics = ['wedding-decorators-delhi-17nov2024-1.jpg','flower-decorators-delhi-gurugram-noida-2.jpg',
+    'wedding-planners-delhi-gurgaon-noida-7.jpg','wedding-decor.jpeg','flower-decorators-delhi-gurugram-noida-4.jpg',
+    'venue.jpeg','wedding-decorators-delhi-17nov2024-2.jpg','flower-decorators-delhi-gurugram-noida-5.jpg'];
+  document.getElementById('ring').innerHTML = ringPics.map((f, i) =>
+    `<figure style="--a:${i * (360 / ringPics.length)}deg"><img src="${img(f)}" alt=""></figure>`).join('');
+
+  const shots = [
+    ['wedding-decorators-delhi-17nov2024-2.jpg','Reception stage · Delhi'],
+    ['flower-decorators-delhi-gurugram-noida-2.jpg','Flower wall'],
+    ['flower-decorators-delhi-gurugram-noida-4.jpg','Entrance décor'],
+    ['wedding-planners-delhi-gurgaon-noida-11.jpg','Mandap · Gurugram'],
+    ['flower-decorators-delhi-gurugram-noida-5.jpg','Table flowers'],
+    ['entertainment.jpeg','Live entertainment'],
+    ['wedding-decor.jpeg','Sangeet set · Noida'],
+    ['venue.jpeg','Venue &amp; seating'],
+    ['flower-decorators-delhi-gurugram-noida-6.jpg','Stage backdrop'],
+    ['wedding-decorators-delhi-17nov2024-4.jpg','Lighting &amp; drape'],
+    ['360-degree-solution.jpeg','Brand activation'],
+    ['flower-decorators-delhi-gurugram-noida-3.jpg','Floral detail']
+  ];
+  document.getElementById('gal').innerHTML = shots.map(([f, c], i) =>
+    `<figure data-i="${i}" tabindex="0" role="button" aria-label="Open ${c.replace(/&amp;/g,'and')}"><img src="${img(f)}" alt="${c.replace(/&amp;/g,'and')}" loading="lazy"><figcaption>${c}</figcaption></figure>`).join('');
+
+  const roles = [
+    ['Female Emcee / Anchor','Host'], ['Male Emcee / Anchor','Host'], ['Dance Troupe','Stage'],
+    ['Singers','Stage'], ['Puppet Show Performers','Stage'], ['Magician','Spectacle'],
+    ['Stilt Walker (Long Man)','Spectacle'], ['Live Statue','Spectacle'], ['Joker / Clown / Charlie','Spectacle'],
+    ['Juggler','Spectacle'], ['Mascots','Spectacle'], ['Game Coordinator','Activities'],
+    ['Science Show Host','Activities'], ['Face Painter','Activities'], ['Pottery Maker','Craft'],
+    ['Nail Artist','Craft'], ['Parlour Beautician','Craft'], ['Tattoo Artist','Craft'],
+    ['Tarot Card Reader','Craft'], ['Russian Promoters','Promo'], ['Photographer','Crew'], ['Videographer','Crew']
+  ];
+  document.getElementById('roster-grid').innerHTML = roles.map(([n, c], i) =>
+    `<div class="role reveal" style="--i:${i % 8}"><span class="no">${String(i + 1).padStart(2, '0')}</span><span class="nm">${n}</span><span class="ct">${c}</span></div>`).join('');
+
+  const cities = ['South Delhi','East Delhi','West Delhi','North Delhi','Noida','Greater Noida','Gurgaon / Gurugram',
+    'Faridabad','Ghaziabad','Manesar','Sonipat','Panipat','Karnal','Rohtak','Jhajjar','Jind','Rewari','Palwal','Nuh',
+    'Mahendragarh','Bhiwani','Charkhi Dadri','Gautam Buddh Nagar','Baghpat','Bulandshahr','Hapur','Meerut',
+    'Muzaffarnagar','Shamli','Agra','Alwar','Bharatpur','Jaipur','Jodhpur','Udaipur','Jaisalmer'];
+  document.getElementById('cityChips').innerHTML = cities.map(c => `<span>${c}</span>`).join('');
+
+  /* fairy lights follow the same quadratic curve as the drawn wire */
+  const at = t => {
+    const p = [[0,8],[300,56],[600,8],[900,-40],[1200,8]];   // the T-command control points, expanded
+    const seg = t < .5 ? 0 : 2, u = t < .5 ? t * 2 : (t - .5) * 2;
+    const [x0,y0] = p[seg], [cx,cy] = p[seg+1], [x1,y1] = p[seg+2], m = 1 - u;
+    return [m*m*x0 + 2*m*u*cx + u*u*x1, m*m*y0 + 2*m*u*cy + u*u*y1];
+  };
+  document.getElementById('bulbs').innerHTML = Array.from({length: 19}, (_, i) => {
+    const [x, y] = at(i / 18);
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" style="animation-delay:${(i * .17).toFixed(2)}s"/>`;
+  }).join('');
+
+  /* ── reveal + count-up ─────────────────────────────────────────────────── */
+  const io = new IntersectionObserver((es) => {
+    for (const e of es) {
+      if (!e.isIntersecting) continue;
+      e.target.classList.add('in');
+      e.target.querySelectorAll?.('[data-count]').forEach(countUp);
+      io.unobserve(e.target);
+    }
+  }, { rootMargin: '-6% 0px -6% 0px' });
+  const watch = () => document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el));
+  watch();
+
+  function countUp(el) {
+    const to = +el.dataset.count, suffix = el.dataset.suffix || '', t0 = performance.now();
+    if (calm) { el.textContent = to.toLocaleString('en-IN') + suffix; return; }
+    const step = (t) => {
+      const p = Math.min(1, (t - t0) / 1700), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(to * e).toLocaleString('en-IN') + (p === 1 ? suffix : '');
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ── nav, menu, scroll progress ────────────────────────────────────────── */
+  const nav = document.getElementById('nav'), menu = document.getElementById('menu'),
+        burger = document.getElementById('burger'), bar = document.getElementById('progress');
+  const onScroll = () => {
+    nav.classList.toggle('is-stuck', scrollY > 30);
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  const setMenu = (open) => { burger.setAttribute('aria-expanded', open); menu.classList.toggle('open', open); };
+  burger.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
+  menu.addEventListener('click', e => { if (e.target.tagName === 'A') setMenu(false); });
+  addEventListener('resize', () => setMenu(false));
+
+  /* ── lightbox ──────────────────────────────────────────────────────────── */
+  const lb = document.createElement('div');
+  lb.className = 'lb'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true');
+  lb.innerHTML = `<button class="lb-btn lb-close" aria-label="Close">✕</button>
+    <button class="lb-btn lb-prev" aria-label="Previous">‹</button>
+    <button class="lb-btn lb-next" aria-label="Next">›</button>
+    <figure><img alt=""><figcaption></figcaption></figure>`;
+  document.body.appendChild(lb);
+  const lbImg = lb.querySelector('img'), lbCap = lb.querySelector('figcaption');
+  let at_i = 0, opener = null;
+
+  const show = (i) => {
+    at_i = (i + shots.length) % shots.length;
+    lbImg.src = img(shots[at_i][0]);
+    lbCap.innerHTML = shots[at_i][1];
+    lbImg.alt = shots[at_i][1].replace(/&amp;/g, 'and');
+  };
+  const open = (i, from) => { opener = from; show(i); lb.classList.add('on'); lb.querySelector('.lb-close').focus(); };
+  const close = () => { lb.classList.remove('on'); opener?.focus(); };
+
+  document.getElementById('gal').addEventListener('click', e => {
+    const f = e.target.closest('figure'); if (f) open(+f.dataset.i, f);
+  });
+  document.getElementById('gal').addEventListener('keydown', e => {
+    const f = e.target.closest('figure');
+    if (f && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(+f.dataset.i, f); }
+  });
+  lb.addEventListener('click', e => {
+    if (e.target.closest('.lb-next')) show(at_i + 1);
+    else if (e.target.closest('.lb-prev')) show(at_i - 1);
+    else if (!e.target.closest('figure') || e.target.closest('.lb-close')) close();
+  });
+  addEventListener('keydown', e => {
+    if (!lb.classList.contains('on')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowRight') show(at_i + 1);
+    if (e.key === 'ArrowLeft') show(at_i - 1);
+  });
+
+  /* ── pointer-driven 3D: ring tilt, card tilt, cursor, magnetic buttons ──── */
+  if (fine && !calm) {
+    const dot = document.createElement('div'), ring = document.createElement('div');
+    dot.className = 'cursor'; ring.className = 'cursor-ring';
+    document.body.append(dot, ring);
+    let rx = innerWidth / 2, ry = innerHeight / 2, cx = rx, cy = ry;
+
+    const ringWrap = document.getElementById('ringWrap');
+    addEventListener('pointermove', (e) => {
+      rx = e.clientX; ry = e.clientY;
+      dot.style.translate = `${rx - 3.5}px ${ry - 3.5}px`;
+      const nx = rx / innerWidth - .5, ny = ry / innerHeight - .5;
+      ringWrap.style.setProperty('--try', (nx * 18).toFixed(2) + 'deg');
+      ringWrap.style.setProperty('--trx', (-ny * 10).toFixed(2) + 'deg');
+      const hot = e.target.closest('a,button,.gal figure,.role,.logo-chip');
+      ring.classList.toggle('hot', !!hot);
+    }, { passive: true });
+
+    (function trail() {                       // the ring lags the dot — reads as weight
+      cx += (rx - cx) * .16; cy += (ry - cy) * .16;
+      ring.style.translate = `${cx - 17}px ${cy - 17}px`;
+      requestAnimationFrame(trail);
+    })();
+
+    document.addEventListener('pointermove', (e) => {
+      const el = e.target.closest('.tilt, .sheen')?.closest('.glass');
+      if (!el) return;
+      const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      el.style.setProperty('--px', (x * 100) + '%');
+      el.style.setProperty('--py', (y * 100) + '%');
+      if (el.classList.contains('tilt'))
+        el.style.transform = `perspective(1100px) rotateY(${(x - .5) * 11}deg) rotateX(${(.5 - y) * 11}deg) translateY(-6px)`;
+    }, { passive: true });
+    document.querySelectorAll('.tilt').forEach(el => el.addEventListener('pointerleave', () => { el.style.transform = ''; }));
+
+    document.querySelectorAll('.btn').forEach(b => {           // magnetic pull
+      b.addEventListener('pointermove', (e) => {
+        const r = b.getBoundingClientRect();
+        b.style.translate = `${(e.clientX - r.left - r.width / 2) * .22}px ${(e.clientY - r.top - r.height / 2) * .3}px`;
+      });
+      b.addEventListener('pointerleave', () => { b.style.translate = '0 0'; });
+    });
+  }
+
+  /* ── bokeh: slow stage haze drifting upward ────────────────────────────── */
+  const cv = document.getElementById('bokeh'), ctx = cv.getContext('2d');
+  const hues = ['255,61,154', '139,92,255', '255,208,138', '201,162,255'];
+  let dots = [], dpr = Math.min(devicePixelRatio || 1, 1.5), raf;
+
+  const sizeCanvas = () => {
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+    cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = innerWidth < 700 ? 16 : 34;
+    dots = Array.from({ length: n }, () => ({
+      x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+      r: 6 + Math.random() * 34, a: .06 + Math.random() * .2,
+      v: .08 + Math.random() * .34, h: hues[(Math.random() * hues.length) | 0]
+    }));
+  };
+  const paint = () => {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    for (const d of dots) {
+      const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
+      g.addColorStop(0, `rgba(${d.h},${d.a})`);
+      g.addColorStop(1, `rgba(${d.h},0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.284); ctx.fill();
+      d.y -= d.v; d.x += Math.sin(d.y / 90) * .22;
+      if (d.y + d.r < 0) { d.y = innerHeight + d.r; d.x = Math.random() * innerWidth; }
+    }
+    raf = requestAnimationFrame(paint);
+  };
+  sizeCanvas();
+  if (calm) paint(), cancelAnimationFrame(raf); else paint();
+  addEventListener('resize', () => { sizeCanvas(); }, { passive: true });
+  document.addEventListener('visibilitychange', () => {        // don't burn battery in a background tab
+    cancelAnimationFrame(raf);
+    if (!document.hidden && !calm) raf = requestAnimationFrame(paint);
+  });
+
+  /* ── enquiry form → WhatsApp (no backend to keep alive) ────────────────── */
+  const form = document.getElementById('enq'), note = document.getElementById('enq-note');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = new FormData(form), name = (f.get('name') || '').trim(), phone = (f.get('phone') || '').trim();
+    if (!name || !phone) {
+      note.textContent = 'Please add your name and phone number so we can call you back.';
+      note.style.color = 'var(--pink)';
+      (name ? form.phone : form.name).focus();
+      return;
+    }
+    const text = `Hi SHOWMAQERS! I'm ${name} (${phone}).`
+      + `\nEvent: ${f.get('type')}`
+      + (f.get('date') ? `\nDate: ${f.get('date')}` : '')
+      + (f.get('msg')?.trim() ? `\nDetails: ${f.get('msg').trim()}` : '');
+    window.open('https://wa.me/919811788643?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    note.textContent = 'WhatsApp should have opened with your enquiry — send it and we will reply shortly.';
+    note.style.color = 'var(--gold)';
+  });
+})();
+</script>
+</body>
+</html>
