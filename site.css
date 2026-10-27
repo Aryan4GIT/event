@@ -351,7 +351,11 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   .nav-links.open{display:flex; position:fixed; inset:0; flex-direction:column; justify-content:center; gap:.5rem;
     background:rgba(255,248,252,.97); backdrop-filter:blur(24px); z-index:59; padding:max(20px,env(safe-area-inset-left,0px))}
   .nav-links.open a{font-size:1.35rem; padding:.75rem 1.5rem}
-  .burger{display:block; z-index:62}
+  /* a backdrop-filter ancestor becomes the containing block for its fixed
+     children, which collapsed this overlay onto the stuck nav pill */
+  .nav:has(.nav-links.open) .nav-in{backdrop-filter:none; -webkit-backdrop-filter:none}
+  .nav:has(.nav-links.open) .brand{position:relative; z-index:62}
+  .burger{display:block; position:relative; z-index:62}
   .ring{--r:clamp(190px,34vw,300px)}
 }
 @media (max-width:620px){
