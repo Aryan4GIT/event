@@ -5,10 +5,10 @@
    rose hairline edge; one deeper blush band breaks the white halfway down.     */
 :root{
   /* colour */
-  --void:#FFF8FC; --ink:#FFF1F8; --ink-2:#FCE8F3;
-  --mist:#3A1527; --dim:#7A5566; --dim-2:#A8808F;
+  --void:#FFFCF9;
+  --mist:#3A1527; --dim:#6F4A5B; --dim-2:#8E6678;
   --lav:#C73070; --violet:#E83E82; --pink:#FF2E90; --magenta:#F04B93; --gold:#BE7A1C;
-  --silk:#FBECF5; --plum:#3A1527;
+  --plum:#3A1527;
   --grad:linear-gradient(100deg,#FF2E90 0%,#ED3580 45%,#D42A6B 100%);
   --grad-foil:linear-gradient(100deg,#FF4FA0 0%,#F43F90 34%,#E8357F 70%,#D42A6B 100%);
   --line:rgba(226,122,170,.2);
@@ -39,9 +39,9 @@ button,input,select,textarea{font:inherit; color:inherit}
 #bokeh{position:fixed; inset:0; z-index:-3; pointer-events:none}
 .aurora{position:fixed; inset:-25vh -15vw; z-index:-4; pointer-events:none; filter:blur(100px); overflow:hidden}
 .aurora i{position:absolute; border-radius:50%; display:block}
-.aurora i:nth-child(1){width:58vw; height:58vw; left:-10vw; top:-8vh; background:radial-gradient(circle,rgba(255,170,212,.3),transparent 64%); animation:drift 28s ease-in-out infinite}
-.aurora i:nth-child(2){width:50vw; height:50vw; right:-8vw; top:2vh; background:radial-gradient(circle,rgba(255,110,180,.34),transparent 64%); animation:drift 34s ease-in-out infinite reverse}
-.aurora i:nth-child(3){width:46vw; height:46vw; left:24vw; top:58vh; background:radial-gradient(circle,rgba(255,196,160,.26),transparent 64%); animation:drift 42s ease-in-out infinite}
+.aurora i:nth-child(1){width:58vw; height:58vw; left:-10vw; top:-8vh; background:radial-gradient(circle,rgba(255,196,222,.15),transparent 64%); animation:drift 28s ease-in-out infinite}
+.aurora i:nth-child(2){width:50vw; height:50vw; right:-8vw; top:2vh; background:radial-gradient(circle,rgba(246,214,164,.17),transparent 64%); animation:drift 34s ease-in-out infinite reverse}
+.aurora i:nth-child(3){width:46vw; height:46vw; left:24vw; top:58vh; background:radial-gradient(circle,rgba(255,182,206,.13),transparent 64%); animation:drift 42s ease-in-out infinite}
 @keyframes drift{0%,100%{transform:translate3d(0,0,0) scale(1)}33%{transform:translate3d(7vw,9vh,0) scale(1.18)}66%{transform:translate3d(-6vw,-7vh,0) scale(.88)}}
 .grain{position:fixed; inset:0; z-index:70; pointer-events:none; opacity:.03; mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -55,7 +55,7 @@ button,input,select,textarea{font:inherit; color:inherit}
 /* ── frosted glass recipe ─────────────────────────────────────────────────── */
 .glass{
   position:relative; border-radius:var(--r); isolation:isolate;
-  background:linear-gradient(158deg,rgba(255,255,255,.96),rgba(255,244,250,.72) 46%,rgba(252,236,246,.88));
+  background:linear-gradient(158deg,rgba(255,255,255,.96),rgba(255,251,247,.72) 46%,rgba(254,247,242,.88));
   box-shadow:inset 0 1px 0 #fff, inset 0 -1px 0 rgba(255,255,255,.6),
              0 28px 60px -34px rgba(196,74,134,.4);
 }
@@ -76,9 +76,9 @@ button,input,select,textarea{font:inherit; color:inherit}
 section{position:relative}
 .band{padding-block:clamp(80px,10vw,152px)}
 .band--silk{background:
-   radial-gradient(900px 500px at 12% -10%,rgba(255,46,144,.14),transparent 60%),
-   radial-gradient(900px 600px at 95% 110%,rgba(232,62,130,.16),transparent 60%),
-   linear-gradient(180deg,#FDE9F3,#FFE6F2); color:var(--plum);
+   radial-gradient(900px 500px at 12% -10%,rgba(255,46,144,.07),transparent 60%),
+   radial-gradient(900px 600px at 95% 110%,rgba(214,166,92,.1),transparent 60%),
+   linear-gradient(180deg,#FFF6FA,#FFF7EE); color:var(--plum);
    border-radius:clamp(30px,4vw,60px); overflow:hidden;
    box-shadow:0 -40px 90px -56px rgba(255,46,144,.6), 0 40px 90px -56px rgba(232,62,130,.6)}
 .band--silk h2,.band--silk h3{color:#3A1527}
@@ -118,9 +118,9 @@ h2 em,h1 em{font-style:italic; background:var(--grad); -webkit-background-clip:t
 .nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:60; transition:padding .35s}
 .nav-in{display:flex; align-items:center; gap:1rem; padding:.55rem .6rem .55rem 1rem; margin-top:14px; border-radius:99px;
   transition:background .4s, box-shadow .4s, backdrop-filter .4s, margin .35s}
-.nav.is-stuck .nav-in{background:rgba(255,252,254,.78); backdrop-filter:blur(22px) saturate(170%);
+.nav.is-stuck .nav-in{background:rgba(255,254,252,.78); backdrop-filter:blur(22px) saturate(170%);
   box-shadow:inset 0 0 0 1px rgba(226,122,170,.18), inset 0 1px 0 #fff, 0 20px 46px -34px rgba(196,74,134,.8); margin-top:8px}
-body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:61; background:rgba(255,248,252,.92)}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:61; background:rgba(255,252,249,.92)}
 .brand{display:flex; align-items:center; gap:.7rem; margin-right:auto; min-width:0}
 .brand img{width:40px; height:40px; object-fit:contain; filter:drop-shadow(0 4px 16px rgba(255,61,154,.65))}
 .brand b{font:700 1rem/1 var(--body); letter-spacing:.17em}
@@ -140,7 +140,7 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 /* ── hero ─────────────────────────────────────────────────────────────────── */
 .hero{min-height:clamp(660px,94svh,1020px); display:grid; place-items:center; overflow:hidden; padding-block:clamp(40px,6vw,70px) clamp(92px,9vw,124px)}
 .hero::after{content:""; position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(ellipse 82% 70% at 50% 46%,transparent 46%,rgba(255,248,252,.92) 86%)}
+  background:radial-gradient(ellipse 82% 70% at 50% 46%,transparent 46%,rgba(255,252,249,.92) 86%)}
 .beams{position:absolute; inset:0; overflow:hidden; pointer-events:none}
 .beam{position:absolute; top:-45%; left:50%; width:58vw; height:150%; transform-origin:50% 0; filter:blur(18px);
   background:conic-gradient(from 180deg at 50% 0%,transparent 43%,rgba(255,46,144,.16) 50%,transparent 57%);
@@ -158,11 +158,11 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
   translate:-50% -50%; transform:rotateY(var(--a)) translateZ(var(--r)); backface-visibility:hidden;
   border-radius:18px; overflow:hidden; box-shadow:0 34px 64px -30px rgba(196,74,134,.6), 0 0 0 1px rgba(255,255,255,.9), 0 0 60px -16px rgba(255,46,144,.45)}
 .ring figure img{width:100%; height:100%; object-fit:cover}
-.ring figure::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(255,46,144,.05),rgba(255,248,252,.1))}
+.ring figure::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(255,46,144,.05),rgba(255,252,249,.1))}
 
 .hero-copy{position:relative; z-index:3; text-align:center; max-width:960px; margin-inline:auto; padding-inline:4px}
 .hero-copy::before{content:""; position:absolute; inset:-28% -16%; z-index:-1; pointer-events:none;
-  background:radial-gradient(ellipse at center,rgba(255,250,253,.96) 34%,rgba(255,250,253,.74) 56%,transparent 76%)}
+  background:radial-gradient(ellipse at center,rgba(255,253,251,.96) 34%,rgba(255,253,251,.74) 56%,transparent 76%)}
 .hero .eyebrow{justify-content:center}
 h1{font:400 clamp(3rem,9vw,7.2rem)/.94 var(--display); margin:0 0 1.1rem; letter-spacing:-.03em; text-wrap:balance}
 h1 .line{display:block; overflow:hidden}
@@ -202,7 +202,7 @@ h1 .line > span{display:block}
 .card-media{aspect-ratio:16/10; overflow:hidden; position:relative; border-radius:var(--r) var(--r) 0 0}
 .card-media img{width:100%; height:100%; object-fit:cover; transition:transform .9s cubic-bezier(.2,.7,.3,1)}
 .card:hover .card-media img{transform:scale(1.09)}
-.card-media::after{content:""; position:absolute; inset:0; background:linear-gradient(to top,rgba(255,245,250,.98),rgba(255,245,250,.06) 70%)}
+.card-media::after{content:""; position:absolute; inset:0; background:linear-gradient(to top,rgba(255,251,247,.98),rgba(255,251,247,.06) 70%)}
 .card-tag{position:absolute; top:1.1rem; left:1.1rem; z-index:2; transform:translateZ(70px);
   background:rgba(255,255,255,.82); backdrop-filter:blur(12px); border-radius:99px; padding:.42rem .85rem;
   font:500 .62rem/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:#A1246A;
@@ -262,7 +262,7 @@ figcaption{position:absolute; inset:auto 0 0; z-index:2; padding:1.8rem .95rem .
 
 /* lightbox */
 .lb{position:fixed; inset:0; z-index:85; display:grid; place-items:center; padding:max(20px,env(safe-area-inset-left,0px));
-  background:rgba(255,246,251,.9); backdrop-filter:blur(22px); opacity:0; visibility:hidden; transition:opacity .35s,visibility .35s}
+  background:rgba(255,252,249,.9); backdrop-filter:blur(22px); opacity:0; visibility:hidden; transition:opacity .35s,visibility .35s}
 .lb.on{opacity:1; visibility:visible}
 .lb figure{margin:0; max-width:min(1000px,100%); border-radius:var(--r); overflow:hidden; position:relative;
   transform:scale(.88) rotateX(10deg); transition:transform .5s cubic-bezier(.2,.9,.3,1);
@@ -320,7 +320,7 @@ form{padding:clamp(1.5rem,2.8vw,2.4rem); display:grid; gap:1.1rem; min-width:0}
 .field label{font:500 .64rem/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2)}
 .field input,.field select,.field textarea{background:rgba(255,255,255,.86); border:0; border-radius:14px; padding:.9rem 1rem; font-size:.96rem; width:100%;
   box-shadow:inset 0 0 0 1px rgba(226,122,170,.26); transition:box-shadow .3s, background .3s}
-.field input::placeholder,.field textarea::placeholder{color:#B08A9B}
+.field input::placeholder,.field textarea::placeholder{color:#9A7385}
 .field input:focus,.field select:focus,.field textarea:focus{outline:0; background:#fff;
   box-shadow:inset 0 0 0 1px var(--pink), 0 0 0 4px rgba(255,46,144,.16)}
 .field textarea{resize:vertical; min-height:96px}
@@ -349,7 +349,7 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   .gal{grid-template-columns:repeat(2,1fr)}
   .nav-links{display:none}
   .nav-links.open{display:flex; position:fixed; inset:0; flex-direction:column; justify-content:center; gap:.5rem;
-    background:rgba(255,248,252,.97); backdrop-filter:blur(24px); z-index:59; padding:max(20px,env(safe-area-inset-left,0px))}
+    background:rgba(255,252,249,.97); backdrop-filter:blur(24px); z-index:59; padding:max(20px,env(safe-area-inset-left,0px))}
   .nav-links.open a{font-size:1.35rem; padding:.75rem 1.5rem}
   /* a backdrop-filter ancestor becomes the containing block for its fixed
      children, which collapsed this overlay onto the stuck nav pill */
@@ -365,7 +365,7 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   .nav-in .brand img{width:34px; height:34px}
   .nav-in .brand b{font-size:.78rem; letter-spacing:.1em}
   .nav-in .btn--hot{padding:.72rem 1.05rem; font-size:.84rem}
-  .hero-copy::before{inset:-30% -22%; background:radial-gradient(ellipse at center,rgba(255,248,252,.95) 42%,rgba(255,248,252,.72) 66%,transparent 82%)}
+  .hero-copy::before{inset:-30% -22%; background:radial-gradient(ellipse at center,rgba(255,252,249,.95) 42%,rgba(255,252,249,.72) 66%,transparent 82%)}
   .gal figure:nth-child(1),.gal figure:nth-child(8){grid-row:span 1}
   .row2{grid-template-columns:1fr}
   .hero-cta .btn{flex:1 1 100%}
@@ -400,7 +400,7 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
 .chat-panel{position:fixed; right:max(18px,env(safe-area-inset-right,0px)); bottom:calc(max(18px,env(safe-area-inset-bottom,0px)) + 72px);
   z-index:86; width:min(372px,calc(100vw - 36px)); max-height:min(560px,calc(100vh - 140px));
   display:none; flex-direction:column; overflow:hidden; border-radius:var(--r);
-  background:linear-gradient(158deg,rgba(255,255,255,.98),rgba(255,244,250,.94));
+  background:linear-gradient(158deg,rgba(255,255,255,.98),rgba(255,251,247,.94));
   backdrop-filter:blur(26px) saturate(165%); -webkit-backdrop-filter:blur(26px) saturate(165%);
   box-shadow:inset 0 0 0 1px rgba(226,122,170,.26), 0 34px 70px -30px rgba(196,74,134,.75)}
 .chat-panel.on{display:flex}

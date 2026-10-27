@@ -671,7 +671,7 @@
 
   /* ── bokeh haze ────────────────────────────────────────────────────────── */
   const cv = document.getElementById('bokeh'), ctx = cv.getContext('2d');
-  const hues = ['255,46,144', '232,62,130', '255,150,190', '255,150,200'];
+  const hues = ['255,172,205', '246,214,164', '255,196,220', '240,205,160'];
   let dots = [], dpr = Math.min(devicePixelRatio || 1, 1.5), raf;
   const sizeCanvas = () => {
     cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
@@ -679,7 +679,7 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     dots = Array.from({ length: innerWidth < 700 ? 14 : 28 }, () => ({
       x: Math.random() * innerWidth, y: Math.random() * innerHeight,
-      r: 6 + Math.random() * 34, a: .04 + Math.random() * .12,
+      r: 6 + Math.random() * 34, a: .02 + Math.random() * .06,
       v: .08 + Math.random() * .34, h: hues[(Math.random() * hues.length) | 0]
     }));
   };
