@@ -102,12 +102,30 @@ Their photo is in the `vendor-pending` bucket under **Storage**; the row's
 
 ---
 
+## Skill media — a photo or video of the artist working
+
+Run [`skill-media.sql`](skill-media.sql) in the SQL Editor. One step again.
+
+It adds a `skill_path` column, lets the upload buckets accept video up to
+40 MB, and adds that one column to the public `roster` view.
+
+After it, the registration form has a second, optional upload: one photo or
+short video of the artist at a real event. It appears under their photo on the
+admin dashboard, so you can watch it before deciding. Approving publishes the
+clip along with the photo, and their roster card gets a **▶ Reel** badge that
+plays the clip full screen.
+
+Until this file is run the form still works — it just sends the registration
+without the clip rather than failing.
+
+---
+
 ## What is in the database
 
 | Table | What it holds |
 |---|---|
 | `categories` | the 20 roster sections |
-| `vendors` | one row per artist — contact details, status, photo |
+| `vendors` | one row per artist — contact details, status, photo, skill clip |
 | `staff` | who is allowed to approve |
 | `roster` *(view)* | the only thing the public can read: approved artists, safe columns |
 

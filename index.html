@@ -206,7 +206,7 @@
         </div>
         <div class="reveal" style="--i:2; flex:0 0 auto">
           <span class="big-num">12</span>
-          <span style="font:500 .68rem/1.4 var(--mono); letter-spacing:.22em; text-transform:uppercase; color:#8233c9">Years combined experience</span>
+          <span style="font:500 .68rem/1.4 var(--mono); letter-spacing:.22em; text-transform:uppercase; color:#C73070">Years combined experience</span>
         </div>
       </div>
 
@@ -342,7 +342,7 @@
   </section>
 
   <svg class="lights" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0 8 Q 300 56 600 8 T 1200 8" fill="none" stroke="rgba(146,84,196,.35)" stroke-width="1"/>
+    <path d="M0 8 Q 300 56 600 8 T 1200 8" fill="none" stroke="rgba(226,122,170,.35)" stroke-width="1"/>
     <g id="bulbs"></g>
   </svg>
 </main>
@@ -552,7 +552,7 @@
 
   /* ── bokeh: slow stage haze drifting upward ────────────────────────────── */
   const cv = document.getElementById('bokeh'), ctx = cv.getContext('2d');
-  const hues = ['255,46,144', '124,58,237', '255,150,190', '190,130,255'];
+  const hues = ['255,46,144', '232,62,130', '255,150,190', '255,150,200'];
   let dots = [], dpr = Math.min(devicePixelRatio || 1, 1.5), raf;
 
   const sizeCanvas = () => {
@@ -608,5 +608,6 @@
   });
 })();
 </script>
+<script src="chat.js" defer></script>
 </body>
 </html>

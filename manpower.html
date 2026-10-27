@@ -25,13 +25,13 @@
 .faces-track{display:flex; gap:16px; width:max-content; animation:slide 46s linear infinite; transform:rotateX(9deg)}
 .faces:hover .faces-track{animation-play-state:paused}
 .faces figure{flex:0 0 auto; width:116px; aspect-ratio:3/4; margin:0; border-radius:14px; overflow:hidden; position:relative;
-  box-shadow:0 16px 34px -22px rgba(120,40,120,.9), inset 0 0 0 1px rgba(255,255,255,.9)}
+  box-shadow:0 16px 34px -22px rgba(196,74,134,.9), inset 0 0 0 1px rgba(255,255,255,.9)}
 .faces img{width:100%; height:100%; object-fit:cover}
 
 /* category index */
 .cat-index{display:flex; flex-wrap:wrap; gap:.55rem; justify-content:center; margin-top:2.2rem}
 .cat-index a{border-radius:99px; padding:.5rem 1rem; font-size:.84rem; color:var(--dim); background:rgba(255,255,255,.72);
-  box-shadow:inset 0 0 0 1px rgba(146,84,196,.2); transition:.28s cubic-bezier(.2,.8,.2,1)}
+  box-shadow:inset 0 0 0 1px rgba(226,122,170,.2); transition:.28s cubic-bezier(.2,.8,.2,1)}
 .cat-index a:hover{color:#fff; background:var(--grad); box-shadow:none; transform:translateY(-2px)}
 
 /* a category block */
@@ -42,12 +42,12 @@
 .cat h2{font:400 clamp(1.8rem,3.4vw,2.8rem)/1.1 var(--display); margin:0; letter-spacing:-.015em; flex:0 0 auto}
 .cat-head p{margin:0; flex:1 1 440px; min-width:0; color:var(--dim); font-size:.97rem}
 .count{font:500 .62rem/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--lav);
-  background:rgba(255,255,255,.8); box-shadow:inset 0 0 0 1px rgba(146,84,196,.22); border-radius:99px; padding:.4rem .75rem}
+  background:rgba(255,255,255,.8); box-shadow:inset 0 0 0 1px rgba(226,122,170,.22); border-radius:99px; padding:.4rem .75rem}
 
 /* named people */
 .people{display:grid; grid-template-columns:repeat(auto-fill,minmax(166px,1fr)); gap:clamp(.7rem,1.3vw,1.1rem); perspective:1200px}
 .person{margin:0; border-radius:18px; overflow:hidden; background:#fff; cursor:zoom-in; position:relative;
-  box-shadow:0 16px 34px -24px rgba(120,40,120,.85), inset 0 0 0 1px rgba(146,84,196,.14);
+  box-shadow:0 16px 34px -24px rgba(196,74,134,.85), inset 0 0 0 1px rgba(226,122,170,.14);
   transition:transform .45s cubic-bezier(.2,.7,.3,1), box-shadow .45s}
 .person img{width:100%; aspect-ratio:3/4; object-fit:cover; object-position:top center; transition:transform .7s cubic-bezier(.2,.7,.3,1)}
 .person figcaption{position:static; background:none; color:var(--mist); padding:.7rem .8rem .85rem;
@@ -57,26 +57,30 @@
   box-shadow:0 36px 56px -30px rgba(255,46,144,.6), inset 0 0 0 1px rgba(255,46,144,.4)}
 .person:hover img{transform:scale(1.06)}
 .people.clipped > .person:nth-child(n+25){display:none}
+.person .reel{position:absolute; top:.5rem; right:.5rem; z-index:3; display:flex; align-items:center; gap:.3rem;
+  padding:.26rem .55rem .26rem .45rem; border-radius:99px; background:var(--grad); color:#fff;
+  font:600 .58rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase;
+  box-shadow:0 8px 20px -10px rgba(255,61,154,.9)}
 .show-all{display:block; margin:1.6rem auto 0}
 .show-all[hidden]{display:none}
 
 /* photo strips */
 .strip{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:clamp(.7rem,1.3vw,1.1rem); perspective:1200px}
 .strip figure{margin:0; border-radius:18px; overflow:hidden; position:relative; aspect-ratio:4/3; cursor:zoom-in;
-  box-shadow:0 18px 36px -26px rgba(120,40,120,.9), inset 0 0 0 1px rgba(146,84,196,.14);
+  box-shadow:0 18px 36px -26px rgba(196,74,134,.9), inset 0 0 0 1px rgba(226,122,170,.14);
   transition:transform .5s cubic-bezier(.2,.7,.3,1), box-shadow .5s}
 .strip img{width:100%; height:100%; object-fit:cover; transition:transform .8s cubic-bezier(.2,.7,.3,1)}
 .strip figure:hover{transform:translateZ(44px) rotateX(5deg) rotateY(-5deg); z-index:2;
   box-shadow:0 40px 62px -32px rgba(255,46,144,.6), inset 0 0 0 1px rgba(255,46,144,.4)}
 .strip figure:hover img{transform:scale(1.08)}
 .strip .noimg{display:grid; place-content:center; text-align:center; gap:.5rem; cursor:default;
-  background:linear-gradient(150deg,#FFE9F4,#F0E4FF); box-shadow:inset 0 0 0 1px rgba(146,84,196,.18)}
-.strip .noimg:hover{transform:none; box-shadow:inset 0 0 0 1px rgba(146,84,196,.18)}
+  background:linear-gradient(150deg,#FFE9F4,#FFE6F2); box-shadow:inset 0 0 0 1px rgba(226,122,170,.18)}
+.strip .noimg:hover{transform:none; box-shadow:inset 0 0 0 1px rgba(226,122,170,.18)}
 .strip .noimg span{font:400 2.6rem/1 var(--display); background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent}
-.strip .noimg small{font:500 .6rem/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:#8233c9; padding-inline:1rem}
+.strip .noimg small{font:500 .6rem/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:#C73070; padding-inline:1rem}
 
 /* localities */
-.locality{border-radius:var(--r-sm); background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(146,84,196,.18); margin-bottom:.8rem}
+.locality{border-radius:var(--r-sm); background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(226,122,170,.18); margin-bottom:.8rem}
 .locality summary{cursor:pointer; padding:.95rem 1.2rem; font:500 .88rem/1 var(--body); color:var(--mist); list-style:none; display:flex; justify-content:space-between; gap:1rem}
 .locality summary::-webkit-details-marker{display:none}
 .locality summary::after{content:"+"; color:var(--pink); font-size:1.1rem; line-height:1}
@@ -523,7 +527,9 @@
       const kind = box.dataset.people, list = DATA[kind] || [];
       const role = label[kind] || box.closest('.cat')?.querySelector('h2')?.textContent.trim() || '';
       box.innerHTML = list.map(p =>
-        `<figure class="person" data-src="${p.i}" data-cap="${p.n}"><img src="${p.i}" alt="${p.n}" loading="lazy">` +
+        `<figure class="person" data-src="${p.i}" data-cap="${p.n}"${p.s ? ` data-clip="${p.s}"` : ''}>` +
+        (p.s ? '<span class="reel">▶ Reel</span>' : '') +
+        `<img src="${p.i}" alt="${p.n}" loading="lazy">` +
         `<figcaption>${p.n}<b>${role}</b></figcaption></figure>`).join('');
       box.style.marginBottom = list.length ? '1.1rem' : '0';
     });
@@ -553,13 +559,17 @@
     const cfg = window.SUPABASE;
     if (!cfg || /YOUR-/.test(cfg.url + cfg.anonKey)) return;
     try {
-      const r = await fetch(`${cfg.url}/rest/v1/roster?select=name,category_key,photo_path,sort&order=sort.asc`,
-        { headers: { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey } });
+      const h = { headers: { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey } };
+      const read = cols => fetch(`${cfg.url}/rest/v1/roster?select=${cols}&order=sort.asc`, h);
+      /* skill_path only exists once supabase/skill-media.sql is run — until
+         then read the roster without it rather than losing the live data */
+      let r = await read('name,category_key,photo_path,skill_path,sort');
+      if (!r.ok) r = await read('name,category_key,photo_path,sort');
       if (!r.ok) return;
       const rows = await r.json();
       if (!Array.isArray(rows) || !rows.length) return;   // never blank the page
       const live = {};
-      for (const row of rows) (live[row.category_key] ||= []).push({ n: row.name, i: row.photo_path });
+      for (const row of rows) (live[row.category_key] ||= []).push({ n: row.name, i: row.photo_path, s: row.skill_path || null });
       DATA = live;
       render();
     } catch (e) { /* offline or project paused — the snapshot stays up */ }
@@ -592,16 +602,21 @@
   lb.innerHTML = `<button class="lb-btn lb-close" aria-label="Close">✕</button>
     <button class="lb-btn lb-prev" aria-label="Previous">‹</button>
     <button class="lb-btn lb-next" aria-label="Next">›</button>
-    <figure><img alt=""><figcaption></figcaption></figure>`;
+    <figure><img alt=""><video controls playsinline hidden></video><figcaption></figcaption></figure>`;
   document.body.appendChild(lb);
-  const lbImg = lb.querySelector('img'), lbCap = lb.querySelector('figcaption');
+  const lbImg = lb.querySelector('img'), lbVid = lb.querySelector('video'), lbCap = lb.querySelector('figcaption');
   let shots = [], at = 0, opener = null;
 
   const show = (i) => {
     at = (i + shots.length) % shots.length;
-    lbImg.src = shots[at].src; lbImg.alt = shots[at].cap; lbCap.textContent = shots[at].cap;
+    const shot = shots[at], clip = shot.clip, isVid = clip && /\.(mp4|webm|mov)(\?|$)/i.test(clip);
+    lbVid.pause();
+    lbVid.hidden = !isVid; lbImg.hidden = !!isVid;
+    if (isVid) { lbVid.src = clip; lbVid.play().catch(() => {}); }
+    else { lbVid.removeAttribute('src'); lbImg.src = clip || shot.src; }
+    lbImg.alt = shot.cap; lbCap.textContent = shot.cap;
   };
-  const close = () => { lb.classList.remove('on'); opener?.focus?.(); };
+  const close = () => { lb.classList.remove('on'); lbVid.pause(); opener?.focus?.(); };
 
   document.addEventListener('click', (e) => {
     const fig = e.target.closest('.person, .strip figure:not(.noimg)');
@@ -609,6 +624,7 @@
     const group = fig.closest('.people, .strip');
     shots = [...group.querySelectorAll('figure:not(.noimg)')].map(f => ({
       src: f.dataset.src || f.querySelector('img').getAttribute('src'),
+      clip: f.dataset.clip || null,
       cap: f.dataset.cap || f.querySelector('figcaption')?.textContent.trim() || ''
     }));
     opener = fig;
@@ -655,7 +671,7 @@
 
   /* ── bokeh haze ────────────────────────────────────────────────────────── */
   const cv = document.getElementById('bokeh'), ctx = cv.getContext('2d');
-  const hues = ['255,46,144', '124,58,237', '255,150,190', '190,130,255'];
+  const hues = ['255,46,144', '232,62,130', '255,150,190', '255,150,200'];
   let dots = [], dpr = Math.min(devicePixelRatio || 1, 1.5), raf;
   const sizeCanvas = () => {
     cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
@@ -687,5 +703,6 @@
   });
 })();
 </script>
+<script src="chat.js" defer></script>
 </body>
 </html>

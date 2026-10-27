@@ -31,7 +31,7 @@
 .vform .pair{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem}
 .req{color:var(--pink)}
 .consent{display:flex; gap:.8rem; align-items:flex-start; padding:1rem 1.1rem; border-radius:14px;
-  background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(146,84,196,.22); position:relative; z-index:2}
+  background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(226,122,170,.22); position:relative; z-index:2}
 .consent input{width:20px; height:20px; flex:0 0 auto; margin-top:.15rem; accent-color:var(--pink)}
 .consent label{font-size:.9rem; color:var(--dim); line-height:1.55}
 .vform .status{min-height:1.2em; font-size:.88rem; color:var(--dim-2); position:relative; z-index:2}
@@ -39,11 +39,11 @@
 .vform .status.ok{color:#1F8A5B}
 .drop{display:grid; gap:.7rem; justify-items:center; text-align:center; cursor:pointer; position:relative; z-index:2;
   padding:1.3rem; border-radius:14px; font-size:.88rem; color:var(--dim);
-  background:linear-gradient(140deg,rgba(255,46,144,.07),rgba(124,58,237,.07));
-  box-shadow:inset 0 0 0 1.5px dashed rgba(146,84,196,.4); transition:.25s}
+  background:linear-gradient(140deg,rgba(255,46,144,.07),rgba(232,62,130,.07));
+  box-shadow:inset 0 0 0 1.5px dashed rgba(226,122,170,.4); transition:.25s}
 .drop:hover,.drop.over{box-shadow:inset 0 0 0 1.5px dashed var(--pink); background:#fff}
-.drop img{width:104px; aspect-ratio:3/4; object-fit:cover; border-radius:12px; display:none}
-.drop.has img{display:block}
+.drop img,.drop video{width:104px; aspect-ratio:3/4; object-fit:cover; border-radius:12px; display:none; background:#000}
+.drop.has img:not([hidden]),.drop.has video:not([hidden]){display:block}
 .sent{text-align:center; padding:1rem 0 .4rem}
 .sent b{display:block; font:400 2rem/1.2 var(--display); background:var(--grad);
   -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:.5rem}
@@ -54,7 +54,7 @@
 .checklist li{display:flex; gap:.75rem; align-items:flex-start; color:var(--dim); font-size:.95rem}
 .checklist li::before{content:"✓"; color:var(--pink); font-weight:700; flex:0 0 auto}
 .faq{margin-top:1.2rem}
-.faq details{border-radius:var(--r-sm); background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(146,84,196,.18); margin-bottom:.7rem}
+.faq details{border-radius:var(--r-sm); background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(226,122,170,.18); margin-bottom:.7rem}
 .faq summary{cursor:pointer; padding:.95rem 1.2rem; font:500 .92rem/1.3 var(--body); color:var(--mist); list-style:none;
   display:flex; justify-content:space-between; gap:1rem}
 .faq summary::-webkit-details-marker{display:none}
@@ -251,9 +251,19 @@
           </label>
         </div>
 
+        <div class="field">
+          <label for="v-skill">Show us your skill <span style="color:var(--dim-2); font-weight:400">— optional</span></label>
+          <label class="drop" id="v-sdrop" for="v-skill">
+            <input id="v-skill" name="skill" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" hidden>
+            <img id="v-sprev" alt="" hidden>
+            <video id="v-svid" muted playsinline hidden></video>
+            <span id="v-sdropmsg">One photo or a short video of you working a real event — up to 40 MB. This is what gets you booked.</span>
+          </label>
+        </div>
+
         <div class="consent">
           <input id="v-consent" name="consent" type="checkbox" required>
-          <label for="v-consent">I confirm these details are mine and I agree that Showmaqers may show my name, photo and work details on this website and share them with clients for bookings. <span class="req">*</span></label>
+          <label for="v-consent">I confirm these details are mine and I agree that Showmaqers may show my name, photo, any clip I upload and work details on this website and share them with clients for bookings. <span class="req">*</span></label>
         </div>
 
         <button class="btn btn--hot" type="submit">Send my registration</button>
@@ -377,6 +387,32 @@
   drop.addEventListener('dragleave', () => drop.classList.remove('over'));
   drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); takeFile(e.dataTransfer.files[0]); });
 
+  /* ── skill clip — one photo or short video of them working ──────────────
+     Optional, because a good one takes effort and we would rather have the
+     registration than nothing. Videos go up untouched; photos get shrunk. */
+  const sdrop = document.getElementById('v-sdrop'), sprev = document.getElementById('v-sprev'),
+        svid = document.getElementById('v-svid'), smsg = document.getElementById('v-sdropmsg');
+  const SKILL_TYPES = /^(image\/(jpeg|png|webp)|video\/(mp4|webm|quicktime))$/;
+  let skill = null;
+
+  const takeSkill = (file) => {
+    if (!file) return;
+    if (!SKILL_TYPES.test(file.type)) return say('The clip must be a JPG, PNG, WebP, MP4, WebM or MOV file.', 'err');
+    if (file.size > 40 * 1024 * 1024) return say('That clip is over 40 MB — please send a shorter or smaller one.', 'err');
+    skill = file;
+    const isVid = file.type.startsWith('video/');
+    sprev.hidden = isVid; svid.hidden = !isVid;
+    (isVid ? svid : sprev).src = URL.createObjectURL(file);
+    if (isVid) { svid.loop = true; svid.play().catch(() => {}); }
+    sdrop.classList.add('has');
+    smsg.textContent = file.name;
+    say('');
+  };
+  document.getElementById('v-skill').addEventListener('change', e => takeSkill(e.target.files[0]));
+  sdrop.addEventListener('dragover', e => { e.preventDefault(); sdrop.classList.add('over'); });
+  sdrop.addEventListener('dragleave', () => sdrop.classList.remove('over'));
+  sdrop.addEventListener('drop', e => { e.preventDefault(); sdrop.classList.remove('over'); takeSkill(e.dataTransfer.files[0]); });
+
   /* phone cameras make 4 MB photos; shrink before sending over mobile data */
   async function shrink(file, max = 1200) {
     try {
@@ -429,23 +465,41 @@
       if (!cfg || /YOUR-/.test(cfg.url)) throw new Error('not configured');
       const h = { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey };
 
+      const folder = crypto.randomUUID();
+      const put = (name, body) => fetch(`${cfg.url}/storage/v1/object/vendor-pending/${folder}/${name}`,
+        { method: 'POST', headers: { ...h, 'Content-Type': body.type || 'application/octet-stream' }, body });
+
       const blob = await shrink(photo);
-      const path = `${crypto.randomUUID()}/photo.jpg`;
-      const up = await fetch(`${cfg.url}/storage/v1/object/vendor-pending/${path}`,
-        { method: 'POST', headers: { ...h, 'Content-Type': blob.type || 'image/jpeg' }, body: blob });
+      const up = await put('photo.jpg', blob);
       if (!up.ok) throw new Error('upload ' + up.status);
 
-      const res = await fetch(`${cfg.url}/rest/v1/vendors`, {
+      let skillPath = null;
+      if (skill) {
+        const isVid = skill.type.startsWith('video/');
+        const ext = isVid ? { 'video/webm': 'webm', 'video/quicktime': 'mov' }[skill.type] || 'mp4' : 'jpg';
+        const sup = await put('skill.' + ext, isVid ? skill : await shrink(skill, 1600));
+        if (sup.ok) skillPath = `vendor-pending/${folder}/skill.${ext}`;
+        else console.warn('[registration] clip not stored:', sup.status);   // never lose the registration over it
+      }
+
+      const row = {
+        name: get('name'), category_key: get('cat'), city: get('city'), phone: get('phone'),
+        email: get('email') || null, years_experience: get('exp') ? +get('exp') : null,
+        fee_note: get('fee') || null, languages: get('langs') || null, links: get('links') || null,
+        bio: get('about'), photo_path: `vendor-pending/${folder}/photo.jpg`,
+        status: 'pending', source: 'self', consent_at: new Date().toISOString()
+      };
+      if (skillPath) row.skill_path = skillPath;
+
+      const insert = () => fetch(`${cfg.url}/rest/v1/vendors`, {
         method: 'POST',
         headers: { ...h, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-        body: JSON.stringify({
-          name: get('name'), category_key: get('cat'), city: get('city'), phone: get('phone'),
-          email: get('email') || null, years_experience: get('exp') ? +get('exp') : null,
-          fee_note: get('fee') || null, languages: get('langs') || null, links: get('links') || null,
-          bio: get('about'), photo_path: 'vendor-pending/' + path,
-          status: 'pending', source: 'self', consent_at: new Date().toISOString()
-        })
+        body: JSON.stringify(row)
       });
+      let res = await insert();
+      /* skill_path arrives with supabase/skill-media.sql — until that is run,
+         send the registration without it rather than turning the artist away */
+      if (!res.ok && skillPath) { delete row.skill_path; skillPath = null; res = await insert(); }
       if (!res.ok) throw new Error('insert ' + res.status);
 
       form.hidden = true;
@@ -487,7 +541,7 @@
 
   /* ── bokeh haze ────────────────────────────────────────────────────────── */
   const cv = document.getElementById('bokeh'), ctx = cv.getContext('2d');
-  const hues = ['255,46,144', '124,58,237', '255,150,190', '190,130,255'];
+  const hues = ['255,46,144', '232,62,130', '255,150,190', '255,150,200'];
   let dots = [], dpr = Math.min(devicePixelRatio || 1, 1.5), raf;
   const sizeCanvas = () => {
     cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
@@ -519,5 +573,6 @@
   });
 })();
 </script>
+<script src="chat.js" defer></script>
 </body>
 </html>

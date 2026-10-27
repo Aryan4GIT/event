@@ -22,7 +22,7 @@
 
 .toolbar{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin:1.6rem 0 1.4rem}
 .tab{border:0; cursor:pointer; border-radius:99px; padding:.55rem 1.05rem; font:500 .86rem/1 var(--body);
-  background:rgba(255,255,255,.7); color:var(--dim); box-shadow:inset 0 0 0 1px rgba(146,84,196,.2); transition:.25s}
+  background:rgba(255,255,255,.7); color:var(--dim); box-shadow:inset 0 0 0 1px rgba(226,122,170,.2); transition:.25s}
 .tab:hover{color:var(--mist)}
 .tab[aria-selected="true"]{background:var(--grad); color:#fff; box-shadow:none}
 .tab b{font-variant-numeric:tabular-nums}
@@ -30,8 +30,11 @@
 
 .queue{display:grid; gap:1.1rem}
 .appl{display:grid; grid-template-columns:168px minmax(0,1fr); gap:1.4rem; padding:1.2rem}
-.appl .shot{border-radius:14px; overflow:hidden; aspect-ratio:3/4; background:rgba(146,84,196,.1); display:grid; place-items:center}
-.appl .shot img{width:100%; height:100%; object-fit:cover}
+.appl .shot{border-radius:14px; overflow:hidden; aspect-ratio:3/4; background:rgba(226,122,170,.1); display:grid; place-items:center}
+.appl .shot img,.appl .shot video{width:100%; height:100%; object-fit:cover}
+.appl .clip{margin-top:.6rem; border-radius:12px; overflow:hidden; background:#000; aspect-ratio:3/4; display:grid; place-items:center}
+.appl .clip video,.appl .clip img{width:100%; height:100%; object-fit:cover}
+.appl .clip small{font:500 .6rem/1.4 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--dim-2)}
 .appl .shot small{font:500 .6rem/1.4 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--dim-2)}
 .appl h3{font:600 1.2rem/1.3 var(--body); margin:0 0 .2rem}
 .appl .role{font:500 .64rem/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--lav)}
@@ -43,13 +46,13 @@
 .acts{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center}
 .mini{padding:.6rem 1.05rem; font-size:.84rem}
 .why{flex:1 1 200px; min-width:0; background:rgba(255,255,255,.86); border:0; border-radius:12px; padding:.6rem .8rem;
-  font-size:.88rem; box-shadow:inset 0 0 0 1px rgba(146,84,196,.24)}
+  font-size:.88rem; box-shadow:inset 0 0 0 1px rgba(226,122,170,.24)}
 .why:focus{outline:0; box-shadow:inset 0 0 0 1px var(--pink)}
 
 .rows{display:grid; gap:.5rem}
 .row-item{display:flex; gap:.8rem; align-items:center; padding:.6rem .8rem; border-radius:12px;
-  background:rgba(255,255,255,.72); box-shadow:inset 0 0 0 1px rgba(146,84,196,.16)}
-.row-item img{width:38px; height:48px; object-fit:cover; border-radius:8px; background:rgba(146,84,196,.1)}
+  background:rgba(255,255,255,.72); box-shadow:inset 0 0 0 1px rgba(226,122,170,.16)}
+.row-item img{width:38px; height:48px; object-fit:cover; border-radius:8px; background:rgba(226,122,170,.1)}
 .row-item .nm{font-size:.9rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .row-item .tag{font:500 .58rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--dim-2)}
 .row-item .sp{margin-left:auto; display:flex; gap:.5rem; align-items:center}
@@ -135,7 +138,7 @@
   const AUTH = cfg.url + '/auth/v1', REST = cfg.url + '/rest/v1', STORE = cfg.url + '/storage/v1';
   const KEY = 'showmaqers-admin-session';
   const $ = id => document.getElementById(id);
-  let session = null, photos = {};   // photos: vendor id → object URL + blob
+  let session = null, photos = {}, clips = {};   // vendor id → object URL + blob
 
   try { session = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
 
@@ -168,7 +171,8 @@
   function signOut() {
     keep(null);
     Object.values(photos).forEach(p => URL.revokeObjectURL(p.url));
-    photos = {};
+    Object.values(clips).forEach(c => URL.revokeObjectURL(c.url));
+    photos = {}; clips = {};
     $('dash').hidden = true;
     $('login').hidden = false;
   }
@@ -234,7 +238,10 @@
     }
     box.innerHTML = list.map(v => `
       <article class="appl glass blur" data-id="${v.id}">
-        <div class="shot" id="shot-${v.id}"><small>loading…</small></div>
+        <div>
+          <div class="shot" id="shot-${v.id}"><small>loading…</small></div>
+          ${v.skill_path ? `<div class="clip" id="clip-${v.id}"><small>loading clip…</small></div>` : ''}
+        </div>
         <div>
           <span class="role">${esc(v.category_key)}</span>
           <h3>${esc(v.name)}</h3>
@@ -256,7 +263,7 @@
           </div>
         </div>
       </article>`).join('');
-    list.forEach(v => loadPhoto(v));
+    list.forEach(v => { loadPhoto(v); if (v.skill_path) loadClip(v); });
   }
 
   /* the pending bucket is private, so fetch the bytes with the admin's token */
@@ -271,6 +278,23 @@
       photos[v.id] = { blob, url };
       slot.innerHTML = `<img src="${url}" alt="${esc(v.name)}">`;
     } catch (e) { slot.innerHTML = '<small>photo missing</small>'; }
+  }
+
+  /* the skill clip, same private bucket — kept as a blob so approving does
+     not have to download it a second time */
+  async function loadClip(v) {
+    const slot = $('clip-' + v.id);
+    if (!slot) return;
+    try {
+      const r = await fetch(`${STORE}/object/${v.skill_path}`, { headers: authHeaders() });
+      if (!r.ok) throw new Error(r.status);
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      clips[v.id] = { blob, url };
+      slot.innerHTML = blob.type.startsWith('video/')
+        ? `<video src="${url}" controls playsinline preload="metadata"></video>`
+        : `<img src="${url}" alt="${esc(v.name)} at work">`;
+    } catch (e) { slot.innerHTML = '<small>clip missing</small>'; }
   }
 
   function drawListed(list) {
@@ -339,12 +363,30 @@
     }
     publicUrl = `${STORE}/object/public/vendor-photos/${dest}`;
 
+    // the skill clip rides along, but never blocks the approval
+    let publicClip = null;
+    if (row.skill_path) {
+      try {
+        const c = clips[id] || { blob: await (await fetch(`${STORE}/object/${row.skill_path}`, { headers: authHeaders() })).blob() };
+        const ext = row.skill_path.split('.').pop().toLowerCase();
+        const cdest = `${id}/${Date.now()}-skill.${ext}`;
+        const cup = await fetch(`${STORE}/object/vendor-photos/${cdest}`, {
+          method: 'POST',
+          headers: { ...authHeaders(), 'Content-Type': c.blob.type || 'application/octet-stream' },
+          body: c.blob
+        });
+        if (cup.ok) publicClip = `${STORE}/object/public/vendor-photos/${cdest}`;
+      } catch (e) { console.warn('[approve] clip not published:', e.message); }
+    }
+
     // put them last in their section
     const top = (await (await api(`/vendors?select=sort&category_key=eq.${row.category_key}&status=eq.approved&order=sort.desc&limit=1`)).json())[0];
-    const saved = await patch(id, { status: 'approved', photo_path: publicUrl, sort: (top?.sort || 0) + 1 });
+    const saved = await patch(id, { status: 'approved', photo_path: publicUrl, sort: (top?.sort || 0) + 1,
+                                    ...(publicClip ? { skill_path: publicClip } : {}) });
     if (saved.status !== 'approved') throw new Error('the row did not save as approved');
 
     fetch(`${STORE}/object/${row.photo_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+    if (publicClip) fetch(`${STORE}/object/${row.skill_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
     return row.name + ' is live on the roster.';
   }
 
