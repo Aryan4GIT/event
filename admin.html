@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roster Admin — SHOWMAQERS</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="images/logo-3.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+/* ── roster admin ─────────────────────────────────────────────────────────── */
+.admin{padding-block:clamp(26px,4vw,48px)}
+.admin h1{font:400 clamp(1.9rem,4vw,2.8rem)/1.05 var(--display); margin:0 0 .3rem; letter-spacing:-.02em}
+.admin [hidden]{display:none !important}
+
+.login{max-width:400px; margin:min(9vh,80px) auto; padding:clamp(1.5rem,3vw,2.2rem); display:grid; gap:1rem}
+.login h2{font:600 1.2rem/1.3 var(--body); margin:0}
+.login p{margin:0; font-size:.9rem; color:var(--dim)}
+
+.toolbar{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin:1.6rem 0 1.4rem}
+.tab{border:0; cursor:pointer; border-radius:99px; padding:.55rem 1.05rem; font:500 .86rem/1 var(--body);
+  background:rgba(255,255,255,.7); color:var(--dim); box-shadow:inset 0 0 0 1px rgba(146,84,196,.2); transition:.25s}
+.tab:hover{color:var(--mist)}
+.tab[aria-selected="true"]{background:var(--grad); color:#fff; box-shadow:none}
+.tab b{font-variant-numeric:tabular-nums}
+.who{margin-left:auto; display:flex; gap:.7rem; align-items:center; font-size:.84rem; color:var(--dim-2)}
+
+.queue{display:grid; gap:1.1rem}
+.appl{display:grid; grid-template-columns:168px minmax(0,1fr); gap:1.4rem; padding:1.2rem}
+.appl .shot{border-radius:14px; overflow:hidden; aspect-ratio:3/4; background:rgba(146,84,196,.1); display:grid; place-items:center}
+.appl .shot img{width:100%; height:100%; object-fit:cover}
+.appl .shot small{font:500 .6rem/1.4 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--dim-2)}
+.appl h3{font:600 1.2rem/1.3 var(--body); margin:0 0 .2rem}
+.appl .role{font:500 .64rem/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--lav)}
+.facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:.5rem 1.2rem; margin:1rem 0}
+.facts div{min-width:0}
+.facts dt{font:500 .58rem/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--dim-2)}
+.facts dd{margin:0; font-size:.92rem; word-break:break-word}
+.appl .bio{font-size:.92rem; color:var(--dim); margin:0 0 1rem}
+.acts{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center}
+.mini{padding:.6rem 1.05rem; font-size:.84rem}
+.why{flex:1 1 200px; min-width:0; background:rgba(255,255,255,.86); border:0; border-radius:12px; padding:.6rem .8rem;
+  font-size:.88rem; box-shadow:inset 0 0 0 1px rgba(146,84,196,.24)}
+.why:focus{outline:0; box-shadow:inset 0 0 0 1px var(--pink)}
+
+.rows{display:grid; gap:.5rem}
+.row-item{display:flex; gap:.8rem; align-items:center; padding:.6rem .8rem; border-radius:12px;
+  background:rgba(255,255,255,.72); box-shadow:inset 0 0 0 1px rgba(146,84,196,.16)}
+.row-item img{width:38px; height:48px; object-fit:cover; border-radius:8px; background:rgba(146,84,196,.1)}
+.row-item .nm{font-size:.9rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.row-item .tag{font:500 .58rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--dim-2)}
+.row-item .sp{margin-left:auto; display:flex; gap:.5rem; align-items:center}
+.note{font-size:.86rem; color:var(--dim-2); margin:.9rem 0 0}
+.note.err{color:var(--pink)} .note.ok{color:#1F8A5B}
+.empty{padding:2.4rem 1.4rem; text-align:center; color:var(--dim)}
+.empty b{display:block; font:400 1.5rem/1.3 var(--display); color:var(--mist); margin-bottom:.4rem}
+.foot-tools{display:flex; flex-wrap:wrap; gap:.8rem; align-items:center; margin-top:2rem; padding:1rem 1.2rem}
+.foot-tools p{margin:0; flex:1 1 260px; font-size:.84rem; color:var(--dim-2)}
+@media (max-width:620px){ .appl{grid-template-columns:1fr} .appl .shot{max-width:190px} }
+</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <div class="nav-in">
+      <a class="brand" href="index.html">
+        <img src="images/logo-3.png" alt="SHOWMAQERS logo">
+        <span><b>SHOWMAQERS</b><small>Roster admin</small></span>
+      </a>
+      <nav class="nav-links" id="menu" aria-label="Main">
+        <a href="manpower.html">Artist roster</a>
+        <a href="vendors.html">Registration page</a>
+      </nav>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap admin">
+
+  <!-- signed out ---------------------------------------------------------- -->
+  <form class="login glass blur" id="login">
+    <h2>Admin sign in</h2>
+    <p>Use the login you created in Supabase. Only accounts on the staff list can review registrations.</p>
+    <div class="field">
+      <label for="l-email">Email</label>
+      <input id="l-email" type="email" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="l-pass">Password</label>
+      <input id="l-pass" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn btn--hot" type="submit">Sign in</button>
+    <p class="note" id="l-note"></p>
+  </form>
+
+  <!-- signed in ----------------------------------------------------------- -->
+  <section id="dash" hidden>
+    <h1>Roster admin</h1>
+    <p class="lede">Approve a registration and the artist appears on the <a href="manpower.html" style="color:var(--pink)">roster</a> straight away.</p>
+
+    <div class="toolbar">
+      <button class="tab" id="tab-pending"  aria-selected="true"  data-view="pending">New registrations <b></b></button>
+      <button class="tab" id="tab-listed"   aria-selected="false" data-view="listed">Listed <b></b></button>
+      <button class="tab" id="tab-unlisted" aria-selected="false" data-view="unlisted">Taken down <b></b></button>
+      <button class="tab" id="tab-rejected" aria-selected="false" data-view="rejected">Rejected <b></b></button>
+      <span class="who"><span id="who-email"></span>
+        <button class="btn btn--glass mini" type="button" id="signout">Sign out</button></span>
+    </div>
+
+    <div id="view-pending"  class="queue"></div>
+    <div id="view-listed"   class="rows" hidden></div>
+    <div id="view-unlisted" class="rows" hidden></div>
+    <div id="view-rejected" class="rows" hidden></div>
+    <p class="note" id="d-note"></p>
+
+    <div class="foot-tools glass blur">
+      <p>The site falls back to <code>artists-data.js</code> if the database is ever unreachable. Download a fresh copy now and then so the fallback matches what is live.</p>
+      <button class="btn btn--glass mini" type="button" id="snapshot">Download artists-data.js</button>
+    </div>
+  </section>
+</main>
+
+<script src="supabase-config.js"></script>
+<script>
+(() => {
+  const cfg = window.SUPABASE || {};
+  const AUTH = cfg.url + '/auth/v1', REST = cfg.url + '/rest/v1', STORE = cfg.url + '/storage/v1';
+  const KEY = 'showmaqers-admin-session';
+  const $ = id => document.getElementById(id);
+  let session = null, photos = {};   // photos: vendor id → object URL + blob
+
+  try { session = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+
+  const keep = s => {
+    session = s;
+    try { s ? localStorage.setItem(KEY, JSON.stringify(s)) : localStorage.removeItem(KEY); } catch (e) {}
+  };
+  const note = (el, msg, kind) => { el.textContent = msg; el.className = 'note ' + (kind || ''); };
+
+  /* ── session ───────────────────────────────────────────────────────────── */
+  async function fresh() {
+    if (!session) return false;
+    if ((session.expires_at || 0) * 1000 - Date.now() > 60000) return true;
+    const r = await fetch(`${AUTH}/token?grant_type=refresh_token`, {
+      method: 'POST', headers: { apikey: cfg.anonKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: session.refresh_token })
+    });
+    if (!r.ok) { signOut(); return false; }
+    keep(await r.json());
+    return true;
+  }
+
+  const authHeaders = () => ({ apikey: cfg.anonKey, Authorization: 'Bearer ' + session.access_token });
+
+  async function api(path, opts = {}) {
+    if (!await fresh()) throw new Error('signed out');
+    return fetch(REST + path, { ...opts, headers: { ...authHeaders(), ...(opts.headers || {}) } });
+  }
+
+  function signOut() {
+    keep(null);
+    Object.values(photos).forEach(p => URL.revokeObjectURL(p.url));
+    photos = {};
+    $('dash').hidden = true;
+    $('login').hidden = false;
+  }
+  $('signout').addEventListener('click', signOut);
+
+  $('login').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    note($('l-note'), 'Signing in…');
+    try {
+      const r = await fetch(`${AUTH}/token?grant_type=password`, {
+        method: 'POST', headers: { apikey: cfg.anonKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: $('l-email').value.trim(), password: $('l-pass').value })
+      });
+      if (!r.ok) throw new Error((await r.json()).error_description || 'Wrong email or password.');
+      keep(await r.json());
+      $('l-pass').value = '';
+      await start();
+    } catch (err) {
+      note($('l-note'), err.message, 'err');
+    } finally { btn.disabled = false; }
+  });
+
+  /* ── start: confirm this login is actually staff ───────────────────────── */
+  async function start() {
+    const r = await api(`/staff?select=user_id&user_id=eq.${session.user.id}`);
+    const rows = r.ok ? await r.json() : [];
+    if (!rows.length) {
+      note($('l-note'), 'That account is not on the staff list, so it cannot review registrations.', 'err');
+      keep(null);
+      return;
+    }
+    $('login').hidden = true;
+    $('dash').hidden = false;
+    $('who-email').textContent = session.user.email;
+    await loadAll();
+  }
+
+  /* ── data ──────────────────────────────────────────────────────────────── */
+  const esc = s => String(s ?? '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+
+  async function loadAll() {
+    const [p, a, u, x] = await Promise.all([
+      api('/vendors?select=*&status=eq.pending&order=created_at.asc').then(r => r.json()),
+      api('/vendors?select=id,name,category_key,photo_path,city&status=eq.approved&order=category_key.asc,sort.asc').then(r => r.json()),
+      api('/vendors?select=id,name,category_key,photo_path,city&status=eq.unlisted&order=reviewed_at.desc').then(r => r.json()),
+      api('/vendors?select=id,name,category_key,review_note&status=eq.rejected&order=reviewed_at.desc').then(r => r.json())
+    ]);
+    $('tab-pending').querySelector('b').textContent = p.length;
+    $('tab-listed').querySelector('b').textContent = a.length;
+    $('tab-unlisted').querySelector('b').textContent = u.length;
+    $('tab-rejected').querySelector('b').textContent = x.length;
+    drawPending(p); drawListed(a); drawUnlisted(u); drawRejected(x);
+  }
+
+  function drawPending(list) {
+    const box = $('view-pending');
+    if (!list.length) {
+      box.innerHTML = `<div class="empty glass blur"><b>Nothing waiting</b>
+        New registrations from the <a href="vendors.html" style="color:var(--pink)">join page</a> land here.</div>`;
+      return;
+    }
+    box.innerHTML = list.map(v => `
+      <article class="appl glass blur" data-id="${v.id}">
+        <div class="shot" id="shot-${v.id}"><small>loading…</small></div>
+        <div>
+          <span class="role">${esc(v.category_key)}</span>
+          <h3>${esc(v.name)}</h3>
+          <dl class="facts">
+            <div><dt>City</dt><dd>${esc(v.city) || '—'}</dd></div>
+            <div><dt>Phone</dt><dd><a href="tel:${esc(v.phone)}" style="color:var(--pink)">${esc(v.phone) || '—'}</a></dd></div>
+            <div><dt>Email</dt><dd>${esc(v.email) || '—'}</dd></div>
+            <div><dt>Experience</dt><dd>${v.years_experience ? v.years_experience + ' years' : '—'}</dd></div>
+            <div><dt>Usual fee</dt><dd>${esc(v.fee_note) || '—'}</dd></div>
+            <div><dt>Languages</dt><dd>${esc(v.languages) || '—'}</dd></div>
+            <div><dt>Links</dt><dd>${v.links ? `<a href="${esc(v.links.startsWith('http') ? v.links : 'https://' + v.links)}" target="_blank" rel="noopener" style="color:var(--pink)">${esc(v.links)}</a>` : '—'}</dd></div>
+            <div><dt>Sent</dt><dd>${new Date(v.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</dd></div>
+          </dl>
+          <p class="bio">${esc(v.bio)}</p>
+          <div class="acts">
+            <button class="btn btn--hot mini" data-act="approve">Approve &amp; publish</button>
+            <input class="why" placeholder="Reason (optional, kept private)" aria-label="Reason for rejecting">
+            <button class="btn btn--glass mini" data-act="reject">Reject</button>
+          </div>
+        </div>
+      </article>`).join('');
+    list.forEach(v => loadPhoto(v));
+  }
+
+  /* the pending bucket is private, so fetch the bytes with the admin's token */
+  async function loadPhoto(v) {
+    const slot = $('shot-' + v.id);
+    if (!v.photo_path) { slot.innerHTML = '<small>no photo</small>'; return; }
+    try {
+      const r = await fetch(`${STORE}/object/${v.photo_path}`, { headers: authHeaders() });
+      if (!r.ok) throw new Error(r.status);
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      photos[v.id] = { blob, url };
+      slot.innerHTML = `<img src="${url}" alt="${esc(v.name)}">`;
+    } catch (e) { slot.innerHTML = '<small>photo missing</small>'; }
+  }
+
+  function drawListed(list) {
+    $('view-listed').innerHTML = list.length ? list.map(v => `
+      <div class="row-item" data-id="${v.id}">
+        <img src="${esc(v.photo_path)}" alt="" loading="lazy">
+        <span class="nm">${esc(v.name)}<br><span class="tag">${esc(v.category_key)}${v.city ? ' · ' + esc(v.city) : ''}</span></span>
+        <span class="sp"><button class="btn btn--glass mini" data-act="unlist">Take down</button></span>
+      </div>`).join('') : '<p class="note">Nobody is listed yet.</p>';
+  }
+
+  /* approved once, then taken down — vetted already, so one click puts them back */
+  function drawUnlisted(list) {
+    $('view-unlisted').innerHTML = list.length ? list.map(v => `
+      <div class="row-item" data-id="${v.id}">
+        <img src="${esc(v.photo_path)}" alt="" loading="lazy">
+        <span class="nm">${esc(v.name)}<br><span class="tag">${esc(v.category_key)}${v.city ? ' · ' + esc(v.city) : ''}</span></span>
+        <span class="sp"><button class="btn btn--hot mini" data-act="relist">Put back on the roster</button></span>
+      </div>`).join('') : '<p class="note">Nobody has been taken down.</p>';
+  }
+
+  function drawRejected(list) {
+    $('view-rejected').innerHTML = list.length ? list.map(v => `
+      <div class="row-item" data-id="${v.id}">
+        <span class="nm">${esc(v.name)}<br><span class="tag">${esc(v.category_key)}${v.review_note ? ' · ' + esc(v.review_note) : ''}</span></span>
+        <span class="sp"><button class="btn btn--glass mini" data-act="restore">Put back in the queue</button></span>
+      </div>`).join('') : '<p class="note">Nothing rejected.</p>';
+  }
+
+  /* ── actions ───────────────────────────────────────────────────────────── */
+  /* return=representation, so a change that matched no row cannot look like
+     success — PostgREST answers 204 either way with return=minimal. */
+  const patch = async (id, body) => {
+    const r = await api(`/vendors?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
+      body: JSON.stringify({ ...body, reviewed_at: new Date().toISOString(), reviewed_by: session.user.id })
+    });
+    if (!r.ok) throw new Error('the database refused that change (' + r.status + ')');
+    const rows = await r.json();
+    if (!rows.length) throw new Error('nothing changed — that row is no longer visible to your login');
+    return rows[0];
+  };
+
+  async function approve(card) {
+    const id = card.dataset.id;
+    const row = (await (await api(`/vendors?select=*&id=eq.${id}`)).json())[0];
+    if (!row) throw new Error('that registration has gone');
+
+    // move the photo into the public bucket
+    let publicUrl = row.photo_path;
+    const held = photos[id];
+    const blob = held ? held.blob : await (await fetch(`${STORE}/object/${row.photo_path}`, { headers: authHeaders() })).blob();
+    // a fresh key every time, so this is always a plain insert — no upsert,
+    // and therefore no UPDATE policy needed on the bucket
+    const dest = `${id}/${Date.now()}.jpg`;
+    const up = await fetch(`${STORE}/object/vendor-photos/${dest}`, {
+      method: 'POST',
+      headers: { ...authHeaders(), 'Content-Type': blob.type || 'image/jpeg' },
+      body: blob
+    });
+    if (!up.ok) {
+      let why = '';
+      try { const j = JSON.parse(await up.text()); why = j.message || j.error || ''; } catch (e) {}
+      throw new Error('could not publish the photo — ' + (why || 'HTTP ' + up.status));
+    }
+    publicUrl = `${STORE}/object/public/vendor-photos/${dest}`;
+
+    // put them last in their section
+    const top = (await (await api(`/vendors?select=sort&category_key=eq.${row.category_key}&status=eq.approved&order=sort.desc&limit=1`)).json())[0];
+    const saved = await patch(id, { status: 'approved', photo_path: publicUrl, sort: (top?.sort || 0) + 1 });
+    if (saved.status !== 'approved') throw new Error('the row did not save as approved');
+
+    fetch(`${STORE}/object/${row.photo_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+    return row.name + ' is live on the roster.';
+  }
+
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const card = btn.closest('[data-id]'), id = card.dataset.id, act = btn.dataset.act;
+    btn.disabled = true;
+    note($('d-note'), 'Working…');
+    try {
+      let msg;
+      if (act === 'approve') msg = await approve(card);
+      if (act === 'reject') {
+        const why = card.querySelector('.why')?.value.trim() || null;
+        await patch(id, { status: 'rejected', review_note: why });
+        msg = 'Registration rejected.';
+      }
+      if (act === 'unlist') {
+        await patch(id, { status: 'unlisted' });
+        msg = 'Taken off the roster — no longer on the public page.';
+      }
+      if (act === 'relist') {
+        await patch(id, { status: 'approved' });
+        msg = 'Back on the roster.';
+      }
+      if (act === 'restore') {
+        await patch(id, { status: 'pending', review_note: null });
+        msg = 'Back in the queue.';
+      }
+      await loadAll();
+      note($('d-note'), msg, 'ok');
+    } catch (err) {
+      btn.disabled = false;
+      note($('d-note'), err.message, 'err');
+    }
+  });
+
+  /* ── tabs ──────────────────────────────────────────────────────────────── */
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(o => {
+      const on = o === t;
+      o.setAttribute('aria-selected', on);
+      $('view-' + o.dataset.view).hidden = !on;
+    });
+  }));
+
+  /* ── keep the offline fallback in step with what is live ───────────────── */
+  $('snapshot').addEventListener('click', async () => {
+    try {
+      const rows = await (await api('/roster?select=name,category_key,photo_path,sort&order=sort.asc')).json();
+      const out = {};
+      for (const r of rows) (out[r.category_key] ||= []).push({ n: r.name, i: r.photo_path });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob(['window.ARTISTS = ' + JSON.stringify(out, null, 1) + ';\n'], { type: 'text/javascript' }));
+      a.download = 'artists-data.js';
+      document.body.appendChild(a); a.click(); a.remove();
+      note($('d-note'), 'Downloaded — replace artists-data.js in the website folder.', 'ok');
+    } catch (err) { note($('d-note'), 'Could not build the snapshot.', 'err'); }
+  });
+
+  /* ── nav ───────────────────────────────────────────────────────────────── */
+  const nav = $('nav'), menu = $('menu'), burger = $('burger');
+  addEventListener('scroll', () => nav.classList.toggle('is-stuck', scrollY > 30), { passive: true });
+  burger.addEventListener('click', () => {
+    const open = burger.getAttribute('aria-expanded') !== 'true';
+    burger.setAttribute('aria-expanded', open); menu.classList.toggle('open', open);
+  });
+
+  /* already signed in from last time? */
+  if (session && session.access_token) start().catch(signOut);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join as an Artist — SHOWMAQERS</title>
+<meta name="description" content="Register with Showmaqers as a DJ, anchor, singer, dancer, photographer or any event artist. Get verified and listed on our artist roster for bookings across Delhi NCR.">
+<link rel="icon" href="images/logo-3.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+/* ── vendor sign-up page only ─────────────────────────────────────────────── */
+.page-hero{padding-block:clamp(40px,6vw,74px) clamp(26px,4vw,46px); text-align:center; position:relative; overflow:hidden}
+.page-hero h1{font:400 clamp(2.6rem,7vw,5rem)/1 var(--display); margin:0 0 1rem; letter-spacing:-.03em; text-wrap:balance}
+.page-hero .lede{margin-inline:auto}
+.page-hero .eyebrow{justify-content:center}
+.crumb{font:500 .66rem/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2); margin-bottom:1.4rem}
+.crumb a:hover{color:var(--pink)}
+
+.steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:clamp(1rem,2vw,1.6rem)}
+.step{padding:1.7rem 1.6rem 1.8rem; transition:transform .5s cubic-bezier(.2,.7,.3,1), box-shadow .5s}
+.step:hover{transform:translateY(-6px); box-shadow:inset 0 1px 0 #fff, 0 40px 64px -42px rgba(255,46,144,.75)}
+.step b{display:block; font:400 2.4rem/1 var(--display); background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:.4rem}
+.step h3{font:600 1.1rem/1.3 var(--body); margin:0 0 .5rem}
+.step p{margin:0; color:var(--dim); font-size:.93rem}
+
+.vform{padding:clamp(1.5rem,3vw,2.6rem); display:grid; gap:1.1rem; max-width:860px; margin-inline:auto}
+.vform[hidden]{display:none}
+.vform .pair{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem}
+.req{color:var(--pink)}
+.consent{display:flex; gap:.8rem; align-items:flex-start; padding:1rem 1.1rem; border-radius:14px;
+  background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(146,84,196,.22); position:relative; z-index:2}
+.consent input{width:20px; height:20px; flex:0 0 auto; margin-top:.15rem; accent-color:var(--pink)}
+.consent label{font-size:.9rem; color:var(--dim); line-height:1.55}
+.vform .status{min-height:1.2em; font-size:.88rem; color:var(--dim-2); position:relative; z-index:2}
+.vform .status.err{color:var(--pink)}
+.vform .status.ok{color:#1F8A5B}
+.drop{display:grid; gap:.7rem; justify-items:center; text-align:center; cursor:pointer; position:relative; z-index:2;
+  padding:1.3rem; border-radius:14px; font-size:.88rem; color:var(--dim);
+  background:linear-gradient(140deg,rgba(255,46,144,.07),rgba(124,58,237,.07));
+  box-shadow:inset 0 0 0 1.5px dashed rgba(146,84,196,.4); transition:.25s}
+.drop:hover,.drop.over{box-shadow:inset 0 0 0 1.5px dashed var(--pink); background:#fff}
+.drop img{width:104px; aspect-ratio:3/4; object-fit:cover; border-radius:12px; display:none}
+.drop.has img{display:block}
+.sent{text-align:center; padding:1rem 0 .4rem}
+.sent b{display:block; font:400 2rem/1.2 var(--display); background:var(--grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:.5rem}
+.sent p{margin:0 auto; max-width:46ch; color:var(--dim); font-size:.95rem}
+
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.4rem,3vw,3rem); align-items:start}
+.checklist{list-style:none; margin:1.4rem 0 0; padding:0; display:flex; flex-direction:column; gap:.75rem}
+.checklist li{display:flex; gap:.75rem; align-items:flex-start; color:var(--dim); font-size:.95rem}
+.checklist li::before{content:"✓"; color:var(--pink); font-weight:700; flex:0 0 auto}
+.faq{margin-top:1.2rem}
+.faq details{border-radius:var(--r-sm); background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(146,84,196,.18); margin-bottom:.7rem}
+.faq summary{cursor:pointer; padding:.95rem 1.2rem; font:500 .92rem/1.3 var(--body); color:var(--mist); list-style:none;
+  display:flex; justify-content:space-between; gap:1rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+"; color:var(--pink); font-size:1.1rem; line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq p{margin:0; padding:0 1.2rem 1.1rem; color:var(--dim); font-size:.9rem}
+@media (max-width:760px){
+  .vform .pair,.two-col{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas id="bokeh" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <div class="nav-in">
+      <a class="brand" href="index.html">
+        <img src="images/logo-3.png" alt="SHOWMAQERS logo">
+        <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
+      </a>
+      <nav class="nav-links" id="menu" aria-label="Main">
+        <a href="index.html#services">Services</a>
+        <a href="manpower.html">Artists</a>
+        <a href="index.html#gallery">Gallery</a>
+        <a href="index.html#about">About</a>
+        <a href="vendors.html" aria-current="page">Join us</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <a class="btn btn--hot" href="#register">Register<span class="num">&nbsp;as an artist</span></a>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="beams" aria-hidden="true"><span class="beam"></span><span class="beam"></span><span class="beam"></span></div>
+    <div class="wrap">
+      <p class="crumb"><a href="index.html">Home</a> · Join as an artist</p>
+      <p class="eyebrow">For DJs · Anchors · Singers · Dancers · Crew</p>
+      <h1>Get on the <em>call sheet</em>.</h1>
+      <p class="lede">
+        Showmaqers books artists and manpower for weddings, corporate events and parties across Delhi NCR every week.
+        Register once, get verified, and your profile joins the roster our clients pick from.
+      </p>
+      <div class="hero-cta" style="justify-content:center">
+        <a class="btn btn--hot" href="#register">Register now</a>
+        <a class="btn btn--glass" href="manpower.html">See the roster</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" style="padding-block:clamp(40px,5vw,70px)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow reveal">How it works</p>
+          <h2 class="reveal" style="--i:1">Three steps, <em>no joining fee</em>.</h2>
+        </div>
+        <p class="lede reveal" style="--i:2">We verify every artist before they go on the roster, because our clients book on our word.</p>
+      </div>
+      <div class="steps">
+        <article class="step glass blur reveal" style="--i:1">
+          <b>01</b>
+          <h3>Register</h3>
+          <p>Fill the form below and send us one or two clear photos. Takes about two minutes.</p>
+          <span class="sheen"></span>
+        </article>
+        <article class="step glass blur reveal" style="--i:2">
+          <b>02</b>
+          <h3>We verify</h3>
+          <p>Our team calls you, checks your work and references, and agrees your rate for each kind of event.</p>
+          <span class="sheen"></span>
+        </article>
+        <article class="step glass blur reveal" style="--i:3">
+          <b>03</b>
+          <h3>You're listed</h3>
+          <p>Once approved, your name and photo go up on the artist roster and we call you when a booking fits.</p>
+          <span class="sheen"></span>
+        </article>
+      </div>
+
+      <p class="eyebrow reveal" style="margin-top:2.6rem">What we book</p>
+      <div class="chips reveal" style="margin-top:0">
+        <span>DJ</span><span>Female Emcee Anchors</span><span>Male Emcee Anchors</span><span>Singers</span>
+        <span>Dancers</span><span>Photographer</span><span>Videographer</span><span>Tattoo Artist</span>
+        <span>Face Painter</span><span>Game Coordinator</span><span>Russian Promoters</span><span>Parlour Beautician</span>
+        <span>Nail Artist</span><span>Tarot Card Reader</span><span>Pottery Maker</span><span>Puppet Show Performers</span>
+        <span>Magician</span><span>Stilt Walker (longman)</span><span>Joker / Clown / Charlie</span><span>Juggler</span><span>Mascots</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="register" style="padding-top:0; scroll-margin-top:92px">
+    <div class="wrap">
+      <div class="sec-head" style="justify-content:center; text-align:center">
+        <div style="flex:1 1 100%">
+          <p class="eyebrow reveal" style="justify-content:center">Registration</p>
+          <h2 class="reveal" style="--i:1">Tell us what you <em>do</em>.</h2>
+          <p class="lede reveal" style="--i:2; margin-inline:auto">Everything marked <span class="req">*</span> is needed. Sending the form opens WhatsApp with your details filled in — send it, then attach your photos in the same chat.</p>
+        </div>
+      </div>
+
+      <form class="vform glass blur reveal" id="vendor" novalidate>
+        <div class="pair">
+          <div class="field">
+            <label for="v-name">Full name or stage name <span class="req">*</span></label>
+            <input id="v-name" name="name" required placeholder="DJ Karan / Anchor Ritu">
+          </div>
+          <div class="field">
+            <label for="v-cat">What you do <span class="req">*</span></label>
+            <select id="v-cat" name="cat" required>
+              <option value="">Choose one…</option>
+              <option value="dj">DJ</option>
+              <option value="anchors">Female Emcee Anchor</option>
+              <option value="anchors">Male Emcee Anchor</option>
+              <option value="singers">Singer</option>
+              <option value="dancers">Dancer</option>
+              <option value="photographer">Photographer</option>
+              <option value="videographer">Videographer</option>
+              <option value="tattoo">Tattoo Artist</option>
+              <option value="face-painter">Face Painter</option>
+              <option value="game-coordinator">Game Coordinator</option>
+              <option value="russian-promoters">Russian Promoter</option>
+              <option value="parlour">Parlour Beautician</option>
+              <option value="nail-artist">Nail Artist</option>
+              <option value="tarot">Tarot Card Reader</option>
+              <option value="pottery">Pottery Maker</option>
+              <option value="puppet">Puppet Show Performer</option>
+              <option value="magician">Magician</option>
+              <option value="stilt-walker">Stilt Walker (longman)</option>
+              <option value="joker">Joker / Clown / Charlie</option>
+              <option value="juggler">Juggler</option>
+              <option value="mascots">Mascot Artist</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pair">
+          <div class="field">
+            <label for="v-city">Base city <span class="req">*</span></label>
+            <input id="v-city" name="city" required placeholder="Delhi / Gurugram / Noida">
+          </div>
+          <div class="field">
+            <label for="v-phone">WhatsApp number <span class="req">*</span></label>
+            <input id="v-phone" name="phone" type="tel" required placeholder="98xxxxxxxx">
+          </div>
+        </div>
+
+        <div class="pair">
+          <div class="field">
+            <label for="v-email">Email</label>
+            <input id="v-email" name="email" type="email" placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="v-exp">Years of experience</label>
+            <input id="v-exp" name="exp" type="number" min="0" max="60" placeholder="5">
+          </div>
+        </div>
+
+        <div class="pair">
+          <div class="field">
+            <label for="v-fee">Usual fee per event (₹)</label>
+            <input id="v-fee" name="fee" placeholder="15,000 — negotiable by event">
+          </div>
+          <div class="field">
+            <label for="v-langs">Languages you work in</label>
+            <input id="v-langs" name="langs" placeholder="Hindi, English, Punjabi">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="v-links">Instagram, YouTube or portfolio link</label>
+          <input id="v-links" name="links" placeholder="instagram.com/yourhandle">
+        </div>
+
+        <div class="field">
+          <label for="v-about">About your work <span class="req">*</span></label>
+          <textarea id="v-about" name="about" required placeholder="Corporate anchoring and sangeet nights, 120+ shows, comfortable with Hindi and English scripts. Own sound for small gatherings."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="v-photo">Your photo <span class="req">*</span></label>
+          <label class="drop" id="v-drop" for="v-photo">
+            <input id="v-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+            <img id="v-prev" alt="">
+            <span id="v-dropmsg">Click or drop a clear, recent photo — this is what clients see</span>
+          </label>
+        </div>
+
+        <div class="consent">
+          <input id="v-consent" name="consent" type="checkbox" required>
+          <label for="v-consent">I confirm these details are mine and I agree that Showmaqers may show my name, photo and work details on this website and share them with clients for bookings. <span class="req">*</span></label>
+        </div>
+
+        <button class="btn btn--hot" type="submit">Send my registration</button>
+        <p class="status" id="v-status" role="status">Prefer email? <a href="mailto:info@showmaqers.com?subject=Artist%20registration" style="color:var(--pink)">info@showmaqers.com</a> — or call +91 99107 72449.</p>
+        <span class="sheen"></span>
+      </form>
+
+      <div class="vform glass blur sent" id="v-done" hidden>
+        <b>Registration received</b>
+        <p>Your profile is in the queue. We check new artists within a few working days and call you on the number you gave. Once approved, your name and photo go up on the artist roster.</p>
+        <p style="margin-top:1.4rem"><a class="btn btn--glass" href="manpower.html">See the roster</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" style="padding-top:0">
+    <div class="wrap two-col">
+      <div class="reveal">
+        <p class="eyebrow">What we look for</p>
+        <h2>The roster is <em>vetted</em>, not open.</h2>
+        <ul class="checklist">
+          <li>You turn up before call time, every time — that is the whole job.</li>
+          <li>Recent photos and at least one video or reel of you working a real event.</li>
+          <li>A clear rate for each kind of event, so we can quote clients honestly.</li>
+          <li>Your own kit where the role needs it, or tell us what we must arrange.</li>
+          <li>References from two events in the last year.</li>
+        </ul>
+      </div>
+      <div class="reveal" style="--i:1">
+        <p class="eyebrow">Questions</p>
+        <div class="faq">
+          <details>
+            <summary>Is there a joining fee?</summary>
+            <p>No. Registering and being listed costs nothing. We agree your fee per booking, and the client pays through us.</p>
+          </details>
+          <details>
+            <summary>How long does approval take?</summary>
+            <p>We usually call within a few working days. Busy wedding season can take longer — you can always follow up on +91 99107 72449.</p>
+          </details>
+          <details>
+            <summary>When does my profile go live?</summary>
+            <p>After our team verifies you. Your name and photo then appear in the matching section of the <a href="manpower.html" style="color:var(--pink)">artist roster</a>.</p>
+          </details>
+          <details>
+            <summary>Can I be listed under more than one role?</summary>
+            <p>Yes. Register once and tell us the other roles in the "about your work" box — an anchor who also sings is listed in both.</p>
+          </details>
+          <details>
+            <summary>Can I remove my profile later?</summary>
+            <p>Yes, any time. Message us on the same number and we take your name and photo down.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="index.html">
+      <img src="images/logo-3.png" alt="">
+      <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
+    </a>
+    <nav aria-label="Footer">
+      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="vendors.html">Join us</a>
+      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
+    </nav>
+    <p>SHOWMAQERS · All rights reserved</p>
+  </div>
+</footer>
+
+<script src="supabase-config.js"></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!calm) root.classList.add('anim');
+
+  /* ── reveal on scroll ──────────────────────────────────────────────────── */
+  const io = new IntersectionObserver((es) => {
+    for (const e of es) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }, { rootMargin: '-5% 0px -5% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ── nav, menu, scroll progress ────────────────────────────────────────── */
+  const nav = document.getElementById('nav'), menu = document.getElementById('menu'),
+        burger = document.getElementById('burger'), bar = document.getElementById('progress');
+  const onScroll = () => {
+    nav.classList.toggle('is-stuck', scrollY > 30);
+    const max = root.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  const setMenu = (open) => { burger.setAttribute('aria-expanded', open); menu.classList.toggle('open', open); };
+  burger.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
+  menu.addEventListener('click', e => { if (e.target.tagName === 'A') setMenu(false); });
+  addEventListener('resize', () => setMenu(false));
+
+  /* ── registration → database ────────────────────────────────────────────
+     No account needed. The form posts one pending row and one photo; the
+     public can write but never read, so nobody can browse the queue.     */
+  const form = document.getElementById('vendor'), status = document.getElementById('v-status');
+  const drop = document.getElementById('v-drop'), fileInput = document.getElementById('v-photo');
+  const WA = '919910772449';
+  const say = (msg, kind) => { status.innerHTML = msg; status.className = 'status ' + (kind || ''); };
+  let photo = null;
+
+  const takeFile = (file) => {
+    if (!file) return;
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return say('Please choose a JPG, PNG or WebP image.', 'err');
+    if (file.size > 10 * 1024 * 1024) return say('That photo is over 10 MB — please pick a smaller one.', 'err');
+    photo = file;
+    document.getElementById('v-prev').src = URL.createObjectURL(file);
+    drop.classList.add('has');
+    document.getElementById('v-dropmsg').textContent = file.name;
+    say('');
+  };
+  fileInput.addEventListener('change', e => takeFile(e.target.files[0]));
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); takeFile(e.dataTransfer.files[0]); });
+
+  /* phone cameras make 4 MB photos; shrink before sending over mobile data */
+  async function shrink(file, max = 1200) {
+    try {
+      const bmp = await createImageBitmap(file);
+      const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
+      if (scale === 1 && file.size < 900000) return file;
+      const c = document.createElement('canvas');
+      c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
+      c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+      return await new Promise(r => c.toBlob(b => r(b || file), 'image/jpeg', .85));
+    } catch (e) { return file; }
+  }
+
+  const waHref = (get) => 'https://wa.me/' + WA + '?text=' + encodeURIComponent(
+    'ARTIST REGISTRATION — Showmaqers'
+    + `\n\nName: ${get('name')}\nRole: ${form.cat.selectedOptions[0].textContent}\nCity: ${get('city')}\nWhatsApp: ${get('phone')}`
+    + (get('email') ? `\nEmail: ${get('email')}` : '')
+    + (get('exp') ? `\nExperience: ${get('exp')} years` : '')
+    + (get('fee') ? `\nUsual fee: ${get('fee')}` : '')
+    + (get('langs') ? `\nLanguages: ${get('langs')}` : '')
+    + (get('links') ? `\nLinks: ${get('links')}` : '')
+    + `\n\nAbout: ${get('about')}`
+    + '\n\nI agree my name and photo may be listed on showmaqers.com. Photo attached below.');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const get = k => (f.get(k) || '').toString().trim();
+
+    const missing = [['name','your name'],['cat','what you do'],['city','your city'],
+                     ['phone','your WhatsApp number'],['about','a line about your work']].find(([k]) => !get(k));
+    if (missing) {
+      say('Please add ' + missing[1] + '.', 'err');
+      form.querySelector(`[name="${missing[0]}"]`).focus();
+      return;
+    }
+    if (!photo) { say('Please add a photo — it is what clients see on the roster.', 'err'); drop.focus(); return; }
+    if (!form.consent.checked) {
+      say('Please tick the consent box so we may list your name and photo.', 'err');
+      form.consent.focus();
+      return;
+    }
+
+    const cfg = window.SUPABASE;
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    say('Sending your registration…');
+
+    try {
+      if (!cfg || /YOUR-/.test(cfg.url)) throw new Error('not configured');
+      const h = { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey };
+
+      const blob = await shrink(photo);
+      const path = `${crypto.randomUUID()}/photo.jpg`;
+      const up = await fetch(`${cfg.url}/storage/v1/object/vendor-pending/${path}`,
+        { method: 'POST', headers: { ...h, 'Content-Type': blob.type || 'image/jpeg' }, body: blob });
+      if (!up.ok) throw new Error('upload ' + up.status);
+
+      const res = await fetch(`${cfg.url}/rest/v1/vendors`, {
+        method: 'POST',
+        headers: { ...h, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify({
+          name: get('name'), category_key: get('cat'), city: get('city'), phone: get('phone'),
+          email: get('email') || null, years_experience: get('exp') ? +get('exp') : null,
+          fee_note: get('fee') || null, languages: get('langs') || null, links: get('links') || null,
+          bio: get('about'), photo_path: 'vendor-pending/' + path,
+          status: 'pending', source: 'self', consent_at: new Date().toISOString()
+        })
+      });
+      if (!res.ok) throw new Error('insert ' + res.status);
+
+      form.hidden = true;
+      const done = document.getElementById('v-done');
+      done.hidden = false;
+      done.scrollIntoView({ block: 'center' });
+    } catch (err) {
+      console.warn('[registration] could not save:', err.message);   // for debugging a failed send
+      btn.disabled = false;
+      say('We could not send that automatically. <a href="' + waHref(get) + '" target="_blank" rel="noopener" '
+        + 'style="color:var(--pink);font-weight:600">Send it on WhatsApp instead</a> — your details are already filled in.', 'err');
+    }
+  });
+
+  /* ── cursor + magnetic buttons ─────────────────────────────────────────── */
+  if (fine && !calm) {
+    const dot = document.createElement('div'), ring = document.createElement('div');
+    dot.className = 'cursor'; ring.className = 'cursor-ring';
+    document.body.append(dot, ring);
+    let rx = innerWidth / 2, ry = innerHeight / 2, cx = rx, cy = ry;
+    addEventListener('pointermove', (e) => {
+      rx = e.clientX; ry = e.clientY;
+      dot.style.translate = `${rx - 3.5}px ${ry - 3.5}px`;
+      ring.classList.toggle('hot', !!e.target.closest('a,button,summary,input,select,textarea'));
+    }, { passive: true });
+    (function trail() {
+      cx += (rx - cx) * .16; cy += (ry - cy) * .16;
+      ring.style.translate = `${cx - 17}px ${cy - 17}px`;
+      requestAnimationFrame(trail);
+    })();
+    document.querySelectorAll('.btn').forEach(b => {
+      b.addEventListener('pointermove', (e) => {
+        const r = b.getBoundingClientRect();
+        b.style.translate = `${(e.clientX - r.left - r.width / 2) * .22}px ${(e.clientY - r.top - r.height / 2) * .3}px`;
+      });
+      b.addEventListener('pointerleave', () => { b.style.translate = '0 0'; });
+    });
+  }
+
+  /* ── bokeh haze ────────────────────────────────────────────────────────── */
+  const cv = document.getElementById('bokeh'), ctx = cv.getContext('2d');
+  const hues = ['255,46,144', '124,58,237', '255,150,190', '190,130,255'];
+  let dots = [], dpr = Math.min(devicePixelRatio || 1, 1.5), raf;
+  const sizeCanvas = () => {
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+    cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    dots = Array.from({ length: innerWidth < 700 ? 14 : 28 }, () => ({
+      x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+      r: 6 + Math.random() * 34, a: .04 + Math.random() * .12,
+      v: .08 + Math.random() * .34, h: hues[(Math.random() * hues.length) | 0]
+    }));
+  };
+  const paint = () => {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    for (const d of dots) {
+      const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
+      g.addColorStop(0, `rgba(${d.h},${d.a})`); g.addColorStop(1, `rgba(${d.h},0)`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.284); ctx.fill();
+      d.y -= d.v; d.x += Math.sin(d.y / 90) * .22;
+      if (d.y + d.r < 0) { d.y = innerHeight + d.r; d.x = Math.random() * innerWidth; }
+    }
+    raf = requestAnimationFrame(paint);
+  };
+  sizeCanvas(); paint();
+  if (calm) cancelAnimationFrame(raf);
+  addEventListener('resize', sizeCanvas, { passive: true });
+  document.addEventListener('visibilitychange', () => {
+    cancelAnimationFrame(raf);
+    if (!document.hidden && !calm) raf = requestAnimationFrame(paint);
+  });
+})();
+</script>
+</body>
+</html>
