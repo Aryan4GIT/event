@@ -120,6 +120,26 @@ without the clip rather than failing.
 
 ---
 
+## Performance duration
+
+Run [`performance-fields.sql`](performance-fields.sql) in the SQL Editor.
+
+It adds a `performance_duration` column and lets a public registration set it.
+The form now asks three things it did not before:
+
+| On the form | Where it lands |
+|---|---|
+| **Where you are based** (city and area, required) | the existing `city` column |
+| **How long you perform** (required) | the new `performance_duration` column |
+| **YouTube link of your performance** (optional) | the existing `links` column |
+
+Instagram links are no longer asked for, and the form rejects one if pasted.
+
+Until this file is run the form still works — it retries the registration
+without the duration rather than failing.
+
+---
+
 ## What is in the database
 
 | Table | What it holds |

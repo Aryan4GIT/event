@@ -252,7 +252,8 @@
             <div><dt>Experience</dt><dd>${v.years_experience ? v.years_experience + ' years' : '—'}</dd></div>
             <div><dt>Usual fee</dt><dd>${esc(v.fee_note) || '—'}</dd></div>
             <div><dt>Languages</dt><dd>${esc(v.languages) || '—'}</dd></div>
-            <div><dt>Links</dt><dd>${v.links ? `<a href="${esc(v.links.startsWith('http') ? v.links : 'https://' + v.links)}" target="_blank" rel="noopener" style="color:var(--pink)">${esc(v.links)}</a>` : '—'}</dd></div>
+            <div><dt>Performs for</dt><dd>${esc(v.performance_duration) || '—'}</dd></div>
+            <div><dt>YouTube</dt><dd>${v.links ? `<a href="${esc(v.links.startsWith('http') ? v.links : 'https://' + v.links)}" target="_blank" rel="noopener" style="color:var(--pink)">${esc(v.links)}</a>` : '—'}</dd></div>
             <div><dt>Sent</dt><dd>${new Date(v.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</dd></div>
           </dl>
           <p class="bio">${esc(v.bio)}</p>

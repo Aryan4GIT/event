@@ -99,7 +99,7 @@
     <div class="beams" aria-hidden="true"><span class="beam"></span><span class="beam"></span><span class="beam"></span></div>
     <div class="wrap">
       <p class="crumb"><a href="index.html">Home</a> · Join as an artist</p>
-      <p class="eyebrow">For DJs · Anchors · Singers · Dancers · Crew</p>
+      <p class="eyebrow">For DJs · Anchors · Singers · Dancers · Wardrobe · Crew</p>
       <h1>Get on the <em>call sheet</em>.</h1>
       <p class="lede">
         Showmaqers books artists and manpower for weddings, corporate events and parties across Delhi NCR every week.
@@ -142,14 +142,19 @@
         </article>
       </div>
 
-      <p class="eyebrow reveal" style="margin-top:2.6rem">What we book</p>
+      <p class="eyebrow reveal" style="margin-top:2.6rem">Artists we book</p>
       <div class="chips reveal" style="margin-top:0">
         <span>DJ</span><span>Female Emcee Anchors</span><span>Male Emcee Anchors</span><span>Singers</span>
-        <span>Dancers</span><span>Photographer</span><span>Videographer</span><span>Tattoo Artist</span>
-        <span>Face Painter</span><span>Game Coordinator</span><span>Russian Promoters</span><span>Parlour Beautician</span>
-        <span>Nail Artist</span><span>Tarot Card Reader</span><span>Pottery Maker</span><span>Puppet Show Performers</span>
+        <span>Dancers</span><span>Photographer</span><span>Videographer</span><span>Game Coordinator</span>
+        <span>Russian Promoters</span><span>Tarot Card Reader</span><span>Pottery Maker</span><span>Puppet Show Performers</span>
         <span>Magician</span><span>Stilt Walker (longman)</span><span>Joker / Clown / Charlie</span><span>Juggler</span><span>Mascots</span>
       </div>
+
+      <p class="eyebrow reveal" style="margin-top:2.2rem">Wardrobe we book</p>
+      <div class="chips reveal" style="margin-top:0">
+        <span>Tattoo Artist</span><span>Face Painter</span><span>Nail Artist</span><span>Parlour Beautician</span>
+      </div>
+      <p class="lede reveal" style="margin-top:1rem; font-size:.92rem">Wardrobe registers on this same form &mdash; pick your role under <em>Wardrobe</em> in the list below.</p>
     </div>
   </section>
 
@@ -173,27 +178,31 @@
             <label for="v-cat">What you do <span class="req">*</span></label>
             <select id="v-cat" name="cat" required>
               <option value="">Choose one…</option>
-              <option value="dj">DJ</option>
-              <option value="anchors">Female Emcee Anchor</option>
-              <option value="anchors">Male Emcee Anchor</option>
-              <option value="singers">Singer</option>
-              <option value="dancers">Dancer</option>
-              <option value="photographer">Photographer</option>
-              <option value="videographer">Videographer</option>
-              <option value="tattoo">Tattoo Artist</option>
-              <option value="face-painter">Face Painter</option>
-              <option value="game-coordinator">Game Coordinator</option>
-              <option value="russian-promoters">Russian Promoter</option>
-              <option value="parlour">Parlour Beautician</option>
-              <option value="nail-artist">Nail Artist</option>
-              <option value="tarot">Tarot Card Reader</option>
-              <option value="pottery">Pottery Maker</option>
-              <option value="puppet">Puppet Show Performer</option>
-              <option value="magician">Magician</option>
-              <option value="stilt-walker">Stilt Walker (longman)</option>
-              <option value="joker">Joker / Clown / Charlie</option>
-              <option value="juggler">Juggler</option>
-              <option value="mascots">Mascot Artist</option>
+              <optgroup label="Artists">
+                <option value="dj">DJ</option>
+                <option value="anchors">Female Emcee Anchor</option>
+                <option value="anchors">Male Emcee Anchor</option>
+                <option value="singers">Singer</option>
+                <option value="dancers">Dancer</option>
+                <option value="photographer">Photographer</option>
+                <option value="videographer">Videographer</option>
+                <option value="game-coordinator">Game Coordinator</option>
+                <option value="russian-promoters">Russian Promoter</option>
+                <option value="tarot">Tarot Card Reader</option>
+                <option value="pottery">Pottery Maker</option>
+                <option value="puppet">Puppet Show Performer</option>
+                <option value="magician">Magician</option>
+                <option value="stilt-walker">Stilt Walker (longman)</option>
+                <option value="joker">Joker / Clown / Charlie</option>
+                <option value="juggler">Juggler</option>
+                <option value="mascots">Mascot Artist</option>
+              </optgroup>
+              <optgroup label="Wardrobe">
+                <option value="tattoo">Tattoo Artist</option>
+                <option value="face-painter">Face Painter</option>
+                <option value="nail-artist">Nail Artist</option>
+                <option value="parlour">Parlour Beautician</option>
+              </optgroup>
               <option value="other">Other</option>
             </select>
           </div>
@@ -201,8 +210,8 @@
 
         <div class="pair">
           <div class="field">
-            <label for="v-city">Base city <span class="req">*</span></label>
-            <input id="v-city" name="city" required placeholder="Delhi / Gurugram / Noida">
+            <label for="v-city">Where you are based <span class="req">*</span></label>
+            <input id="v-city" name="city" required placeholder="Gurugram, Sector 54 — city and area">
           </div>
           <div class="field">
             <label for="v-phone">WhatsApp number <span class="req">*</span></label>
@@ -232,9 +241,15 @@
           </div>
         </div>
 
-        <div class="field">
-          <label for="v-links">Instagram, YouTube or portfolio link</label>
-          <input id="v-links" name="links" placeholder="instagram.com/yourhandle">
+        <div class="pair">
+          <div class="field">
+            <label for="v-dur">How long you perform <span class="req">*</span></label>
+            <input id="v-dur" name="dur" required placeholder="45 minutes / 2 hours / 3 sets of 20 min">
+          </div>
+          <div class="field">
+            <label for="v-links">YouTube link of your performance</label>
+            <input id="v-links" name="links" placeholder="youtube.com/watch?v=…">
+          </div>
         </div>
 
         <div class="field">
@@ -433,7 +448,8 @@
     + (get('exp') ? `\nExperience: ${get('exp')} years` : '')
     + (get('fee') ? `\nUsual fee: ${get('fee')}` : '')
     + (get('langs') ? `\nLanguages: ${get('langs')}` : '')
-    + (get('links') ? `\nLinks: ${get('links')}` : '')
+    + `\nPerformance duration: ${get('dur')}`
+    + (get('links') ? `\nYouTube: ${get('links')}` : '')
     + `\n\nAbout: ${get('about')}`
     + '\n\nI agree my name and photo may be listed on showmaqers.com. Photo attached below.');
 
@@ -442,11 +458,17 @@
     const f = new FormData(form);
     const get = k => (f.get(k) || '').toString().trim();
 
-    const missing = [['name','your name'],['cat','what you do'],['city','your city'],
-                     ['phone','your WhatsApp number'],['about','a line about your work']].find(([k]) => !get(k));
+    const missing = [['name','your name'],['cat','what you do'],['city','where you are based'],
+                     ['phone','your WhatsApp number'],['dur','how long you perform'],
+                     ['about','a line about your work']].find(([k]) => !get(k));
     if (missing) {
       say('Please add ' + missing[1] + '.', 'err');
       form.querySelector(`[name="${missing[0]}"]`).focus();
+      return;
+    }
+    if (/instagram\.com/i.test(get('links'))) {
+      say('We list a YouTube link of your performance, not an Instagram one.', 'err');
+      form.links.focus();
       return;
     }
     if (!photo) { say('Please add a photo — it is what clients see on the roster.', 'err'); drop.focus(); return; }
@@ -486,6 +508,7 @@
         name: get('name'), category_key: get('cat'), city: get('city'), phone: get('phone'),
         email: get('email') || null, years_experience: get('exp') ? +get('exp') : null,
         fee_note: get('fee') || null, languages: get('langs') || null, links: get('links') || null,
+        performance_duration: get('dur'),
         bio: get('about'), photo_path: `vendor-pending/${folder}/photo.jpg`,
         status: 'pending', source: 'self', consent_at: new Date().toISOString()
       };
@@ -500,6 +523,8 @@
       /* skill_path arrives with supabase/skill-media.sql — until that is run,
          send the registration without it rather than turning the artist away */
       if (!res.ok && skillPath) { delete row.skill_path; skillPath = null; res = await insert(); }
+      /* same for performance_duration, which arrives with performance-fields.sql */
+      if (!res.ok) { delete row.performance_duration; res = await insert(); }
       if (!res.ok) throw new Error('insert ' + res.status);
 
       form.hidden = true;
