@@ -52,11 +52,14 @@ button,input,select,textarea{font:inherit; color:inherit}
    than a CSS mask, which would be sized against a viewport height that moves
    independently of the artwork. Nothing here blurs or re-tints it: one
    image, downscaled, so it stays sharp.
-   It can sit this strong because it is now light on light: what crosses the
-   copy is paper, and only the swan and the ribbon carry any weight.
+   .32 is measured, not taste. Body copy is --mist on this paper; composite
+   the mark over it and read the contrast at its darkest pixel -- the swan's
+   deep pink -- and .78 gives 2.1:1, under the 4.5:1 floor, which is why the
+   words stopped reading. .32 puts that worst case at 7.5:1. Raising it is
+   not a preference, it is taking the text away.
    body's background propagates to the canvas, so a negative z-index here is
    never painted over; ::before is already the iOS notch strip.          */
-body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.78;
+body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.32;
   background:url("images/logo-stage.webp") center/min(760px,66%) auto no-repeat}
 /* The breathe rides on filter:opacity, not the opacity property, so it
    multiplies the rule above instead of replacing it -- otherwise the phone
@@ -65,7 +68,7 @@ body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none
 @keyframes mark{
   0%,100%{transform:scale(1); filter:opacity(.78)}
   50%{transform:scale(1.035); filter:opacity(1)}}
-@media (max-width:620px){body::after{background-size:92%; opacity:.6}}
+@media (max-width:620px){body::after{background-size:92%; opacity:.26}}
 .cursor,.cursor-ring{position:fixed; top:0; left:0; z-index:80; pointer-events:none; border-radius:50%}
 .cursor{width:7px; height:7px; background:var(--pink); box-shadow:0 0 12px rgba(255,46,144,.8)}
 .cursor-ring{width:34px; height:34px; border:1px solid rgba(255,46,144,.5); transition:width .25s,height .25s,border-color .25s,background .25s}
