@@ -45,22 +45,20 @@ button,input,select,textarea{font:inherit; color:inherit}
 @keyframes drift{0%,100%{transform:translate3d(0,0,0) scale(1)}33%{transform:translate3d(7vw,9vh,0) scale(1.18)}66%{transform:translate3d(-6vw,-7vh,0) scale(.88)}}
 .grain{position:fixed; inset:0; z-index:70; pointer-events:none; opacity:.03; mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
-/* The house mark, centred in the viewport: the full painted lockup, with its
-   black ground repainted to this page's white so the two match. The art
-   itself is untouched from mid-tone up -- gold, swan and teal are as drawn.
-   logo-stage.webp also carries an elliptical falloff in its own alpha rather
-   than a CSS mask, which would be sized against a viewport height that moves
-   independently of the artwork. Nothing here blurs or re-tints it: one
-   image, downscaled, so it stays sharp.
-   .32 is measured, not taste. Body copy is --mist on this paper; composite
-   the mark over it and read the contrast at its darkest pixel -- the swan's
-   deep pink -- and .78 gives 2.1:1, under the 4.5:1 floor, which is why the
-   words stopped reading. .32 puts that worst case at 7.5:1. Raising it is
-   not a preference, it is taking the text away.
+/* The house mark, centred in the viewport. logo-mark.webp is the lockup cut
+   off its white ground, so there is no plate to blend and no baked falloff
+   to keep aligned -- it sits on whatever the page is. It is the nav and
+   footer badge too: one file, one download, three sizes.
+   .38 is measured, not taste. Body copy is --mist on this paper; composite
+   the mark over it and read the contrast at its darkest pixel, and .38
+   gives 5.8:1 against the 4.5:1 floor for normal text. .55 would be 3.3:1,
+   which is the point where the words stop reading.
+   Served at 560px from a 698px file, so it is downscaled rather than
+   stretched; the source art is only 349px, which is the ceiling here.
    body's background propagates to the canvas, so a negative z-index here is
    never painted over; ::before is already the iOS notch strip.          */
-body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.32;
-  background:url("images/logo-stage.webp") center/min(760px,66%) auto no-repeat}
+body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.38;
+  background:url("images/logo-mark.webp") center/min(560px,54%) auto no-repeat}
 /* The breathe rides on filter:opacity, not the opacity property, so it
    multiplies the rule above instead of replacing it -- otherwise the phone
    rule below sets .3 and the keyframes hand the screen .52 anyway. */
@@ -68,7 +66,7 @@ body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none
 @keyframes mark{
   0%,100%{transform:scale(1); filter:opacity(.78)}
   50%{transform:scale(1.035); filter:opacity(1)}}
-@media (max-width:620px){body::after{background-size:92%; opacity:.26}}
+@media (max-width:620px){body::after{background-size:84%; opacity:.32}}
 .cursor,.cursor-ring{position:fixed; top:0; left:0; z-index:80; pointer-events:none; border-radius:50%}
 .cursor{width:7px; height:7px; background:var(--pink); box-shadow:0 0 12px rgba(255,46,144,.8)}
 .cursor-ring{width:34px; height:34px; border:1px solid rgba(255,46,144,.5); transition:width .25s,height .25s,border-color .25s,background .25s}
@@ -146,11 +144,7 @@ h2 em,h1 em{font-style:italic; background:var(--grad); -webkit-background-clip:t
   box-shadow:inset 0 0 0 1px rgba(226,122,170,.18), inset 0 1px 0 #fff, 0 20px 46px -34px rgba(196,74,134,.8); margin-top:8px}
 body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:61; background:rgba(255,252,249,.92)}
 .brand{display:flex; align-items:center; gap:.7rem; margin-right:auto; min-width:0}
-/* The lockup is painted on a dark plate and cannot be lifted off it -- its
-   modelling runs into the background -- so it is framed as a badge instead.
-   cover, not contain, so the rounding clips the artwork and not a gutter. */
-.brand img{width:40px; height:40px; object-fit:cover; border-radius:10px;
-  box-shadow:0 4px 16px rgba(255,61,154,.45), inset 0 0 0 1px rgba(255,255,255,.14)}
+.brand img{width:40px; height:40px; object-fit:contain; filter:drop-shadow(0 4px 16px rgba(255,61,154,.65))}
 .brand b{font:700 1rem/1 var(--body); letter-spacing:.17em}
 .brand small{display:block; font:400 .56rem/1.5 var(--mono); letter-spacing:.22em; color:var(--dim-2); text-transform:uppercase}
 .nav-links{display:flex; gap:.15rem; align-items:center}
