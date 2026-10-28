@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blog — SHOWMAQERS</title>
+<meta name="description" content="Notes from the floor by Showmaqers — wedding decorators, corporate event planners, birthday party planners and event décor across Delhi, Gurugram, Noida, Faridabad and Ghaziabad.">
+<link rel="icon" href="images/logo-3.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+/* ── blog page only ───────────────────────────────────────────────────────
+   Two views in one file: the index of cards, and one post. The hash picks
+   which, so every post still has its own shareable URL.                  */
+.page-hero{padding-block:clamp(40px,6vw,74px) clamp(24px,3vw,40px); text-align:center; position:relative; overflow:hidden}
+.page-hero h1{font:400 clamp(2.6rem,7vw,5.2rem)/1 var(--display); margin:0 0 1rem; letter-spacing:-.03em; text-wrap:balance}
+.page-hero .lede{margin-inline:auto}
+.page-hero .eyebrow{justify-content:center}
+.crumb{font:500 .66rem/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2); margin-bottom:1.4rem}
+.crumb a:hover{color:var(--pink)}
+
+/* the index */
+.posts{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:clamp(1rem,1.8vw,1.6rem); perspective:1200px}
+/* display:grid above outranks the browser's own [hidden], so restore it */
+.posts[hidden],.article[hidden]{display:none}
+.post-card{display:flex; flex-direction:column; border-radius:20px; overflow:hidden; background:#fff; cursor:pointer;
+  box-shadow:0 18px 38px -26px rgba(196,74,134,.85), inset 0 0 0 1px rgba(226,122,170,.14);
+  transition:transform .45s cubic-bezier(.2,.7,.3,1), box-shadow .45s}
+.post-card:hover,.post-card:focus-visible{transform:translateY(-5px); z-index:2;
+  box-shadow:0 38px 58px -30px rgba(255,46,144,.55), inset 0 0 0 1px rgba(255,46,144,.35)}
+.post-card img{width:100%; aspect-ratio:16/10; object-fit:cover; transition:transform .7s cubic-bezier(.2,.7,.3,1)}
+.post-card:hover img{transform:scale(1.05)}
+.post-card .pc-body{padding:1rem 1.15rem 1.3rem; display:flex; flex-direction:column; gap:.55rem; flex:1}
+.post-card time{font:500 .6rem/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--lav)}
+.post-card h2{margin:0; font:400 1.22rem/1.3 var(--display); letter-spacing:-.01em}
+.post-card p{margin:0; color:var(--dim); font-size:.86rem; line-height:1.6;
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden}
+.post-card .more{margin-top:auto; font:600 .62rem/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--pink)}
+
+/* one post */
+.article{max-width:760px; margin-inline:auto}
+.article .back{display:inline-block; margin-bottom:1.8rem; font:500 .66rem/1 var(--mono);
+  letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2)}
+.article .back:hover{color:var(--pink)}
+.article time{display:block; font:500 .62rem/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--lav); margin-bottom:.9rem}
+.article h1{font:400 clamp(2rem,4.4vw,3.2rem)/1.08 var(--display); margin:0 0 1.6rem; letter-spacing:-.02em; text-wrap:balance}
+.article .hero-shot{width:100%; border-radius:20px; margin-bottom:2rem; aspect-ratio:16/9; object-fit:cover;
+  box-shadow:0 24px 48px -30px rgba(196,74,134,.9)}
+.article h2{font:600 1.12rem/1.4 var(--body); margin:2.2rem 0 .7rem; letter-spacing:-.005em}
+.article p{margin:0 0 1.1rem; color:var(--dim); line-height:1.8}
+.article ul{margin:0 0 1.3rem; padding-left:1.1rem; color:var(--dim); line-height:1.8}
+.article li{margin-bottom:.4rem}
+.article figure{margin:2rem 0}
+.article figure img{width:100%; border-radius:18px}
+.article .tail{margin-top:3rem; padding-top:1.8rem; border-top:1px solid var(--line);
+  display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between}
+@media (max-width:620px){
+  .posts{grid-template-columns:1fr}
+  .article .tail .btn{flex:1 1 100%}
+}
+</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas id="bokeh" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <div class="nav-in">
+      <a class="brand" href="index.html">
+        <img src="images/logo-3.png" alt="SHOWMAQERS logo">
+        <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
+      </a>
+      <nav class="nav-links" id="menu" aria-label="Main">
+        <a href="index.html#services">Services</a>
+        <a href="manpower.html">Artists</a>
+        <a href="games.html">Games</a>
+        <a href="blog.html" aria-current="page">Blog</a>
+        <a href="index.html#gallery">Gallery</a>
+        <a href="index.html#about">About</a>
+        <a href="vendors.html">Join us</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <a class="btn btn--hot" href="tel:+919910772449">Call<span class="num">&nbsp;99107 72449</span></a>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero" id="blogHero">
+    <div class="beams" aria-hidden="true"><span class="beam"></span><span class="beam"></span><span class="beam"></span></div>
+    <div class="wrap">
+      <p class="crumb"><a href="index.html">Home</a> &middot; Blog</p>
+      <p class="eyebrow">Notes from the floor</p>
+      <h1>What we learned <em>setting up</em>.</h1>
+      <p class="lede">
+        Décor, planning and the small decisions that make an evening work — written between events by the
+        people who run them.
+      </p>
+    </div>
+  </section>
+
+  <section class="band" style="padding-top:clamp(20px,3vw,40px)">
+    <div class="wrap">
+      <div class="posts" id="postList"></div>
+      <article class="article reveal" id="postView" hidden></article>
+    </div>
+  </section>
+
+  <section class="band" style="padding-top:0; padding-bottom:clamp(50px,6vw,90px)">
+    <div class="wrap">
+      <div class="book glass blur reveal" style="display:flex; flex-wrap:wrap; gap:1.4rem 2.5rem; align-items:center; justify-content:space-between; padding:clamp(1.6rem,3vw,2.6rem)">
+        <div>
+          <p class="eyebrow">Planning something?</p>
+          <h2 style="margin:0 0 .3rem">Tell us the date and the venue.</h2>
+          <p class="lede" style="margin:0">We'll come back with a plan, a look and a number.</p>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:.8rem">
+          <a class="btn btn--hot" href="tel:+919910772449">Call 99107 72449</a>
+          <a class="btn btn--glass" href="index.html#contact">Send an enquiry</a>
+        </div>
+        <span class="sheen"></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="index.html">
+      <img src="images/logo-3.png" alt="">
+      <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
+    </a>
+    <nav aria-label="Footer">
+      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
+      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
+    </nav>
+    <p>SHOWMAQERS &middot; All rights reserved</p>
+  </div>
+</footer>
+
+<script src="blog-data.js"></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!calm) root.classList.add('anim');
+
+  const POSTS = window.POSTS || [];
+  const list = document.getElementById('postList');
+  const view = document.getElementById('postView');
+  const hero = document.getElementById('blogHero');
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ── the index ─────────────────────────────────────────────────────────── */
+  list.innerHTML = POSTS.map(p => `
+    <a class="post-card" href="#${esc(p.s)}">
+      ${p.i && p.i.length ? `<img src="${esc(p.i[0])}" alt="" loading="lazy">` : ''}
+      <div class="pc-body">
+        ${p.w ? `<time datetime="${esc(p.d)}">${esc(p.w)}</time>` : ''}
+        <h2>${esc(p.t)}</h2>
+        <p>${esc(p.x)}</p>
+        <span class="more">Read &rarr;</span>
+      </div>
+    </a>`).join('');
+
+  /* ── one post ──────────────────────────────────────────────────────────── */
+  function renderPost(p) {
+    const out = [`<a class="back" href="#">&larr; All posts</a>`];
+    if (p.w) out.push(`<time datetime="${esc(p.d)}">${esc(p.w)}</time>`);
+    out.push(`<h1>${esc(p.t)}</h1>`);
+    if (p.i && p.i.length) out.push(`<img class="hero-shot" src="${esc(p.i[0])}" alt="">`);
+
+    /* the source is a flat run of blocks; list items need wrapping back up */
+    let open = false;
+    for (const [kind, txt] of p.b || []) {
+      if (kind === 'li' && !open) { out.push('<ul>'); open = true; }
+      if (kind !== 'li' && open) { out.push('</ul>'); open = false; }
+      if (kind === 'h') out.push(`<h2>${esc(txt)}</h2>`);
+      else if (kind === 'li') out.push(`<li>${esc(txt)}</li>`);
+      else out.push(`<p>${esc(txt)}</p>`);
+    }
+    if (open) out.push('</ul>');
+
+    (p.i || []).slice(1).forEach(src => out.push(`<figure><img src="${esc(src)}" alt="" loading="lazy"></figure>`));
+    out.push(`<div class="tail">
+        <a class="back" href="#" style="margin:0">&larr; All posts</a>
+        <a class="btn btn--hot" href="index.html#contact">Plan my event</a>
+      </div>`);
+    view.innerHTML = out.join('');
+  }
+
+  function route() {
+    const slug = decodeURIComponent(location.hash.slice(1));
+    const post = POSTS.find(p => p.s === slug);
+    if (post) {
+      renderPost(post);
+      view.hidden = false; list.hidden = true; hero.hidden = true;
+      view.classList.add('in');
+      document.title = post.t + ' — SHOWMAQERS';
+    } else {
+      view.hidden = true; list.hidden = false; hero.hidden = false;
+      document.title = 'Blog — SHOWMAQERS';
+      if (slug) location.replace('#');          // unknown slug falls back to the index
+    }
+    scrollTo({ top: 0, behavior: 'auto' });
+  }
+  addEventListener('hashchange', route);
+  route();
+
+  /* ── reveal on scroll ──────────────────────────────────────────────────── */
+  const io = new IntersectionObserver((es) => {
+    for (const e of es) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }, { rootMargin: '-5% 0px -5% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ── nav, menu, scroll progress ────────────────────────────────────────── */
+  const nav = document.getElementById('nav'), menu = document.getElementById('menu'),
+        burger = document.getElementById('burger'), bar = document.getElementById('progress');
+  const onScroll = () => {
+    nav.classList.toggle('is-stuck', scrollY > 30);
+    const max = root.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  const setMenu = (open) => { burger.setAttribute('aria-expanded', open); menu.classList.toggle('open', open); };
+  burger.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
+  menu.addEventListener('click', e => { if (e.target.tagName === 'A') setMenu(false); });
+  addEventListener('resize', () => setMenu(false));
+
+  /* ── cursor + magnetic buttons ─────────────────────────────────────────── */
+  if (fine && !calm) {
+    const dot = document.createElement('div'), ring = document.createElement('div');
+    dot.className = 'cursor'; ring.className = 'cursor-ring';
+    document.body.append(dot, ring);
+    let rx = innerWidth / 2, ry = innerHeight / 2, cx = rx, cy = ry;
+    addEventListener('pointermove', (e) => {
+      rx = e.clientX; ry = e.clientY;
+      dot.style.translate = `${rx - 3.5}px ${ry - 3.5}px`;
+      ring.classList.toggle('hot', !!e.target.closest('a,button,.post-card'));
+    }, { passive: true });
+    (function trail() {
+      cx += (rx - cx) * .16; cy += (ry - cy) * .16;
+      ring.style.translate = `${cx - 17}px ${cy - 17}px`;
+      requestAnimationFrame(trail);
+    })();
+    document.querySelectorAll('.btn').forEach(b => {
+      b.addEventListener('pointermove', (e) => {
+        const r = b.getBoundingClientRect();
+        b.style.translate = `${(e.clientX - r.left - r.width / 2) * .22}px ${(e.clientY - r.top - r.height / 2) * .3}px`;
+      });
+      b.addEventListener('pointerleave', () => { b.style.translate = '0 0'; });
+    });
+  }
+
+  /* ── bokeh haze ────────────────────────────────────────────────────────── */
+  const cv = document.getElementById('bokeh'), ctx = cv.getContext('2d');
+  const hues = ['255,172,205', '246,214,164', '255,196,220', '240,205,160'];
+  let dots = [], dpr = Math.min(devicePixelRatio || 1, 1.5), raf;
+  const sizeCanvas = () => {
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+    cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    dots = Array.from({ length: innerWidth < 700 ? 14 : 28 }, () => ({
+      x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+      r: 6 + Math.random() * 34, a: .02 + Math.random() * .06,
+      v: .08 + Math.random() * .34, h: hues[(Math.random() * hues.length) | 0]
+    }));
+  };
+  const paint = () => {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    for (const d of dots) {
+      const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
+      g.addColorStop(0, `rgba(${d.h},${d.a})`); g.addColorStop(1, `rgba(${d.h},0)`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.284); ctx.fill();
+      d.y -= d.v; d.x += Math.sin(d.y / 90) * .22;
+      if (d.y + d.r < 0) { d.y = innerHeight + d.r; d.x = Math.random() * innerWidth; }
+    }
+    raf = requestAnimationFrame(paint);
+  };
+  sizeCanvas(); paint();
+  if (calm) cancelAnimationFrame(raf);
+  addEventListener('resize', sizeCanvas, { passive: true });
+  document.addEventListener('visibilitychange', () => {
+    cancelAnimationFrame(raf);
+    if (!document.hidden && !calm) raf = requestAnimationFrame(paint);
+  });
+})();
+</script>
+<script src="chat.js" defer></script>
+</body>
+</html>
