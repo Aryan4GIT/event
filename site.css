@@ -414,11 +414,19 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   .ring{--r:clamp(190px,34vw,300px)}
 }
 @media (max-width:620px){
-  .nav-in .brand small,.nav-in .btn--hot .num,.scroll-cue{display:none}
+  .nav-in .btn--hot .num,.scroll-cue{display:none}
   .nav-in{padding-left:.75rem; gap:.5rem}
   .nav-in .brand{gap:.5rem}
   .nav-in .brand img{width:34px; height:34px}
   .nav-in .brand b{font-size:.78rem; letter-spacing:.1em}
+  /* The second line used to be display:none here, because at the desktop
+     .56rem/.22em it is 169px wide and the bar only has room for about 125
+     once the mark, the Call pill and the burger have taken theirs. It is
+     the half of the name that says what the company does, so it stays and
+     the tracking gives way instead: .08em rather than .22em, and a size
+     that follows the viewport so it still fits a 320px screen. nowrap
+     because a second line here would make the whole bar taller.       */
+  .nav-in .brand small{font-size:clamp(.42rem,1.9vw,.56rem); letter-spacing:.08em; white-space:nowrap}
   .nav-in .btn--hot{padding:.72rem 1.05rem; font-size:.84rem}
   .hero-copy::before{inset:-30% -22%; background:radial-gradient(ellipse at center,rgba(255,252,249,.95) 42%,rgba(255,252,249,.72) 66%,transparent 82%)}
   .gal figure:nth-child(1),.gal figure:nth-child(8){grid-row:span 1}
