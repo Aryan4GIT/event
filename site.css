@@ -45,21 +45,21 @@ button,input,select,textarea{font:inherit; color:inherit}
 @keyframes drift{0%,100%{transform:translate3d(0,0,0) scale(1)}33%{transform:translate3d(7vw,9vh,0) scale(1.18)}66%{transform:translate3d(-6vw,-7vh,0) scale(.88)}}
 .grain{position:fixed; inset:0; z-index:70; pointer-events:none; opacity:.03; mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
-/* The house mark. logo-mark.png is the emblem alone, built from logo-3.png;
-   here it is only a mask, so the colour is the rose-and-champagne gradient
-   below and stays tweakable in CSS. Tucked into the bottom-left corner and
-   bleeding off both edges: a corner ornament, not a wash under the copy.  */
-body::after{content:""; position:fixed; left:-2.5vw; bottom:-5vh; z-index:-2; pointer-events:none;
-  width:clamp(300px,31vw,440px); aspect-ratio:786/561;
-  background:linear-gradient(118deg,#FF4FA0 0%,#F7D9A8 34%,#F04B93 60%,#C9962E 100%);
-  -webkit-mask:url("images/logo-mark.png") center/contain no-repeat;
-  mask:url("images/logo-mark.png") center/contain no-repeat;
-  opacity:.5}
-.anim body::after{animation:mark 20s ease-in-out infinite}
+/* The house mark, centred in the viewport and meant to be seen. It can be
+   bold here because the copy above it rides in .glass cards: the mark reads
+   through the gaps between them, not through the text. The halo lifts it off
+   the page so it looks placed rather than left behind.
+   body's background propagates to the canvas, so a negative z-index here is
+   never painted over; ::before is already the iOS notch strip.          */
+body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.34;
+  background:url("images/logo-full.png") center/min(600px,52%) no-repeat,
+             radial-gradient(circle at 50% 50%,rgba(255,224,240,.85),rgba(255,241,228,.35) 26%,transparent 42%);
+  filter:drop-shadow(0 20px 46px rgba(232,62,130,.3))}
+.anim body::after{animation:mark 16s ease-in-out infinite}
 @keyframes mark{
-  0%,100%{transform:translate(0,0) rotate(0deg); opacity:.42}
-  50%{transform:translate(10px,-14px) rotate(-1.5deg); opacity:.62}}
-@media (max-width:620px){body::after{left:-14vw; width:74vw; opacity:.34}}
+  0%,100%{transform:scale(1) rotate(0deg); opacity:.28}
+  50%{transform:scale(1.05) rotate(-1.2deg); opacity:.42}}
+@media (max-width:620px){body::after{background-size:76%,cover; opacity:.26}}
 .cursor,.cursor-ring{position:fixed; top:0; left:0; z-index:80; pointer-events:none; border-radius:50%}
 .cursor{width:7px; height:7px; background:var(--pink); box-shadow:0 0 12px rgba(255,46,144,.8)}
 .cursor-ring{width:34px; height:34px; border:1px solid rgba(255,46,144,.5); transition:width .25s,height .25s,border-color .25s,background .25s}
