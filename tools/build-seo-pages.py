@@ -27,6 +27,7 @@ import os
 import re
 import sys
 from datetime import date
+from urllib.parse import urlparse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://www.showmaqers.com"          # one place to change the origin
@@ -40,6 +41,28 @@ JUNK_HEADING = re.compile(r"^\s*(call\s*:|\+?91[\d\s\-]{8,})", re.I)
 # index.html and / are the one place the rebuild is better than the scrape,
 # so they keep the hand-written page.
 SKIP = {"", "index.html"}
+
+
+# the separator is optional: five pages run the number straight into the
+# title with nothing but a space -- "+91-9910772449 HIRE JUGGLER FOR..."
+PHONE_PREFIX = re.compile(r"^\s*\+?\s*91[-\s]?\d[\d\s-]{6,}\s*[-–—|:]?\s*")
+
+
+def clean_title(title):
+    """The live <title> on most pages starts with the sales number, e.g.
+    "+91-9910772449 - BALLOON DECORATORS FOR EVENTS & PARTIES...". That is
+    the first thing a searcher reads in the result, and it pushes the words
+    they searched for past the truncation point. Strip it, squeeze the
+    double spaces the old theme left behind, and put the brand on the end
+    where it belongs when it is not already somewhere in the title.
+    """
+    title = PHONE_PREFIX.sub("", title or "").strip()
+    title = " ".join(title.split())
+    if not title:
+        return "SHOWMAQERS"
+    if "showmaqer" not in title.lower() and len(title) <= 55:
+        title += " — SHOWMAQERS"
+    return title
 
 
 def esc(s):
@@ -85,39 +108,65 @@ def load_posts():
 
 
 def load_pages():
-    with open(os.path.join(ROOT, "showmaqers-content.json"), encoding="utf-8") as f:
-        return json.load(f)
+    """The live crawl: tools/crawl-live-site.py writes it.
+
+    Each page arrives already deduplicated to one spelling, with the site
+    chrome removed, and with its copy as [kind, text, tag] triples in
+    document order instead of a flat list of strings -- so a heading can be
+    laid out as a heading and a bullet as a bullet.
+    """
+    with open(os.path.join(ROOT, "showmaqers-site.json"), encoding="utf-8") as f:
+        return json.load(f)["pages"]
+
+
+def local_image(src):
+    """Where this picture lives in the repo, or None.
+
+    Images already carried over by hand sit in images/; everything the
+    crawler pulled down is in images/live/. Prefer the hand-picked copy when
+    both exist, so the pages keep using the files the rest of the site does.
+    """
+    name = os.path.basename(urlparse(src).path)
+    if not name:
+        return None
+    for path in ("images/" + name, "images/live/" + name):
+        if os.path.exists(os.path.join(ROOT, path)):
+            return path
+    return None
 
 
 def keep_images(images):
-    """Only images that are actually in the repo.
+    """Only pictures that are actually in the repo, each one once.
 
-    The scrape names 1139 of them and 102 were carried over. Writing a tag
-    for the rest would put a thousand broken images on the site, which costs
-    more than the pictures were worth.
+    `images` is either the crawl's [{src, alt}] or a plain list of paths.
     """
-    out = []
-    for src in images:
-        if src not in out and os.path.exists(os.path.join(ROOT, src)):
-            out.append(src)
+    out, seen = [], set()
+    for img in images:
+        src = img["src"] if isinstance(img, dict) else img
+        alt = (img.get("alt") or "") if isinstance(img, dict) else ""
+        path = local_image(src) if src.startswith("http") else (
+            src if os.path.exists(os.path.join(ROOT, src)) else None)
+        if path and path not in seen:
+            seen.add(path)
+            out.append({"path": path, "alt": alt})
     return out
 
 
-def split_faq(body, headings):
-    """Return (body before the FAQ, [(question, answer), ...]).
+def split_faq(body):
+    """Return (copy before the FAQ, [(question, answer), ...]).
 
-    The old pages end with a run of alternating question/answer paragraphs
-    under a 'Frequently Asked Questions' heading. Questions end in '?'.
+    The old pages end with alternating question/answer blocks under a
+    'Frequently Asked Questions' heading. Questions end in '?'.
     """
     mark = next((i for i, b in enumerate(body)
-                 if b.strip().lower().startswith("frequently asked question")), None)
+                 if b[1].strip().lower().startswith("frequently asked question")), None)
     if mark is None:
         return body, []
     rest, pairs = body[mark + 1:], []
     i = 0
     while i < len(rest) - 1:
-        if rest[i].rstrip().endswith("?"):
-            pairs.append((rest[i].strip(), rest[i + 1].strip()))
+        if rest[i][1].rstrip().endswith("?"):
+            pairs.append((rest[i][1].strip(), rest[i + 1][1].strip()))
             i += 2
         else:
             i += 1
@@ -240,7 +289,7 @@ def shell(path, title, description, crumbs, article, jsonld, og_image=None):
 <main>
   <section class="band">
     <div class="wrap">
-      <article class="article reveal">
+      <article class="article">
         <p class="crumb">{crumb}</p>
 {article}
         <div class="tail">
@@ -275,37 +324,61 @@ def breadcrumbs(crumbs, path):
 
 
 def build_scraped(entry, posts_by_slug):
-    """One page from one scrape entry."""
-    path = entry["url"].replace(SITE + "/", "").replace("https://www.showmaqers.com/", "")
+    """One page from one crawled page."""
+    path = urlparse(entry["url"]).path.lstrip("/")
     if path in SKIP or path.replace(".html", "") in SKIP:
         return None
     if path.startswith("blog/") and path[5:-5] in posts_by_slug:
         return None                      # the blog data builds these, better
 
-    title = entry["title"] or "SHOWMAQERS"
+    title = clean_title(entry["title"])
     desc = (entry["description"] or "").strip()
-    headings = {h.strip() for h in entry["headings"] if not JUNK_HEADING.match(h)}
-    body, faq = split_faq(entry["body"], headings)
+    body, faq = split_faq(entry["body"])
     images = keep_images(entry["images"])
-    videos = [v for v in (entry.get("youtube") or []) if "/embed/" in v]
+    videos = [v for v in entry.get("youtube") or [] if "/embed/" in v or "watch?v=" in v]
 
-    h1 = body[0].strip() if body and body[0].strip() in headings else title
-    if body and body[0].strip() == h1:
+    h1 = body[0][1].strip() if body and body[0][0] == "h" else title
+    if body and body[0][0] == "h" and body[0][1].strip() == h1:
         body = body[1:]
     if not desc:
-        desc = (body[0][:155] + "...") if body else title
+        desc = (body[0][1][:155] + "...") if body else title
     desc = unique_desc(desc, h1)
+
+    # Fold the source's heading levels onto h2/h3 relative to the shallowest
+    # one the page actually uses, not to the absolute tag. The balloon price
+    # list is written entirely in <h4>/<h5>, so keying off the tag name alone
+    # gave it 58 h3s under an h1 and no h2 at all.
+    used = sorted({tag for kind, txt, tag in body if kind == "h"})
+    top = used[0] if used else "h2"
 
     out = ['        <h1>%s</h1>' % esc(h1)]
     if images:
         out.append('        <img class="hero-shot" src="%s%s" alt="%s" width="1200" height="675">'
-                   % (rel(path), esc(images[0]), esc(h1)))
-    for block in body:
-        block = block.strip()
-        if not block:
+                   % (rel(path), esc(images[0]["path"]), esc(images[0]["alt"] or h1)))
+
+    open_list = False
+    for kind, txt, tag in body:
+        txt = txt.strip()
+        if not txt:
             continue
-        tag = "h2" if block in headings else "p"
-        out.append("        <%s>%s</%s>" % (tag, esc(block), tag))
+        if kind == "li" and not open_list:
+            out.append("        <ul>"); open_list = True
+        elif kind != "li" and open_list:
+            out.append("        </ul>"); open_list = False
+        if kind == "h":
+            # keep the level the source used, folded into h2/h3. The balloon
+            # page is a price list where each package name is an <h4> and its
+            # price another; flattening every heading to <h2> would make the
+            # package and its price siblings and leave the page with 59 of
+            # them and no outline at all.
+            out.append("        <%(t)s>%(x)s</%(t)s>"
+                       % {"t": "h2" if tag == top else "h3", "x": esc(txt)})
+        elif kind == "li":
+            out.append("          <li>%s</li>" % esc(txt))
+        else:
+            out.append("        <p>%s</p>" % esc(txt))
+    if open_list:
+        out.append("        </ul>")
 
     for v in videos:
         out.append('        <div class="vid"><iframe src="%s" title="%s" loading="lazy" '
@@ -319,9 +392,9 @@ def build_scraped(entry, posts_by_slug):
             out.append("          <dt>%s</dt><dd>%s</dd>" % (esc(q), esc(a)))
         out.append("        </dl>")
 
-    for src in images[1:]:
+    for img in images[1:]:
         out.append('        <figure><img src="%s%s" alt="%s" loading="lazy"></figure>'
-                   % (rel(path), esc(src), esc(h1)))
+                   % (rel(path), esc(img["path"]), esc(img["alt"] or h1)))
 
     crumbs = [("Home", "index.html"), (h1, None)]
     graph = [breadcrumbs(crumbs, path), {
@@ -336,10 +409,15 @@ def build_scraped(entry, posts_by_slug):
         graph.append({"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q,
              "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]})
+    for v in videos:
+        graph.append({"@type": "VideoObject", "name": h1,
+                      "description": desc, "embedUrl": v,
+                      "thumbnailUrl": SITE + "/images/logo-mark.webp",
+                      "uploadDate": "2024-01-01"})
 
     return path, shell(path, title, desc, crumbs, "\n".join(out),
                        {"@context": "https://schema.org", "@graph": graph},
-                       images[0] if images else None)
+                       images[0]["path"] if images else None)
 
 
 def build_post(post):
@@ -355,7 +433,7 @@ def build_post(post):
     out.append("        <h1>%s</h1>" % esc(post["t"]))
     if images:
         out.append('        <img class="hero-shot" src="../%s" alt="%s" width="1200" height="675">'
-                   % (esc(images[0]), esc(post["t"])))
+                   % (esc(images[0]["path"]), esc(post["t"])))
     open_list = False
     for kind, txt in post.get("b") or []:
         if kind == "li" and not open_list:
@@ -363,6 +441,8 @@ def build_post(post):
         if kind != "li" and open_list:
             out.append("        </ul>"); open_list = False
         if kind == "h":
+            # blog-data.js records one heading level, not six, so unlike the
+            # crawled pages there is nothing here to preserve
             out.append("        <h2>%s</h2>" % esc(txt))
         elif kind == "li":
             out.append("          <li>%s</li>" % esc(txt))
@@ -370,16 +450,16 @@ def build_post(post):
             out.append("        <p>%s</p>" % esc(txt))
     if open_list:
         out.append("        </ul>")
-    for src in images[1:]:
+    for img in images[1:]:
         out.append('        <figure><img src="../%s" alt="%s" loading="lazy"></figure>'
-                   % (esc(src), esc(post["t"])))
+                   % (esc(img["path"]), esc(post["t"])))
 
     crumbs = [("Home", "index.html"), ("Blog", "blog.html"), (post["t"], None)]
     graph = [breadcrumbs(crumbs, path), {
         "@type": "BlogPosting", "headline": post["t"], "description": desc,
         "datePublished": post.get("d"), "dateModified": post.get("d"),
         "mainEntityOfPage": "%s/%s" % (SITE, path),
-        "image": ["%s/%s" % (SITE, i) for i in images] or None,
+        "image": ["%s/%s" % (SITE, i["path"]) for i in images] or None,
         "author": {"@type": "Organization", "name": "SHOWMAQERS"},
         "publisher": {"@type": "Organization", "name": "SHOWMAQERS",
                       "logo": {"@type": "ImageObject", "url": SITE + "/images/logo-mark.webp"}},
@@ -387,7 +467,7 @@ def build_post(post):
     graph[1] = {k: v for k, v in graph[1].items() if v is not None}
     return path, shell(path, title, desc, crumbs, "\n".join(out),
                        {"@context": "https://schema.org", "@graph": graph},
-                       images[0] if images else None)
+                       images[0]["path"] if images else None)
 
 
 SECTIONS = [

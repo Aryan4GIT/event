@@ -20,6 +20,7 @@
 .article .hero-shot{width:100%; border-radius:20px; margin-bottom:2rem; aspect-ratio:16/9; object-fit:cover;
   box-shadow:0 24px 48px -30px rgba(196,74,134,.9)}
 .article h2{font:600 1.12rem/1.4 var(--body); margin:2.2rem 0 .7rem; letter-spacing:-.005em}
+.article h3{font:600 .98rem/1.45 var(--body); margin:1.5rem 0 .4rem; color:var(--mist)}
 .article p{margin:0 0 1.1rem; color:var(--dim); line-height:1.8}
 .article ul{margin:0 0 1.3rem; padding-left:1.1rem; color:var(--dim); line-height:1.8}
 .article li{margin-bottom:.4rem}
