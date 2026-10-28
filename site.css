@@ -45,21 +45,26 @@ button,input,select,textarea{font:inherit; color:inherit}
 @keyframes drift{0%,100%{transform:translate3d(0,0,0) scale(1)}33%{transform:translate3d(7vw,9vh,0) scale(1.18)}66%{transform:translate3d(-6vw,-7vh,0) scale(.88)}}
 .grain{position:fixed; inset:0; z-index:70; pointer-events:none; opacity:.03; mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
-/* The house mark, centred in the viewport and meant to be seen. It can be
-   bold here because the copy above it rides in .glass cards: the mark reads
-   through the gaps between them, not through the text. The halo lifts it off
-   the page so it looks placed rather than left behind.
+/* The house mark, centred in the viewport. This is the full painted lockup
+   on its dark plate, not a flattened trace of it, so the gold and the swan
+   keep their modelling -- the plate is what makes those readable and it
+   cannot be cut away. logo-stage.webp carries an elliptical falloff in its
+   own alpha, so the dark ends in the page instead of in a corner; no CSS
+   mask, which would be sized against a viewport height that moves
+   independently of the artwork. Nothing here blurs or re-tints it: one
+   image, downscaled, so it stays sharp.
    body's background propagates to the canvas, so a negative z-index here is
    never painted over; ::before is already the iOS notch strip.          */
-body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.34;
-  background:url("images/logo-full.png") center/min(600px,52%) no-repeat,
-             radial-gradient(circle at 50% 50%,rgba(255,224,240,.85),rgba(255,241,228,.35) 26%,transparent 42%);
-  filter:drop-shadow(0 20px 46px rgba(232,62,130,.3))}
+body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.42;
+  background:url("images/logo-stage.webp") center/min(760px,66%) auto no-repeat}
+/* The breathe rides on filter:opacity, not the opacity property, so it
+   multiplies the rule above instead of replacing it -- otherwise the phone
+   rule below sets .3 and the keyframes hand the screen .52 anyway. */
 .anim body::after{animation:mark 16s ease-in-out infinite}
 @keyframes mark{
-  0%,100%{transform:scale(1) rotate(0deg); opacity:.28}
-  50%{transform:scale(1.05) rotate(-1.2deg); opacity:.42}}
-@media (max-width:620px){body::after{background-size:76%,cover; opacity:.26}}
+  0%,100%{transform:scale(1); filter:opacity(.78)}
+  50%{transform:scale(1.035); filter:opacity(1)}}
+@media (max-width:620px){body::after{background-size:92%; opacity:.3}}
 .cursor,.cursor-ring{position:fixed; top:0; left:0; z-index:80; pointer-events:none; border-radius:50%}
 .cursor{width:7px; height:7px; background:var(--pink); box-shadow:0 0 12px rgba(255,46,144,.8)}
 .cursor-ring{width:34px; height:34px; border:1px solid rgba(255,46,144,.5); transition:width .25s,height .25s,border-color .25s,background .25s}
@@ -70,7 +75,9 @@ body::after{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none
 /* ── frosted glass recipe ─────────────────────────────────────────────────── */
 .glass{
   position:relative; border-radius:var(--r); isolation:isolate;
-  background:linear-gradient(158deg,rgba(255,255,255,.96),rgba(255,251,247,.72) 46%,rgba(254,247,242,.88));
+  /* .88 at the waist, not .72: the centred mark is a painted plate now, and
+     at .72 the swan came through the card and sat under the list text. */
+  background:linear-gradient(158deg,rgba(255,255,255,.97),rgba(255,251,247,.88) 46%,rgba(254,247,242,.93));
   box-shadow:inset 0 1px 0 #fff, inset 0 -1px 0 rgba(255,255,255,.6),
              0 28px 60px -34px rgba(196,74,134,.4);
 }
