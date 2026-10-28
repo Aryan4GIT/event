@@ -233,11 +233,14 @@ h1 .line > span{display:block}
 .marquee-track{display:flex; gap:20px; width:max-content; animation:slide 38s linear infinite; transform:rotateX(11deg)}
 .marquee:hover .marquee-track{animation-play-state:paused}
 @keyframes slide{to{transform:rotateX(11deg) translateX(-50%)}}
+/* These are other companies' marks, so they run in their own colours and at
+   full strength -- no grayscale, no opacity knocked back. Hover is the lift
+   alone now; there is no longer any colour for it to restore.            */
 .logo-chip{flex:0 0 auto; width:146px; height:72px; border-radius:var(--r-sm); background:#fff;
-  display:grid; place-items:center; padding:11px; filter:grayscale(1); opacity:.78; transition:.35s cubic-bezier(.2,.8,.2,1);
+  display:grid; place-items:center; padding:11px; transition:.35s cubic-bezier(.2,.8,.2,1);
   box-shadow:0 14px 30px -22px rgba(196,74,134,.8), inset 0 0 0 1px rgba(226,122,170,.14)}
 .logo-chip img{max-height:100%; width:auto; object-fit:contain}
-.logo-chip:hover{filter:none; opacity:1; transform:translateY(-7px) scale(1.06); box-shadow:0 24px 44px -22px rgba(255,46,144,.6), inset 0 0 0 1px rgba(255,46,144,.3)}
+.logo-chip:hover{transform:translateY(-7px) scale(1.06); box-shadow:0 24px 44px -22px rgba(255,46,144,.6), inset 0 0 0 1px rgba(255,46,144,.3)}
 
 /* ── service cards ────────────────────────────────────────────────────────── */
 .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(1.2rem,2.2vw,1.9rem)}
