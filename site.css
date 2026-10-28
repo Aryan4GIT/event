@@ -4,14 +4,15 @@
    photographs orbiting behind the headline. Every surface is milk glass with a
    rose hairline edge; one deeper blush band breaks the white halfway down.     */
 :root{
-  /* colour. The ink tones are chosen by contrast against --void, not by eye:
-     body and both muted greys clear 7:1, which is the AAA mark for normal
-     text, and the muted pair carry the small uppercase mono labels where a
-     light tone costs the most. --dim-2 was the weak one at 4.8:1.      */
+  /* colour. The ink tones are chosen by contrast against --void, not by eye.
+     Nothing that carries words is below 11:1 now; the muted pair sit close
+     to the body tone on purpose, because they take the small uppercase mono
+     labels, where letters are tiny and widely tracked and a light tone costs
+     the most. --dim-2 started this at 4.8:1.                           */
   --void:#FFFCF9;
-  --mist:#2F0F1E; --dim:#5C3A4A; --dim-2:#6D4F5C;
-  --lav:#C73070; --violet:#E83E82; --pink:#FF2E90; --magenta:#F04B93; --gold:#A26818;
-  --plum:#2F0F1E;
+  --mist:#1E0511; --dim:#442634; --dim-2:#4E3341;
+  --lav:#C73070; --violet:#E83E82; --pink:#FF2E90; --magenta:#F04B93; --gold:#8A5712;
+  --plum:#1E0511;
   --grad:linear-gradient(100deg,#FF2E90 0%,#ED3580 45%,#D42A6B 100%);
   --grad-foil:linear-gradient(100deg,#FF4FA0 0%,#F43F90 34%,#E8357F 70%,#D42A6B 100%);
   --line:rgba(226,122,170,.2);
@@ -106,7 +107,7 @@ section{position:relative}
    linear-gradient(180deg,#FFF6FA,#FFF7EE); color:var(--plum);
    border-radius:clamp(30px,4vw,60px); overflow:hidden;
    box-shadow:0 -40px 90px -56px rgba(255,46,144,.6), 0 40px 90px -56px rgba(232,62,130,.6)}
-.band--silk h2,.band--silk h3{color:#2F0F1E}
+.band--silk h2,.band--silk h3{color:#1E0511}
 .eyebrow{font:500 .72rem/1 var(--mono); letter-spacing:.24em; text-transform:uppercase; color:var(--lav);
   display:flex; align-items:center; gap:.75rem; margin:0 0 1.2rem}
 .eyebrow::before{content:""; width:30px; height:2px; border-radius:2px; background:var(--grad)}
@@ -117,7 +118,7 @@ h2{font:400 clamp(2.2rem,5vw,4rem)/1.05 var(--display); margin:0 0 .45em; letter
 h2 em,h1 em{font-style:italic; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent}
 .foil{background:var(--grad-foil); -webkit-background-clip:text; background-clip:text; color:transparent}
 .lede{max-width:60ch; color:var(--dim); font-size:1.05rem}
-.band--silk .lede{color:#6B4B5A}
+.band--silk .lede{color:#4F3341}
 .sec-head{display:flex; flex-wrap:wrap; gap:1.5rem 3.5rem; align-items:flex-end; justify-content:space-between; margin-bottom:clamp(2.4rem,4.5vw,3.8rem)}
 .sec-head > *{min-width:0; flex:1 1 400px}
 .ghost{position:absolute; right:2%; top:-2.5rem; font:400 clamp(7rem,18vw,15rem)/1 var(--display);
@@ -196,7 +197,7 @@ h1 .line > span{display:block}
 .anim h1 .line:nth-child(2) > span{animation-delay:.12s}
 .anim h1 .line:nth-child(3) > span{animation-delay:.24s}
 @keyframes rise{from{transform:translateY(105%) rotate(4deg)}}
-.hero .lede{margin-inline:auto; color:#6B4B5A}
+.hero .lede{margin-inline:auto; color:#4F3341}
 .hero-cta{display:flex; flex-wrap:wrap; gap:.9rem; justify-content:center; margin-top:2.2rem}
 .proof{display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center; margin-top:2.6rem}
 .proof span{display:inline-flex; align-items:center; gap:.5rem; padding:.6rem 1.05rem; border-radius:99px;
@@ -268,7 +269,7 @@ h1 .line > span{display:block}
 .chips span{border-radius:99px; padding:.55rem 1.05rem; font-size:.87rem; color:var(--dim);
   background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(226,122,170,.2); transition:.3s}
 .chips span:hover{color:var(--mist); background:#fff; box-shadow:inset 0 0 0 1px rgba(255,46,144,.45); transform:translateY(-2px)}
-.band--silk .chips span{background:rgba(255,255,255,.72); box-shadow:inset 0 0 0 1px rgba(232,62,130,.22); color:#6B4B5A}
+.band--silk .chips span{background:rgba(255,255,255,.72); box-shadow:inset 0 0 0 1px rgba(232,62,130,.22); color:#4F3341}
 
 /* ── gallery ──────────────────────────────────────────────────────────────── */
 .gal{display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(.7rem,1.3vw,1.1rem); perspective:1400px}
@@ -309,7 +310,7 @@ figcaption{position:absolute; inset:auto 0 0; z-index:2; padding:1.8rem .95rem .
   transition:transform .5s cubic-bezier(.2,.7,.3,1), box-shadow .5s}
 .panel:hover{transform:translateY(-6px); box-shadow:inset 0 1px 0 #fff, 0 44px 70px -40px rgba(255,122,176,.8), 0 0 0 1px rgba(255,122,176,.28)}
 .panel h3{font:600 1.35rem/1.3 var(--body); margin:0 0 .9rem}
-.panel p{color:#6B4B5A; margin:0 0 1rem; font-size:.99rem}
+.panel p{color:#4F3341; margin:0 0 1rem; font-size:.99rem}
 .panel p:last-child{margin-bottom:0}
 .big-num{font:400 clamp(3.6rem,8vw,6rem)/1 var(--display); background:var(--grad);
   -webkit-background-clip:text; background-clip:text; color:transparent; display:block}
@@ -345,7 +346,7 @@ form{padding:clamp(1.5rem,2.8vw,2.4rem); display:grid; gap:1.1rem; min-width:0}
 .field label{font:500 .64rem/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2)}
 .field input,.field select,.field textarea{background:rgba(255,255,255,.86); border:0; border-radius:14px; padding:.9rem 1rem; font-size:.96rem; width:100%;
   box-shadow:inset 0 0 0 1px rgba(226,122,170,.26); transition:box-shadow .3s, background .3s}
-.field input::placeholder,.field textarea::placeholder{color:#82606F}
+.field input::placeholder,.field textarea::placeholder{color:#664757}
 .field input:focus,.field select:focus,.field textarea:focus{outline:0; background:#fff;
   box-shadow:inset 0 0 0 1px var(--pink), 0 0 0 4px rgba(255,46,144,.16)}
 .field textarea{resize:vertical; min-height:96px}
@@ -364,6 +365,14 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
 
 /* ── reveal (visible by default so a JS failure never blanks the page) ────── */
 .anim .reveal{opacity:0; transform:perspective(1000px) translateY(42px) rotateX(9deg)}
+/* The tilt costs width, and how much depends on how tall the element is: the
+   near edge of a rotated box projects wider than the box itself. A 1200px
+   column inside a 1440px window has gutters to absorb that. Below 1000px the
+   column is the window, so a tall section -- an artist category with ten
+   cards -- threw its own edges off-screen for the length of the entrance and
+   the cards looked cropped and misaligned. Flat rise, no tilt, from here
+   down. See the responsive block for where that width comes from.      */
+@media (max-width:1000px){.anim .reveal{transform:translateY(32px)}}
 .anim .reveal.in{opacity:1; transform:none;
   transition:opacity .9s ease, transform 1s cubic-bezier(.2,.7,.3,1); transition-delay:calc(var(--i,0)*70ms)}
 
@@ -398,6 +407,12 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   .lb-prev{left:1rem} .lb-next{right:1rem} .lb-close{right:1rem}
   .roster{grid-template-columns:1fr 1fr}
   .role .ct{display:none}
+  /* The rule and the dot are flex items beside the label. Centred against a
+     label that has wrapped to three lines they float off on their own, so
+     they ride the first line instead. */
+  .eyebrow{align-items:flex-start}
+  .eyebrow::before{margin-top:.42em}
+  .eyebrow::after{margin-top:.2em}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
