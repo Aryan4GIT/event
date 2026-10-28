@@ -70,7 +70,11 @@
 .game figure.noimg small{font:500 .56rem/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:#94194E}
 .game:hover figure.noimg{transform:none}
 .game-body{padding:.95rem 1rem 1.15rem; display:flex; flex-direction:column; gap:.5rem; flex:1}
-.game h3{margin:0; font:600 1rem/1.25 var(--body); letter-spacing:-.005em}
+.game h3{margin:0; font:600 1rem/1.25 var(--body); letter-spacing:-.005em; transition:color .3s}
+/* the body is an <a> when the set-up has a page; the figure is not,
+   because clicking a photo opens the lightbox instead */
+a.game-body{cursor:pointer}
+a.game-body:hover h3,a.game-body:focus-visible h3{color:var(--pink)}
 /* the old copy runs to very different lengths; clamp so the grid stays even */
 .game p{margin:0; color:var(--dim); font-size:.86rem; line-height:1.6;
   display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:4; overflow:hidden}
@@ -258,11 +262,11 @@
         </figure>` : `<figure class="noimg" aria-hidden="true">
           <b>${esc(it.n.slice(0, 1))}</b><small>Photo on request</small>
         </figure>`}
-        <div class="game-body">
-          <h3>${it.u ? `<a href="${esc(it.u.replace(/^https?:\/\/[^/]+\//, ''))}">${esc(it.n)}</a>` : esc(it.n)}</h3>
+        ${it.u ? `<a class="game-body" href="${esc(it.u.replace(/^https?:\/\/[^/]+\//, ''))}">` : '<div class="game-body">'}
+          <h3>${esc(it.n)}</h3>
           <p>${esc(it.b)}</p>
           ${(it.d || []).length ? `<ul class="spec">${it.d.map(d => `<li>${esc(d)}</li>`).join('')}</ul>` : ''}
-        </div>
+        ${it.u ? '</a>' : '</div>'}
       </article>`;
     }).join('');
   });

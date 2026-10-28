@@ -287,10 +287,13 @@ h1 .line > span{display:block}
 .role .ct{margin-left:auto; font:500 .56rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase;
   color:var(--dim-2); flex:0 0 auto}
 .chips{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:2.4rem}
-.chips span{border-radius:99px; padding:.55rem 1.05rem; font-size:.87rem; color:var(--dim);
+/* a chip is a <span> where it is a statement and an <a> where it names
+   something with a page of its own; :not(.btn) because the two call-to-action
+   buttons under the artist roster sit in a .chips row as well. */
+.chips span,.chips a:not(.btn){border-radius:99px; padding:.55rem 1.05rem; font-size:.87rem; color:var(--dim);
   background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(226,122,170,.2); transition:.3s}
-.chips span:hover{color:var(--mist); background:#fff; box-shadow:inset 0 0 0 1px rgba(255,46,144,.45); transform:translateY(-2px)}
-.band--silk .chips span{background:rgba(255,255,255,.72); box-shadow:inset 0 0 0 1px rgba(232,62,130,.22); color:#36202B}
+.chips span:hover,.chips a:not(.btn):hover{color:var(--mist); background:#fff; box-shadow:inset 0 0 0 1px rgba(255,46,144,.45); transform:translateY(-2px)}
+.band--silk .chips span,.band--silk .chips a:not(.btn){background:rgba(255,255,255,.72); box-shadow:inset 0 0 0 1px rgba(232,62,130,.22); color:#36202B}
 
 /* ── gallery ──────────────────────────────────────────────────────────────── */
 .gal{display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(.7rem,1.3vw,1.1rem); perspective:1400px}
