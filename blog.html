@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Blog — SHOWMAQERS</title>
 <meta name="description" content="Notes from the floor by Showmaqers — wedding decorators, corporate event planners, birthday party planners and event décor across Delhi, Gurugram, Noida, Faridabad and Ghaziabad.">
+<link rel="canonical" href="https://www.showmaqers.com/blog.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SHOWMAQERS">
+<meta property="og:title" content="Blog — SHOWMAQERS">
+<meta property="og:description" content="Notes from the floor by Showmaqers — wedding decorators, corporate event planners, birthday party planners and event décor across Delhi, Gurugram, Noida, Faridabad and Ghaziabad.">
+<meta property="og:url" content="https://www.showmaqers.com/blog.html">
+<meta property="og:image" content="https://www.showmaqers.com/images/logo-mark.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog — SHOWMAQERS">
+<meta name="twitter:description" content="Notes from the floor by Showmaqers — wedding decorators, corporate event planners, birthday party planners and event décor across Delhi, Gurugram, Noida, Faridabad and Ghaziabad.">
+<meta name="twitter:image" content="https://www.showmaqers.com/images/logo-mark.webp">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Blog","name":"SHOWMAQERS blog","url":"https://www.showmaqers.com/blog.html","publisher":{"@id":"https://www.showmaqers.com/#business"}}]}</script>
 <link rel="icon" href="images/logo-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,7 +96,7 @@
         <a href="index.html#gallery">Gallery</a>
         <a href="index.html#about">About</a>
         <a href="vendors.html">Join us</a>
-        <a href="index.html#contact">Contact</a>
+        <a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a>
       </nav>
       <a class="btn btn--hot" href="tel:+919910772449">Call<span class="num">&nbsp;99107 72449</span></a>
       <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
@@ -109,7 +121,6 @@
   <section class="band" style="padding-top:clamp(20px,3vw,40px)">
     <div class="wrap">
       <div class="posts" id="postList"></div>
-      <article class="article reveal" id="postView" hidden></article>
     </div>
   </section>
 
@@ -139,7 +150,7 @@
     </a>
     <nav aria-label="Footer">
       <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
-      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
+      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a>
     </nav>
     <p>SHOWMAQERS &middot; All rights reserved</p>
   </div>
@@ -155,14 +166,13 @@
 
   const POSTS = window.POSTS || [];
   const list = document.getElementById('postList');
-  const view = document.getElementById('postView');
   const hero = document.getElementById('blogHero');
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   /* ── the index ─────────────────────────────────────────────────────────── */
   list.innerHTML = POSTS.map(p => `
-    <a class="post-card" href="#${esc(p.s)}">
+    <a class="post-card" href="blog/${esc(p.s)}.html">
       ${p.i && p.i.length ? `<img src="${esc(p.i[0])}" alt="" loading="lazy">` : ''}
       <div class="pc-body">
         ${p.w ? `<time datetime="${esc(p.d)}">${esc(p.w)}</time>` : ''}
@@ -172,47 +182,18 @@
       </div>
     </a>`).join('');
 
-  /* ── one post ──────────────────────────────────────────────────────────── */
-  function renderPost(p) {
-    const out = [`<a class="back" href="#">&larr; All posts</a>`];
-    if (p.w) out.push(`<time datetime="${esc(p.d)}">${esc(p.w)}</time>`);
-    out.push(`<h1>${esc(p.t)}</h1>`);
-    if (p.i && p.i.length) out.push(`<img class="hero-shot" src="${esc(p.i[0])}" alt="">`);
-
-    /* the source is a flat run of blocks; list items need wrapping back up */
-    let open = false;
-    for (const [kind, txt] of p.b || []) {
-      if (kind === 'li' && !open) { out.push('<ul>'); open = true; }
-      if (kind !== 'li' && open) { out.push('</ul>'); open = false; }
-      if (kind === 'h') out.push(`<h2>${esc(txt)}</h2>`);
-      else if (kind === 'li') out.push(`<li>${esc(txt)}</li>`);
-      else out.push(`<p>${esc(txt)}</p>`);
-    }
-    if (open) out.push('</ul>');
-
-    (p.i || []).slice(1).forEach(src => out.push(`<figure><img src="${esc(src)}" alt="" loading="lazy"></figure>`));
-    out.push(`<div class="tail">
-        <a class="back" href="#" style="margin:0">&larr; All posts</a>
-        <a class="btn btn--hot" href="index.html#contact">Plan my event</a>
-      </div>`);
-    view.innerHTML = out.join('');
-  }
-
-  function route() {
+  /* ── old links ───────────────────────────────────────────
+     Every post is its own page under blog/ now. This file used to render
+     them at blog.html#slug, which search engines never saw as separate
+     pages; anything shared while that was true still has to work, so the
+     hash sends the reader on to the page that replaced it. replace() so
+     the dead URL does not sit in their history.                       */
+  const route = () => {
     const slug = decodeURIComponent(location.hash.slice(1));
     const post = POSTS.find(p => p.s === slug);
-    if (post) {
-      renderPost(post);
-      view.hidden = false; list.hidden = true; hero.hidden = true;
-      view.classList.add('in');
-      document.title = post.t + ' — SHOWMAQERS';
-    } else {
-      view.hidden = true; list.hidden = false; hero.hidden = false;
-      document.title = 'Blog — SHOWMAQERS';
-      if (slug) location.replace('#');          // unknown slug falls back to the index
-    }
-    scrollTo({ top: 0, behavior: 'auto' });
-  }
+    if (post) location.replace('blog/' + post.s + '.html');
+    else if (slug) location.replace('#');
+  };
   addEventListener('hashchange', route);
   route();
 

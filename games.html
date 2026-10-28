@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Games &amp; Activities on Rent — SHOWMAQERS</title>
 <meta name="description" content="Games and activities on rent for events, birthday parties and corporate days in Delhi, Gurugram, Noida, Manesar, Faridabad and Ghaziabad — bouncies, arcade machines, table games, carnival stalls, craft counters and shows. 48 set-ups, delivered and run by our crew.">
+<link rel="canonical" href="https://www.showmaqers.com/games.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SHOWMAQERS">
+<meta property="og:title" content="Games &amp; Activities on Rent — SHOWMAQERS">
+<meta property="og:description" content="Games and activities on rent for events, birthday parties and corporate days in Delhi, Gurugram, Noida, Manesar, Faridabad and Ghaziabad — bouncies, arcade machines, table games, carnival stalls, craft counters and shows. 48 set-ups, delivered and run by our crew.">
+<meta property="og:url" content="https://www.showmaqers.com/games.html">
+<meta property="og:image" content="https://www.showmaqers.com/images/logo-mark.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Games &amp; Activities on Rent — SHOWMAQERS">
+<meta name="twitter:description" content="Games and activities on rent for events, birthday parties and corporate days in Delhi, Gurugram, Noida, Manesar, Faridabad and Ghaziabad — bouncies, arcade machines, table games, carnival stalls, craft counters and shows. 48 set-ups, delivered and run by our crew.">
+<meta name="twitter:image" content="https://www.showmaqers.com/images/logo-mark.webp">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","name":"Games & activities on rent","url":"https://www.showmaqers.com/games.html","about":{"@id":"https://www.showmaqers.com/#business"}}]}</script>
 <link rel="icon" href="images/logo-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,7 +112,7 @@
         <a href="index.html#gallery">Gallery</a>
         <a href="index.html#about">About</a>
         <a href="vendors.html">Join us</a>
-        <a href="index.html#contact">Contact</a>
+        <a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a>
       </nav>
       <a class="btn btn--hot" href="tel:+919910772449">Call<span class="num">&nbsp;99107 72449</span></a>
       <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
@@ -215,7 +227,7 @@
     </a>
     <nav aria-label="Footer">
       <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
-      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
+      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a>
     </nav>
     <p>SHOWMAQERS &middot; All rights reserved</p>
   </div>
@@ -247,7 +259,7 @@
           <b>${esc(it.n.slice(0, 1))}</b><small>Photo on request</small>
         </figure>`}
         <div class="game-body">
-          <h3>${esc(it.n)}</h3>
+          <h3>${it.u ? `<a href="${esc(it.u.replace(/^https?:\/\/[^/]+\//, ''))}">${esc(it.n)}</a>` : esc(it.n)}</h3>
           <p>${esc(it.b)}</p>
           ${(it.d || []).length ? `<ul class="spec">${it.d.map(d => `<li>${esc(d)}</li>`).join('')}</ul>` : ''}
         </div>

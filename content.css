@@ -1,0 +1,52 @@
+/* ── generated content pages ──────────────────────────────────────────────
+   Every page under tools/build-seo-pages.py links this instead of carrying
+   its own <style>, because there are 146 of them and the block would
+   otherwise be copied 146 times into the HTML the browser downloads.
+   The article rules are the ones blog.html already had; they live here now
+   so the hand-written page and the generated ones cannot drift apart.   */
+.page-hero{padding-block:clamp(40px,6vw,74px) clamp(24px,3vw,40px); text-align:center; position:relative; overflow:hidden}
+.page-hero h1{font:400 clamp(2.2rem,5.4vw,4rem)/1.05 var(--display); margin:0 0 1rem; letter-spacing:-.03em; text-wrap:balance}
+.page-hero .lede{margin-inline:auto}
+.page-hero .eyebrow{justify-content:center}
+.crumb{font:500 .66rem/1.7 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2); margin-bottom:1.4rem}
+.crumb a:hover{color:var(--pink)}
+
+.article{max-width:760px; margin-inline:auto}
+.article .back{display:inline-block; margin-bottom:1.8rem; font:500 .66rem/1 var(--mono);
+  letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2)}
+.article .back:hover{color:var(--pink)}
+.article time{display:block; font:500 .62rem/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--lav); margin-bottom:.9rem}
+.article h1{font:400 clamp(2rem,4.4vw,3.2rem)/1.08 var(--display); margin:0 0 1.6rem; letter-spacing:-.02em; text-wrap:balance}
+.article .hero-shot{width:100%; border-radius:20px; margin-bottom:2rem; aspect-ratio:16/9; object-fit:cover;
+  box-shadow:0 24px 48px -30px rgba(196,74,134,.9)}
+.article h2{font:600 1.12rem/1.4 var(--body); margin:2.2rem 0 .7rem; letter-spacing:-.005em}
+.article p{margin:0 0 1.1rem; color:var(--dim); line-height:1.8}
+.article ul{margin:0 0 1.3rem; padding-left:1.1rem; color:var(--dim); line-height:1.8}
+.article li{margin-bottom:.4rem}
+.article figure{margin:2rem 0}
+.article figure img{width:100%; border-radius:18px}
+.article .tail{margin-top:3rem; padding-top:1.8rem; border-top:1px solid var(--line);
+  display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between}
+
+/* the video the page carried on the old site. 16/9 box so the iframe cannot
+   shift the layout as it loads, and loading=lazy so a page far down the
+   article does not pay for the player on first paint.                   */
+.vid{margin:2.2rem 0; border-radius:18px; overflow:hidden; aspect-ratio:16/9;
+  box-shadow:0 24px 48px -30px rgba(196,74,134,.9)}
+.vid iframe{width:100%; height:100%; border:0; display:block}
+
+/* FAQ. <dl> rather than headings, because these are question/answer pairs
+   and the FAQPage block in the page's JSON-LD describes them as such.   */
+.faq{margin:2.4rem 0 0}
+.faq dt{font:600 1rem/1.5 var(--body); margin:1.6rem 0 .5rem}
+.faq dd{margin:0; color:var(--dim); line-height:1.8}
+
+/* the directory at sitemap.html: one list per section of the site */
+.dirs{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:clamp(1.4rem,2.4vw,2.4rem)}
+.dir h2{font:400 1.5rem/1.2 var(--display); margin:0 0 .9rem; letter-spacing:-.01em}
+.dir ul{margin:0; padding:0; list-style:none}
+.dir li{margin-bottom:.45rem; line-height:1.5}
+.dir a{color:var(--dim); font-size:.92rem}
+.dir a:hover{color:var(--pink)}
+
+@media (max-width:620px){.article .tail .btn{flex:1 1 100%}}
