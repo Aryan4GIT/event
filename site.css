@@ -137,7 +137,11 @@ h2 em,h1 em{font-style:italic; background:var(--grad); -webkit-background-clip:t
   box-shadow:inset 0 0 0 1px rgba(226,122,170,.18), inset 0 1px 0 #fff, 0 20px 46px -34px rgba(196,74,134,.8); margin-top:8px}
 body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:61; background:rgba(255,252,249,.92)}
 .brand{display:flex; align-items:center; gap:.7rem; margin-right:auto; min-width:0}
-.brand img{width:40px; height:40px; object-fit:contain; filter:drop-shadow(0 4px 16px rgba(255,61,154,.65))}
+/* The lockup is painted on a dark plate and cannot be lifted off it -- its
+   modelling runs into the background -- so it is framed as a badge instead.
+   cover, not contain, so the rounding clips the artwork and not a gutter. */
+.brand img{width:40px; height:40px; object-fit:cover; border-radius:10px;
+  box-shadow:0 4px 16px rgba(255,61,154,.45), inset 0 0 0 1px rgba(255,255,255,.14)}
 .brand b{font:700 1rem/1 var(--body); letter-spacing:.17em}
 .brand small{display:block; font:400 .56rem/1.5 var(--mono); letter-spacing:.22em; color:var(--dim-2); text-transform:uppercase}
 .nav-links{display:flex; gap:.15rem; align-items:center}
