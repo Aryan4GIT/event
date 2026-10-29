@@ -15,9 +15,8 @@ the grid, and any detail paragraph that the card now carries is removed with
 it. Anything it does not recognise is left alone and the page is skipped, so a
 page is either rebuilt whole or not touched.
 
-Pages whose card labels are price lists rather than names -- the balloon
-packages and the baby shower rates -- are not listed here: their text belongs
-in prose, not on a card.
+A card the live site shows without a photo is left alone: two balloon packages
+have no picture there either, so they stay as prose.
 """
 
 import html
@@ -40,6 +39,9 @@ PAGES = [
     "hire-best-male-female-dj-for-event-party-in-delhi-gurugram-noida-faridabad-manesar.html",
     "female-emcee-anchor-for-hire-for-events-parties-delhi-ncr.html",
     "diwali-rangoli-decorators-delhi-gurgaon-noida.html",
+    "balloon-decorator-for-events-parties-delhi-ncr.html",
+    "baby-shower-decorators-delhi-gurgaon-noida.html",
+    "event-decorators-planners-delhi-gurgaon-noida.html",
 ]
 NUMBERED = re.compile(r"^\s*\d+[.)]?\s+")
 
@@ -64,8 +66,10 @@ def cards_on(page_html):
         body = box.select_one(".smue-service-box-content-section")
         btn = box.select_one(".smue-service-box-button-section a")
         name = re.sub(r"\s+", " ", head.get_text(" ", strip=True)) if head else ""
-        lines = [re.sub(r"\s+", " ", p.get_text(" ", strip=True))
-                 for p in (body.find_all("p") if body else [])]
+        # the price sits in an h4 on the balloon cards and in a p on the rest
+        lines = [re.sub(r"\s+", " ", el.get_text(" ", strip=True))
+                 for el in (body.find_all(["p", "h3", "h4", "h5", "h6", "li"])
+                            if body else [])]
         lines = [l for l in lines if l]
         if not name and lines:                     # the event page names the card here
             name, lines = lines[0], lines[1:]
@@ -119,27 +123,35 @@ def rebuild(page):
 
     path = os.path.join(ROOT, page)
     lines = io.open(path, encoding="utf-8").read().split("\n")
-    text = {}                                   # normalised line text -> index
+    text = {}                            # normalised line text -> indices, in order
     for i, line in enumerate(lines):
         m = LINE.match(line)
         if m:
-            text.setdefault(norm(html.unescape(m.group(2))), i)
+            text.setdefault(norm(html.unescape(m.group(2))), []).append(i)
 
     at = []
     for c in cards:
-        i = text.get(norm(c["name"]))
-        if i is None:
+        # a name can repeat -- two "Baby shower backdrop" packages at different
+        # prices -- so each card takes the next line of that name, not the first
+        where = text.get(norm(c["name"]), [])
+        if not where:
             print("%-56s %r is not a line in our page, skipped"
                   % (page[:56], c["name"][:40])); return False
-        at.append(i)
+        at.append(where.pop(0))
 
-    detail = {norm(l) for c in cards for l in c["lines"]}
+    # The loose copies of what the card now says. A card may hold its detail in
+    # one paragraph where our page split it into a price heading and a list, so
+    # a line goes only if the card repeats it word for word.
     doomed = set(at)
-    for i in at:                                # the loose copies of what the card now says
+    for c, i in zip(cards, at):
+        carried = norm(" ".join(c["lines"]))
         j = i + 1
-        while j < len(lines):
+        while j < len(lines) and carried:
             m = LINE.match(lines[j])
-            if not m or norm(html.unescape(m.group(2))) not in detail:
+            if not m:
+                break
+            said = norm(html.unescape(m.group(2)))
+            if not said or said not in carried:
                 break
             doomed.add(j); j += 1
 
