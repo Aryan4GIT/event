@@ -342,7 +342,9 @@
         <div class="chips reveal" style="--i:3" id="cityChips"></div>
       </div>
       <div class="map glass blur reveal" style="--i:2">
-        <img src="images/ncr.png" alt="Map of the Delhi National Capital Region" loading="lazy">
+        <p class="eyebrow">Pan India</p>
+        <p class="map-count"><b id="cityTotal">0</b> cities and towns</p>
+        <dl class="regions" id="regions"></dl>
       </div>
     </div>
   </section>
@@ -514,6 +516,29 @@
     'Lucknow','Kanpur','Varanasi (Banaras)','Prayagraj','Indore','Bhopal','Chhattisgarh','Kolkata','Mumbai',
     'Goa','Bengaluru','Hyderabad','Chennai'];
   document.getElementById('cityChips').innerHTML = cities.map(c => `<span>${c}</span>`).join('');
+
+  /* Where those cities are, so the panel beside them can say it without a map.
+     An India map has to follow the official boundary to be published here, and
+     the freely licensed ones do not, so the panel carries the reach instead. */
+  const regions = {
+    'Delhi': ['South Delhi','East Delhi','West Delhi','North Delhi'],
+    'Haryana': ['Gurgaon / Gurugram','Faridabad','Manesar','Sonipat','Panipat','Karnal','Rohtak',
+      'Jhajjar','Jind','Rewari','Palwal','Nuh','Mahendragarh','Bhiwani','Charkhi Dadri'],
+    'Uttar Pradesh': ['Noida','Greater Noida','Ghaziabad','Gautam Buddh Nagar','Baghpat','Bulandshahr',
+      'Hapur','Meerut','Muzaffarnagar','Shamli','Agra','Bijnor','Bareilly','Lucknow','Kanpur',
+      'Varanasi (Banaras)','Prayagraj'],
+    'Rajasthan': ['Alwar','Bharatpur','Jaipur','Jodhpur','Udaipur','Jaisalmer','Pushkar','Ranthambore'],
+    'Uttarakhand': ['Mussoorie','Nainital','Dehradun','Haridwar','Rishikesh','Ramnagar','Jim Corbett'],
+    'Himachal &amp; Punjab': ['Manali','Kasol','Kufri','Kasauli','Mandi','Himachal Pradesh','Chandigarh','Ludhiana'],
+    'Rest of India': ['Indore','Bhopal','Chhattisgarh','Kolkata','Mumbai','Goa','Bengaluru','Hyderabad','Chennai']
+  };
+  const placed = new Set(Object.values(regions).flat());
+  const spare = cities.filter(c => !placed.has(c));
+  if (spare.length) regions['Elsewhere'] = spare;      // a city added to the list above still counts
+  document.getElementById('cityTotal').textContent = cities.length;
+  document.getElementById('regions').innerHTML = Object.entries(regions)
+    .filter(([, list]) => list.length)
+    .map(([name, list]) => `<dt>${name}</dt><dd>${list.length}</dd>`).join('');
 
   /* fairy lights follow the same quadratic curve as the drawn wire */
   const at = t => {
