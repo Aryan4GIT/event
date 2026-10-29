@@ -140,6 +140,25 @@ without the duration rather than failing.
 
 ---
 
+## Artist details from the live site
+
+Run [`artist-details.sql`](artist-details.sql) in the SQL Editor.
+
+It adds an `event_type` column and fills in, for the 102 legacy artists, what
+showmaqers.com states under each of them: location, performance duration,
+budget and event type. The anchors page gives all four; the DJ and singer
+pages give a location only, so those rows get a city and nothing else.
+
+The file is generated — re-run `python tools/pull-artist-details.py` after the
+live site changes rather than editing it. That script also refreshes
+`artists-data.js`, which is where the website itself reads the details, and it
+stops with an error if the live page and the roster have drifted out of step.
+
+None of these four reach the public roster view: a visitor sees a name, a
+category and a photo, and budget stays between you and the client.
+
+---
+
 ## What is in the database
 
 | Table | What it holds |

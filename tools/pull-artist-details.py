@@ -1,0 +1,151 @@
+#!/usr/bin/env python
+"""Pull each artist's location, duration, budget and event type off the live site.
+
+  python tools/pull-artist-details.py
+
+Three pages on showmaqers.com carry per-artist detail under the artist's name:
+DJs give a location only, singers give the city in brackets, and the anchors
+page gives all four lines. Every other manpower page is pictures and prose with
+nothing per artist, so there is nothing there to pull.
+
+The cards come back in the same order as the roster in artists-data.js and in
+supabase/seed-roster.sql, so position inside a category is the key — names
+repeat (two Muskans, two Mansis, two Akanshas) and would match the wrong row.
+
+Writes:
+  artists-data.js            the same roster, each artist gaining l/d/b/e
+  supabase/artist-details.sql  run once in the SQL Editor to store it
+"""
+
+import io
+import json
+import os
+import re
+import sys
+
+import requests
+from bs4 import BeautifulSoup
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+UA = {"User-Agent": "Mozilla/5.0 (compatible; showmaqers-site-rebuild/1.0)"}
+
+# category key in artists-data.js -> the live page that details that category
+PAGES = {
+    "dj": "hire-best-male-female-dj-for-event-party-in-delhi-gurugram-noida-faridabad-manesar.html",
+    "anchors": "female-emcee-anchor-for-hire-for-events-parties-delhi-ncr.html",
+    "singers": "hire-bollywood-folk-singers-for-events-weddings-party-delhi-noida-gurugram-faridabad-manesar.html",
+}
+FIELDS = [("l", "location"), ("d", "duration"), ("b", "budget"), ("e", "event type")]
+
+
+def detail(lines):
+    """The four facts out of a card's <p> lines, whichever of them it carries."""
+    got = {}
+    for line in lines:
+        m = re.match(r"\s*(location|duration|budget|event\s*type)\s*:\s*(.+)", line, re.I)
+        if m:
+            got[re.sub(r"\s+", " ", m.group(1)).lower()] = m.group(2).strip()
+            continue
+        # singers carry the city as "(based in Delhi)" and nothing else
+        m = re.match(r"\s*\(\s*based in\s+(.+?)\s*\)\s*$", line, re.I)
+        if m:
+            got["location"] = m.group(1).strip()
+    return got
+
+
+def cards(page):
+    """(name, details) per card, in page order. The anchors are numbered."""
+    r = requests.get("https://showmaqers.com/" + page, headers=UA, timeout=30)
+    r.raise_for_status()
+    r.encoding = r.apparent_encoding or "utf-8"
+    out = []
+    for box in BeautifulSoup(r.text, "html.parser").select(".smue-service-box-obj"):
+        head = box.find(re.compile("^h[1-5]$"))
+        name = re.sub(r"^\s*\d+[.\s]*", "", head.get_text()).strip() if head else ""
+        lines = [re.sub(r"\s+", " ", p.get_text()).strip() for p in box.find_all("p")]
+        out.append((re.sub(r"\s+", " ", name), detail([l for l in lines if l])))
+    return out
+
+
+def sql_str(s):
+    return "'" + s.replace("'", "''") + "'"
+
+
+def main():
+    path = os.path.join(ROOT, "artists-data.js")
+    src = io.open(path, encoding="utf-8").read()
+    head, body = src[: src.index("{")], src[src.index("{") : src.rindex("}") + 1]
+    roster = json.loads(body)
+
+    rows, filled = [], 0
+    for key, page in PAGES.items():
+        found = cards(page)
+        if len(found) != len(roster[key]):
+            sys.exit("%s: live page has %d cards, roster has %d — order is no "
+                     "longer a safe key, check the page" % (key, len(found), len(roster[key])))
+        for i, (artist, (live_name, got)) in enumerate(zip(roster[key], found), start=1):
+            # position is the key, so prove the positions still line up
+            if live_name.lower() != artist["n"].lower():
+                sys.exit("%s %d: live page says %r, roster says %r — the two lists "
+                         "have drifted apart" % (key, i, live_name, artist["n"]))
+            for short, name in FIELDS:
+                artist.pop(short, None)
+                if got.get(name):
+                    artist[short] = got[name]
+            filled += bool(got)
+            rows.append((key, i, [got.get(name, "") for _, name in FIELDS]))
+
+    io.open(path, "w", encoding="utf-8", newline="\n").write(
+        head + json.dumps(roster, ensure_ascii=False, indent=1) + ";\n")
+
+    values = ",\n  ".join(
+        "(%s, %d, %s)" % (sql_str(key), sort, ", ".join(sql_str(v) for v in vals))
+        for key, sort, vals in rows)
+    io.open(os.path.join(ROOT, "supabase", "artist-details.sql"), "w",
+            encoding="utf-8", newline="\n").write(SQL % values)
+
+    print("%d artists, %d with details -> artists-data.js, supabase/artist-details.sql"
+          % (len(rows), filled))
+
+
+SQL = """-- ===========================================================================
+--  Artist details — location, performance duration, budget and event type,
+--  as showmaqers.com states them under each artist.
+--  Run once in the SQL Editor, after seed-roster.sql. Safe to run again.
+--
+--  Generated by tools/pull-artist-details.py — re-run that rather than editing
+--  this by hand. Matched on (category_key, sort), because artist names repeat.
+--  Only the anchors page gives all four; DJs and singers give a location only.
+-- ===========================================================================
+
+alter table public.vendors
+  add column if not exists event_type text;
+
+comment on column public.vendors.event_type is
+  'What the artist is booked for, as the site states it: "Corporate/Social".';
+
+update public.vendors v set
+  city                 = coalesce(nullif(d.city, ''),      v.city),
+  performance_duration = coalesce(nullif(d.duration, ''),  v.performance_duration),
+  fee_note             = coalesce(nullif(d.budget, ''),    v.fee_note),
+  event_type           = coalesce(nullif(d.event_type, ''), v.event_type)
+from (values
+  %s
+) as d(category_key, sort, city, duration, budget, event_type)
+where v.source = 'legacy'
+  and v.category_key = d.category_key
+  and v.sort = d.sort;
+
+-- Not added to public.roster: the public roster shows a name, a category and a
+-- photo. Budget and duration are what we quote on, so they stay staff-only.
+
+-- Check ---------------------------------------------------------------------
+select category_key, count(*) filter (where city is not null)       as with_city,
+                     count(*) filter (where performance_duration is not null) as with_duration,
+                     count(*) filter (where event_type is not null) as with_event_type
+from public.vendors where source = 'legacy' group by category_key order by category_key;
+"""
+
+
+if __name__ == "__main__":
+    main()
