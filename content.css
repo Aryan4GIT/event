@@ -29,6 +29,17 @@
 .article li{margin-bottom:.4rem}
 .article figure{margin:2rem 0}
 .article figure img{width:100%; border-radius:18px}
+
+/* the decorator grid: a picture, the name and the way in, as the old site had it */
+.svc-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1.1rem; margin:2.2rem 0 2.6rem}
+.svc-card{display:flex; flex-direction:column; border-radius:18px; overflow:hidden; background:#fff;
+  box-shadow:0 16px 34px -26px rgba(196,74,134,.8), inset 0 0 0 1px rgba(226,122,170,.14);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s}
+.svc-card:hover{transform:translateY(-4px); box-shadow:0 26px 44px -26px rgba(255,46,144,.7), inset 0 0 0 1px rgba(255,46,144,.35)}
+.svc-card img{width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:var(--line)}
+.svc-card b{padding:.85rem .9rem .1rem; font:600 .88rem/1.35 var(--body); color:var(--mist)}
+.svc-card .btn{margin:auto .9rem 1rem; padding:.6rem 1.1rem; font-size:.78rem}
+
 .article .tail{margin-top:3rem; padding-top:1.8rem; border-top:1px solid var(--line);
   display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between}
 
