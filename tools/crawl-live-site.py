@@ -97,8 +97,29 @@ def seeds():
     return out
 
 
+CSS_URL = re.compile(r"""url\(\s*['"]?([^'")]+)['"]?\s*\)""", re.I)
+
+
+def background_images(soup, url):
+    """Pictures the theme paints with CSS rather than an <img>.
+
+    The service-box cards -- the decorator grid on the event page is the one
+    that matters -- put their photo in a background-image on an empty div, so
+    an <img> sweep walks straight past them and the picture is never kept.
+    """
+    css = " ".join(t.get_text() for t in soup.find_all("style"))
+    css += " ".join(el["style"] for el in soup.select("[style]"))
+    out = []
+    for raw in CSS_URL.findall(css):
+        raw = raw.strip()
+        if raw and not raw.startswith("data:"):
+            out.append(urljoin(url, raw))
+    return out
+
+
 def scrape(html, url):
     soup = BeautifulSoup(html, "lxml")
+    backgrounds = background_images(soup, url)
     for tag in soup(["script", "style", "noscript"]):
         tag.decompose()
 
@@ -121,6 +142,12 @@ def scrape(html, url):
             continue
         images.append({"src": urljoin(url, src),
                        "alt": " ".join((img.get("alt") or "").split())})
+
+    seen = {i["src"] for i in images}
+    for src in backgrounds:
+        if src not in seen and same_site(src):
+            seen.add(src)
+            images.append({"src": src, "alt": "", "css": True})
 
     youtube = []
     for el in soup.find_all(["iframe", "a", "source"]):

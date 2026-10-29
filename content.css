@@ -38,6 +38,7 @@
 .svc-card:hover{transform:translateY(-4px); box-shadow:0 26px 44px -26px rgba(255,46,144,.7), inset 0 0 0 1px rgba(255,46,144,.35)}
 .svc-card img{width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:var(--line)}
 .svc-card b{padding:.85rem .9rem .1rem; font:600 .88rem/1.35 var(--body); color:var(--mist)}
+.svc-card small{padding:.25rem .9rem 0; font:400 .72rem/1.5 var(--body); color:var(--dim)}
 .svc-card .btn{margin:auto .9rem 1rem; padding:.6rem 1.1rem; font-size:.78rem}
 
 .article .tail{margin-top:3rem; padding-top:1.8rem; border-top:1px solid var(--line);
