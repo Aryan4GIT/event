@@ -19,6 +19,17 @@
 .article h1{font:400 clamp(2rem,4.4vw,3.2rem)/1.08 var(--display); margin:0 0 1.6rem; letter-spacing:-.02em; text-wrap:balance}
 .article .hero-shot{width:100%; border-radius:20px; margin-bottom:2rem; aspect-ratio:16/9; object-fit:cover;
   box-shadow:0 24px 48px -30px rgba(196,74,134,.9)}
+
+/* the same moving strip the artists page uses, for a page whose cards below
+   are all pictures anyway -- it reads as a showreel rather than a hero */
+.strip{overflow:hidden; margin:0 0 2rem; padding-block:18px; perspective:900px;
+  border-block:1px solid var(--line); mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.strip-track{display:flex; gap:14px; width:max-content; animation:slide 52s linear infinite; transform:rotateX(9deg)}
+.strip:hover .strip-track{animation-play-state:paused}
+.article .strip figure{flex:0 0 auto; margin:0; width:150px; aspect-ratio:4/3; border-radius:14px; overflow:hidden;
+  box-shadow:0 16px 34px -22px rgba(196,74,134,.9), inset 0 0 0 1px rgba(255,255,255,.9)}
+.article .strip figure img{width:100%; height:100%; object-fit:cover; border-radius:0}
+@media (prefers-reduced-motion:reduce){.strip-track{animation:none}}
 .article h2{font:600 1.12rem/1.4 var(--body); margin:2.2rem 0 .7rem; letter-spacing:-.005em}
 .article h3{font:600 .98rem/1.45 var(--body); margin:1.5rem 0 .4rem; color:var(--mist)}
 .article p{margin:0 0 1.1rem; color:var(--dim); line-height:1.8}
