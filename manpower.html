@@ -68,6 +68,7 @@
 .person figcaption{position:static; background:none; color:var(--mist); padding:.7rem .8rem .85rem;
   font:600 .82rem/1.25 var(--body); letter-spacing:0; text-transform:none}
 .person figcaption b{display:block; font:500 .58rem/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--dim-2)}
+.person figcaption small{display:block; margin-top:.3rem; font:400 .7rem/1.45 var(--body); color:var(--dim)}
 .person:hover{transform:translateZ(40px) rotateX(5deg) rotateY(-5deg); z-index:2;
   box-shadow:0 36px 56px -30px rgba(255,46,144,.6), inset 0 0 0 1px rgba(255,46,144,.4)}
 .person:hover img{transform:scale(1.06)}
@@ -559,11 +560,13 @@
     document.querySelectorAll('[data-people]').forEach(box => {
       const kind = box.dataset.people, list = DATA[kind] || [];
       const role = label[kind] || box.closest('.cat')?.querySelector('h2')?.textContent.trim() || '';
-      box.innerHTML = list.map(p =>
-        `<figure class="person" data-src="${p.i}" data-cap="${p.n}"${p.s ? ` data-clip="${p.s}"` : ''}>` +
+      box.innerHTML = list.map(p => {
+        const facts = [p.l, p.d, p.e].filter(Boolean).join(' · ');   // fee stays off the public card
+        return `<figure class="person" data-src="${p.i}" data-cap="${p.n}"${p.s ? ` data-clip="${p.s}"` : ''}>` +
         (p.s ? '<span class="reel">▶ Reel</span>' : '') +
         `<img src="${p.i}" alt="${p.n}" loading="lazy">` +
-        `<figcaption>${p.n}<b>${role}</b></figcaption></figure>`).join('');
+        `<figcaption>${p.n}<b>${role}</b>${facts ? `<small>${facts}</small>` : ''}</figcaption></figure>`;
+      }).join('');
       box.style.marginBottom = list.length ? '1.1rem' : '0';
     });
     document.querySelectorAll('[data-count-for]').forEach(el => {
@@ -596,13 +599,21 @@
       const read = cols => fetch(`${cfg.url}/rest/v1/roster?select=${cols}&order=sort.asc`, h);
       /* skill_path only exists once supabase/skill-media.sql is run — until
          then read the roster without it rather than losing the live data */
-      let r = await read('name,category_key,photo_path,skill_path,sort');
-      if (!r.ok) r = await read('name,category_key,photo_path,sort');
+      let r = await read('name,category_key,photo_path,skill_path,city,sort');
+      if (!r.ok) r = await read('name,category_key,photo_path,city,sort');
       if (!r.ok) return;
       const rows = await r.json();
       if (!Array.isArray(rows) || !rows.length) return;   // never blank the page
-      const live = {};
-      for (const row of rows) (live[row.category_key] ||= []).push({ n: row.name, i: row.photo_path, s: row.skill_path || null });
+      const live = {}, snap = window.ARTISTS || {};
+      for (const row of rows) {
+        const seen = (live[row.category_key] ||= []);
+        /* duration and event type are staff-only, so the roster view does not
+           carry them — take them from the snapshot, which is in the same
+           sort order this query asks for */
+        const was = (snap[row.category_key] || [])[seen.length] || {};
+        seen.push({ n: row.name, i: row.photo_path, s: row.skill_path || null,
+                    l: row.city || was.l, d: was.d, e: was.e });
+      }
       DATA = live;
       render();
     } catch (e) { /* offline or project paused — the snapshot stays up */ }
