@@ -22,6 +22,9 @@
 .article h2{font:600 1.12rem/1.4 var(--body); margin:2.2rem 0 .7rem; letter-spacing:-.005em}
 .article h3{font:600 .98rem/1.45 var(--body); margin:1.5rem 0 .4rem; color:var(--mist)}
 .article p{margin:0 0 1.1rem; color:var(--dim); line-height:1.8}
+/* links inherit the body colour by default, which inside prose reads as plain text */
+.article p a, .article li a{color:var(--pink); font-weight:500}
+.article p a:hover, .article li a:hover{text-decoration:underline}
 .article ul{margin:0 0 1.3rem; padding-left:1.1rem; color:var(--dim); line-height:1.8}
 .article li{margin-bottom:.4rem}
 .article figure{margin:2rem 0}
