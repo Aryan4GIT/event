@@ -19,6 +19,10 @@ redirects to configure and nothing to lose in the handover.
 
 Nothing here is rendered by JavaScript. A crawler that runs no scripts still
 sees the title, the copy, the images and the structured data.
+
+Careful: the pages have been worked on since this last ran (pull-card-grids.py
+and by hand), and running it again overwrites that work. Whenever it does
+run, run tools/seo-pass.py after it.
 """
 
 import html
@@ -26,13 +30,11 @@ import json
 import os
 import re
 import sys
-from datetime import date
 from urllib.parse import urlparse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://www.showmaqers.com"          # one place to change the origin
 PHONE = "+919811788643"
-TODAY = date.today().isoformat()
 
 # The old site put its phone numbers in <h?> tags in the header, so they come
 # through the scrape as headings. They are not headings.
@@ -525,13 +527,6 @@ def main():
             path, page = built
             written.append((path, page)); titles[path] = entry["title"] or path
 
-    # the hand-written hubs belong in the sitemap too
-    hubs = {"index.html": "Wedding & event planners in Delhi NCR",
-            "manpower.html": "Hire manpower & artists",
-            "games.html": "Games & activities on rent",
-            "blog.html": "Blog", "vendors.html": "Join as an artist",
-            "sitemap.html": "Everything we do"}
-
     written.append(("sitemap.html",
                     build_directory([p for p, _ in written], titles)))
 
@@ -541,25 +536,9 @@ def main():
         with open(full, "w", encoding="utf-8", newline="\n") as f:
             f.write(page)
 
-    urls = list(hubs) + [p for p, _ in written if p != "sitemap.html"]
-    seen, lines = set(), ['<?xml version="1.0" encoding="UTF-8"?>',
-                          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for path in urls:
-        if path in seen:
-            continue
-        seen.add(path)
-        pri = "1.0" if path == "index.html" else "0.8" if path in hubs else "0.6"
-        loc = SITE + "/" + ("" if path == "index.html" else path)
-        lines.append("  <url><loc>%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>"
-                     % (esc(loc), TODAY, pri))
-    lines.append("</urlset>")
-    with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8", newline="\n") as f:
-        f.write("\n".join(lines) + "\n")
-
-    with open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8", newline="\n") as f:
-        f.write("User-agent: *\nAllow: /\nDisallow: /admin.html\n\nSitemap: %s/sitemap.xml\n" % SITE)
-
-    print("wrote %d pages, sitemap.xml with %d urls, robots.txt" % (len(written), len(seen)))
+    # sitemap.xml, robots.txt and the titles, descriptions and JSON-LD as
+    # they finally stand belong to tools/seo-pass.py, which runs after this
+    print("wrote %d pages -- now run tools/seo-pass.py" % len(written))
 
 
 if __name__ == "__main__":
