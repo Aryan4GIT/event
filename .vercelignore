@@ -1,0 +1,11 @@
+# The site is the HTML, CSS, JS and images. These are how it was made and
+# what it was made from, and none of them should be downloadable from it.
+tools/
+supabase/
+showmaqers-site.json
+showmaqers-content.json
+showmaqers-content.md
+video-meta.json
+showmaquers-images/
+.claude/
+.remember/
