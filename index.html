@@ -497,16 +497,31 @@
     `<figure data-i="${i}" tabindex="0" role="button" aria-label="Open ${c.replace(/&amp;/g,'and')}"><img src="${img(f)}" alt="${c.replace(/&amp;/g,'and')}" loading="lazy"><figcaption>${c}</figcaption></figure>`).join('');
 
   const roles = [
-    ['Female Emcee / Anchor','Host'], ['Male Emcee / Anchor','Host'], ['Dance Troupe','Stage'],
-    ['Singers','Stage'], ['Puppet Show Performers','Stage'], ['Magician','Spectacle'],
-    ['Stilt Walker (Long Man)','Spectacle'], ['Live Statue','Spectacle'], ['Joker / Clown / Charlie','Spectacle'],
-    ['Juggler','Spectacle'], ['Mascots','Spectacle'], ['Game Coordinator','Activities'],
-    ['Science Show Host','Activities'], ['Face Painter','Wardrobe'], ['Pottery Maker','Craft'],
-    ['Nail Artist','Wardrobe'], ['Parlour Beautician','Wardrobe'], ['Tattoo Artist','Wardrobe'],
-    ['Tarot Card Reader','Craft'], ['Russian Promoters','Promo'], ['Photographer','Crew'], ['Videographer','Crew']
+    ['Female Emcee / Anchor','Host','female-emcee-anchor-for-hire-for-events-parties-delhi-ncr.html'],
+    ['Male Emcee / Anchor','Host','female-emcee-anchor-for-hire-for-events-parties-delhi-ncr.html'],
+    ['Dance Troupe','Stage','rajasthani-folk-belly-dancer-singer-for-hire-for-events-parties-delhi-gurgaon-noida.html'],
+    ['Singers','Stage','hire-bollywood-folk-singers-for-events-weddings-party-delhi-noida-gurugram-faridabad-manesar.html'],
+    ['Puppet Show Performers','Stage','rajasthani-and-standup-puppet-show-for-events-parties-delhi-ncr.html'],
+    ['Magician','Spectacle','hire-magician-magic-show-for-events-parties-delhi-noida-gurugram-faridabad-ghaziabad-manesar.html'],
+    ['Stilt Walker (Long Man)','Spectacle','long-man-stilt-walker-hire-events-parties-delhi-ncr.html'],
+    ['Live Statue','Spectacle','manpower.html'],
+    ['Joker / Clown / Charlie','Spectacle','hire-clown-joker-charlie-events-parties-delhi-ncr.html'],
+    ['Juggler','Spectacle','hire-juggler-events-parties-delhi-ncr-html.html'],
+    ['Mascots','Spectacle','hire-mascots-events-parties-delhi-ncr.html'],
+    ['Game Coordinator','Activities','game-coordinator-for-events-parties-delhi-ncr.html'],
+    ['Science Show Host','Activities','science-show-for-events-parties-delhi-ncr.html'],
+    ['Face Painter','Wardrobe','hire-face-painter-events-parties-delhi-ncr.html'],
+    ['Pottery Maker','Craft','pottery-maker-on-rent-for-events-parties-delhi-ncr.html'],
+    ['Nail Artist','Wardrobe','nail-artist-for-hire-for-events-parties-delhi-ncr.html'],
+    ['Parlour Beautician','Wardrobe','mini-salon-parlour-for-hire-for-events-parties-delhi-ncr.html'],
+    ['Tattoo Artist','Wardrobe','tattoo-artist-for-hire-for-events-parties-delhi-ncr.html'],
+    ['Tarot Card Reader','Craft','tarot-card-reader-for-hire-for-events-parties-delhi-ncr.html'],
+    ['Russian Promoters','Promo','foreign-artists-russian-promoters-for-events-parties-weddings-delhi-ncr.html'],
+    ['Photographer','Crew','photographer-videographer-for-hire-for-events-parties-delhi-ncr.html'],
+    ['Videographer','Crew','photographer-videographer-for-hire-for-events-parties-delhi-ncr.html']
   ];
-  document.getElementById('roster-grid').innerHTML = roles.map(([n, c], i) =>
-    `<div class="role reveal" style="--i:${i % 8}"><span class="no">${String(i + 1).padStart(2, '0')}</span><span class="nm">${n}</span><span class="ct">${c}</span></div>`).join('');
+  document.getElementById('roster-grid').innerHTML = roles.map(([n, c, h], i) =>
+    `<a class="role reveal" href="${h}" style="--i:${i % 8}"><span class="no">${String(i + 1).padStart(2, '0')}</span><span class="nm">${n}</span><span class="ct">${c}</span></a>`).join('');
 
   const cities = ['South Delhi','East Delhi','West Delhi','North Delhi','Noida','Greater Noida','Gurgaon / Gurugram',
     'Faridabad','Ghaziabad','Manesar','Sonipat','Panipat','Karnal','Rohtak','Jhajjar','Jind','Rewari','Palwal','Nuh',
@@ -732,6 +747,6 @@
   });
 })();
 </script>
-<script src="chat.js" defer></script>
+<script src="site.js" defer></script>
 </body>
 </html>

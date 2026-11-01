@@ -467,48 +467,19 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   .anim .reveal{opacity:1; transform:none}
 }
 
-/* ── chat assistant ───────────────────────────────────────────────────────
-   A scripted desk assistant: it answers the questions people actually ask
-   before enquiring, and hands anything else to WhatsApp. No server, no key. */
-.chat-fab{position:fixed; right:max(18px,env(safe-area-inset-right,0px)); bottom:max(18px,env(safe-area-inset-bottom,0px));
-  z-index:86; width:60px; height:60px; border:0; border-radius:50%; cursor:pointer; display:grid; place-items:center;
-  background:var(--grad); color:#fff; box-shadow:0 16px 38px -12px rgba(255,61,154,.85), inset 0 1px 0 rgba(255,255,255,.4);
-  transition:transform .3s cubic-bezier(.2,.8,.2,1), filter .3s}
-.chat-fab:hover{transform:translateY(-3px) scale(1.04); filter:brightness(1.07)}
-.chat-fab svg{width:26px; height:26px; fill:currentColor}
-.chat-fab .x{display:none}
-.chat-fab[aria-expanded="true"] .x{display:block}
-.chat-fab[aria-expanded="true"] .b{display:none}
-.chat-fab::after{content:""; position:absolute; inset:-5px; border-radius:50%; border:1px solid rgba(255,46,144,.45);
-  animation:ping 2.8s ease-out infinite}
-@keyframes ping{0%{transform:scale(.9); opacity:.9}70%,100%{transform:scale(1.35); opacity:0}}
-@media (prefers-reduced-motion:reduce){.chat-fab::after{animation:none}}
+/* ── WhatsApp button ──────────────────────────────────────────────────────
+   Bottom left: the Tawk.to bubble sits bottom right. */
+.wa-fab{position:fixed; left:max(18px,env(safe-area-inset-left,0px)); bottom:max(18px,env(safe-area-inset-bottom,0px));
+  z-index:86; display:flex; align-items:center; gap:.55rem; padding:11px 16px 11px 13px; border-radius:99px;
+  text-decoration:none; color:#fff; background:#25D366;
+  box-shadow:0 16px 38px -14px rgba(8,116,58,.8), inset 0 1px 0 rgba(255,255,255,.35);
+  opacity:0; transform:translateY(14px); pointer-events:none;
+  transition:opacity .4s, transform .4s cubic-bezier(.2,.8,.2,1), filter .3s}
+.wa-fab.on{opacity:1; transform:none; pointer-events:auto}
+.wa-fab:hover{filter:brightness(1.06); transform:translateY(-3px)}
+.wa-fab svg{width:26px; height:26px; fill:currentColor; flex:none}
+.wa-fab b{font:600 .88rem/1 var(--body); white-space:nowrap}
+@media (max-width:560px){.wa-fab{padding:12px; border-radius:50%} .wa-fab b{display:none}}
 
-.chat-panel{position:fixed; right:max(18px,env(safe-area-inset-right,0px)); bottom:calc(max(18px,env(safe-area-inset-bottom,0px)) + 72px);
-  z-index:86; width:min(372px,calc(100vw - 36px)); max-height:min(560px,calc(100vh - 140px));
-  display:none; flex-direction:column; overflow:hidden; border-radius:var(--r);
-  background:linear-gradient(158deg,rgba(255,255,255,.98),rgba(255,251,247,.94));
-  backdrop-filter:blur(26px) saturate(165%); -webkit-backdrop-filter:blur(26px) saturate(165%);
-  box-shadow:inset 0 0 0 1px rgba(226,122,170,.26), 0 34px 70px -30px rgba(196,74,134,.75)}
-.chat-panel.on{display:flex}
-.chat-head{display:flex; align-items:center; gap:.7rem; padding:.95rem 1.1rem; background:var(--grad); color:#fff}
-.chat-head b{font:600 .96rem/1.2 var(--body)}
-.chat-head small{display:block; font:400 .74rem/1.3 var(--body); opacity:.85}
-.chat-head .dot{width:8px; height:8px; border-radius:50%; background:#8CF2C0; box-shadow:0 0 10px #8CF2C0; flex:none}
-.chat-log{flex:1 1 auto; overflow-y:auto; padding:1.05rem; display:flex; flex-direction:column; gap:.7rem}
-.chat-log p{margin:0; max-width:86%; padding:.68rem .9rem; border-radius:16px; font-size:.9rem; line-height:1.6}
-.chat-log .bot{background:#fff; color:var(--mist); border-bottom-left-radius:5px;
-  box-shadow:inset 0 0 0 1px rgba(226,122,170,.2)}
-.chat-log .me{align-self:flex-end; background:var(--grad); color:#fff; border-bottom-right-radius:5px}
-.chat-log a{color:var(--pink); font-weight:600; text-decoration:underline}
-.chat-chips{display:flex; flex-wrap:wrap; gap:.4rem; padding:0 1.05rem .5rem}
-.chat-chips button{border:0; cursor:pointer; padding:.44rem .8rem; border-radius:99px; font:500 .78rem/1 var(--body);
-  background:rgba(255,46,144,.08); color:var(--lav); box-shadow:inset 0 0 0 1px rgba(226,122,170,.3); transition:background .2s}
-.chat-chips button:hover{background:rgba(255,46,144,.16)}
-.chat-form{display:flex; gap:.5rem; padding:.8rem 1.05rem 1.05rem}
-.chat-form input{flex:1 1 auto; min-width:0; padding:.7rem .95rem; border:0; border-radius:99px; background:#fff;
-  box-shadow:inset 0 0 0 1px rgba(226,122,170,.3); font-size:.9rem}
-.chat-form button{flex:none; width:42px; height:42px; border:0; border-radius:50%; cursor:pointer; display:grid; place-items:center;
-  background:var(--grad); color:#fff}
-.chat-form button svg{width:18px; height:18px; fill:currentColor}
-@media (max-width:420px){.chat-panel{bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + 68px); right:12px; left:12px; width:auto}}
+/* site.js makes the whole card the link, so it should look clickable */
+.svc-card,.card{cursor:pointer}

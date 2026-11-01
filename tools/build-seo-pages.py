@@ -303,6 +303,7 @@ def shell(path, title, description, crumbs, article, jsonld, og_image=None):
 
 {footer}
 {js}
+<script src="{p}site.js" defer></script>
 </body>
 </html>
 """.format(title=esc(title), desc=esc(description), canonical=esc(canonical), img=esc(img),
