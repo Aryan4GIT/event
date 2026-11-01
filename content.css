@@ -76,4 +76,13 @@
 .dir a{color:var(--dim); font-size:.92rem}
 .dir a:hover{color:var(--pink)}
 
+/* "more like this": six pages from the same section, written by tools/seo-pass.py */
+.article .related{margin:3rem 0 0}
+.article .related h2{font:400 1.5rem/1.2 var(--display); margin:0 0 .9rem; letter-spacing:-.01em}
+.article .related ul{margin:0; padding:0; list-style:none;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:.1rem 1.6rem}
+.article .related li{margin-bottom:.45rem; line-height:1.5}
+.article .related a{color:var(--dim); font-size:.92rem; font-weight:400}
+.article .related a:hover{color:var(--pink); text-decoration:none}
+
 @media (max-width:620px){.article .tail .btn{flex:1 1 100%}}
