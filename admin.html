@@ -433,8 +433,26 @@
     const saved = await patch(id, { claim_token: token, claim_expires_at: until });
     if (saved.claim_token !== token) throw new Error('the invite did not save');
     const link = location.origin + location.pathname.replace(/admin\.html$/, '') + 'my-profile.html?t=' + token;
+
+    /* Open WhatsApp already addressed to them with the message written, so the
+       invite is one tap rather than a copy, a search and a paste. Only 23 of
+       the roster have a number on file, so fall back to the clipboard. */
+    const digits = (saved.phone || '').replace(/\D/g, '').slice(-10);
+    if (digits.length === 10) {
+      const text = `Hi ${saved.name.split(' ')[0]}, this is Showmaqers. `
+        + `You can now manage your own profile on our roster — your photos, your clip and your details.
+
+`
+        + `Open this link to set it up: ${link}
+
+`
+        + `The link is just for you and works once. Any trouble, reply here.`;
+      window.open('https://wa.me/91' + digits + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+      try { await navigator.clipboard.writeText(link); } catch (e) {}
+      return 'WhatsApp opened for ' + saved.name + ' with the invite written — press send. The link is on your clipboard too.';
+    }
     try { await navigator.clipboard.writeText(link); } catch (e) {}
-    return 'Invite link copied — send it to ' + saved.name + ' on WhatsApp. It works once and expires in 14 days.';
+    return 'No number on file for ' + saved.name + ', so the invite link is copied to your clipboard instead. It works once and expires in 14 days.';
   }
 
   async function approve(card) {
