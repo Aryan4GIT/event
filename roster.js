@@ -38,7 +38,10 @@
     boxes.forEach(box => {
       const kind = box.dataset.people, list = DATA[kind] || [];
       const role = label[kind] || box.closest('.cat')?.querySelector('h2')?.textContent.trim() || '';
-      box.innerHTML = list.map(p => {
+      /* An approved artist with no photo rendered <img src="null"> — a broken
+         tile on the public roster. Leave them out until a photo exists. */
+      const shown = list.filter(p => p.i);
+      box.innerHTML = shown.map(p => {
         const facts = [p.l, p.d, p.e].filter(Boolean).join(' · ');   // fee stays off the public card
         /* the gallery the lightbox walks: headshot, then every work sample */
         const gallery = [p.i, ...(p.m || []), ...(p.s ? [p.s] : [])];
@@ -51,12 +54,12 @@
         `<img src="${p.i}" alt="${p.n}" loading="lazy">` +
         `<figcaption>${p.n}<b>${role}</b>${facts ? `<small>${facts}</small>` : ''}</figcaption></figure>`;
       }).join('');
-      box.style.marginBottom = list.length ? '1.1rem' : '0';
+      box.style.marginBottom = shown.length ? '1.1rem' : '0';
       /* An artist page says "our DJs" above the grid. With nobody approved in
          that category yet the heading would sit over nothing, so the page can
          wrap the whole block and have it disappear until someone is listed. */
       const section = box.closest('[data-roster]');
-      if (section) section.hidden = !list.length;
+      if (section) section.hidden = !shown.length;
     });
 
     document.querySelectorAll('[data-count-for]').forEach(el => {
