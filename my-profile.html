@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My profile — SHOWMAQERS</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="images/logo-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+.shell{max-width:780px; margin-inline:auto}
+.card{padding:clamp(1.4rem,3vw,2.4rem); display:grid; gap:1.1rem}
+.card[hidden],[hidden]{display:none !important}
+.card h1{font:400 clamp(1.8rem,4vw,2.6rem)/1.1 var(--display); margin:0; letter-spacing:-.02em}
+.card h2{font:600 1rem/1.3 var(--body); margin:1rem 0 0}
+.lede{color:var(--dim); margin:0}
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem}
+.req{color:var(--pink)}
+.status{min-height:1.2em; font-size:.88rem; color:var(--dim-2)}
+.status.err{color:var(--pink)} .status.ok{color:#1F8A5B}
+.who{display:flex; gap:.7rem; align-items:center; justify-content:space-between; flex-wrap:wrap;
+  font:500 .64rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--dim-2)}
+.drop{display:grid; gap:.7rem; justify-items:center; text-align:center; cursor:pointer; padding:1.2rem;
+  border-radius:14px; font-size:.88rem; color:var(--dim);
+  background:linear-gradient(140deg,rgba(255,46,144,.07),rgba(232,62,130,.07));
+  box-shadow:inset 0 0 0 1.5px dashed rgba(226,122,170,.4)}
+.drop:hover,.drop.over{box-shadow:inset 0 0 0 1.5px dashed var(--pink); background:#fff}
+.ms-list{display:flex; flex-wrap:wrap; gap:.6rem}
+.ms-list:empty{display:none}
+.ms-item{position:relative; margin:0; width:92px; aspect-ratio:3/4; border-radius:12px; overflow:hidden; background:#000}
+.ms-item img,.ms-item video{width:100%; height:100%; object-fit:cover; display:block}
+.ms-tag{position:absolute; left:.3rem; bottom:.3rem; padding:.16rem .4rem; border-radius:99px;
+  background:var(--grad); color:#fff; font:600 .5rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase}
+.ms-x{position:absolute; top:.25rem; right:.25rem; width:22px; height:22px; border:0; border-radius:50%;
+  background:rgba(0,0,0,.6); color:#fff; font-size:.7rem; cursor:pointer}
+.note{padding:.85rem 1rem; border-radius:12px; font-size:.88rem; line-height:1.5;
+  background:rgba(255,255,255,.72); box-shadow:inset 0 0 0 1px rgba(226,122,170,.2); color:var(--dim)}
+.note b{color:var(--mist)}
+.live{display:flex; gap:.5rem; align-items:center; font:500 .58rem/1 var(--mono);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--dim-2)}
+.live i{width:7px; height:7px; border-radius:50%; background:#1F8A5B; flex:0 0 auto}
+.live.wait i{background:var(--pink)}
+.shot{width:120px; aspect-ratio:3/4; object-fit:cover; border-radius:12px; background:rgba(226,122,170,.1)}
+@media (max-width:640px){ .pair{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <div class="nav-in">
+      <a class="brand" href="index.html">
+        <img width="698" height="682" src="images/logo-mark.webp" alt="SHOWMAQERS logo">
+        <span><b>SHOWMAQERS</b><small>My profile</small></span>
+      </a>
+      <nav class="nav-links" id="menu" aria-label="Main">
+        <a href="manpower.html">The roster</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <button class="btn btn--glass" id="signout" hidden>Sign out</button>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="band">
+    <div class="wrap shell">
+
+      <!-- ── signing in ─────────────────────────────────────────────────── -->
+      <form class="card glass blur" id="gate">
+        <h1 id="gate-h">Sign in to your profile</h1>
+        <p class="lede" id="gate-lede">Use the email and password you set when you claimed your profile.</p>
+        <div class="pair">
+          <div class="field">
+            <label for="g-email">Email <span class="req">*</span></label>
+            <input id="g-email" type="email" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="g-pass">Password <span class="req">*</span></label>
+            <input id="g-pass" type="password" autocomplete="current-password" required minlength="8">
+          </div>
+        </div>
+        <button class="btn btn--hot" type="submit" id="g-go">Sign in</button>
+        <p class="status" id="g-status"></p>
+        <p class="lede" style="font-size:.88rem">No profile yet? You need an invite link from us &mdash; message
+          <a href="https://wa.me/919811788643" target="_blank" rel="noopener" style="color:var(--pink)">98117 88643</a> on WhatsApp.</p>
+      </form>
+
+      <!-- ── the profile ────────────────────────────────────────────────── -->
+      <form class="card glass blur" id="editor" hidden>
+        <div class="who">
+          <span id="who-email"></span>
+          <span class="live" id="draft-state" hidden><i></i><span></span></span>
+        </div>
+        <h1 id="p-name-h">Your profile</h1>
+        <p class="lede">Clients find you on the roster and book you through Showmaqers. We never publish your
+          number &mdash; enquiries come to us and we call you.</p>
+
+        <div class="pair">
+          <div class="field">
+            <label for="p-name">Name as clients see it <span class="req">*</span></label>
+            <input id="p-name" name="name" required maxlength="80">
+          </div>
+          <div class="field">
+            <label for="p-city">Where you are based</label>
+            <input id="p-city" name="city" maxlength="80" placeholder="Gurugram, Sector 54">
+          </div>
+        </div>
+        <div class="pair">
+          <div class="field">
+            <label for="p-fee">Usual fee per event</label>
+            <input id="p-fee" name="fee_note" placeholder="Rs 25,000/-">
+          </div>
+          <div class="field">
+            <label for="p-langs">Languages you work in</label>
+            <input id="p-langs" name="languages" placeholder="Hindi, English, Punjabi">
+          </div>
+        </div>
+        <div class="pair">
+          <div class="field">
+            <label for="p-dur">How long you perform</label>
+            <input id="p-dur" name="performance_duration" maxlength="80" placeholder="2 hours / 3 sets of 20 min">
+          </div>
+          <div class="field">
+            <label for="p-links">YouTube link</label>
+            <input id="p-links" name="links" maxlength="300" placeholder="youtube.com/watch?v=...">
+          </div>
+        </div>
+        <p class="note">These update on the site as soon as you save.</p>
+
+        <h2>Your description and photos</h2>
+        <p class="note">Changes here go to our team first and appear once approved, usually within a few working
+          days. <b>Leave phone numbers out</b> &mdash; a profile with a number on it will be rejected.</p>
+        <div class="field">
+          <label for="p-bio">About your work</label>
+          <textarea id="p-bio" name="bio_draft" maxlength="2000" rows="4"></textarea>
+        </div>
+        <div class="field">
+          <label>Your photo now</label>
+          <img class="shot" id="p-shot" alt="">
+        </div>
+        <div class="field">
+          <label for="p-media">Add photos and a clip of your work</label>
+          <label class="drop" id="p-drop" for="p-media">
+            <input id="p-media" type="file" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/webm,video/quicktime" hidden>
+            <span class="ms-msg">Add two photos and a video of up to 10 seconds of your work</span>
+          </label>
+          <div class="ms-list" id="p-list"></div>
+          <p class="status" style="min-height:0">Shot on a phone is fine. We shrink everything in your browser
+            before it uploads.</p>
+        </div>
+
+        <button class="btn btn--hot" type="submit" id="p-save">Save my profile</button>
+        <p class="status" id="p-status"></p>
+        <p class="lede" style="font-size:.88rem">Something wrong we should fix? Message
+          <a href="https://wa.me/919811788643" target="_blank" rel="noopener" style="color:var(--pink)">98117 88643</a>.</p>
+      </form>
+
+    </div>
+  </section>
+</main>
+
+<script src="supabase-config.js"></script>
+<script src="media-upload.js"></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('anim');
+  const nav = document.getElementById('nav'), menu = document.getElementById('menu'),
+        burger = document.getElementById('burger');
+  addEventListener('scroll', () => nav.classList.toggle('is-stuck', scrollY > 30), { passive: true });
+  burger.addEventListener('click', () => {
+    const open = burger.getAttribute('aria-expanded') !== 'true';
+    burger.setAttribute('aria-expanded', open); menu.classList.toggle('open', open);
+  });
+
+  const cfg = window.SUPABASE;
+  const $ = id => document.getElementById(id);
+  const gate = $('gate'), editor = $('editor');
+  const say = (el, msg, kind) => { el.innerHTML = msg; el.className = 'status ' + (kind || ''); };
+  const TOKEN = new URLSearchParams(location.search).get('t');   // invite link
+  let session = null, row = null;
+
+  const auth = (path, body) => fetch(`${cfg.url}/auth/v1${path}`, {
+    method: 'POST', headers: { apikey: cfg.anonKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const api = (path, opts = {}) => fetch(`${cfg.url}/rest/v1${path}`, {
+    ...opts,
+    headers: { apikey: cfg.anonKey, Authorization: 'Bearer ' + session.access_token,
+               'Content-Type': 'application/json', ...(opts.headers || {}) }
+  });
+
+  /* An invite link turns the gate into a sign-up: the token is the proof we
+     sent them here, so there is nothing else to verify. */
+  if (TOKEN) {
+    $('gate-h').textContent = 'Claim your profile';
+    $('gate-lede').textContent = 'Pick an email and a password. You will use them to sign in from now on.';
+    $('g-pass').autocomplete = 'new-password';
+    $('g-go').textContent = 'Claim my profile';
+  }
+
+  gate.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = $('g-email').value.trim(), password = $('g-pass').value;
+    if (!email || password.length < 8) return say($('g-status'), 'Use your email and a password of at least 8 characters.', 'err');
+    $('g-go').disabled = true;
+    say($('g-status'), TOKEN ? 'Creating your login…' : 'Signing in…');
+    try {
+      let r = await auth(TOKEN ? '/signup' : '/token?grant_type=password', { email, password });
+      let b = await r.json();
+
+      /* A fresh signup on a project that confirms addresses hands back a user
+         and no session. Tell them plainly instead of failing silently. */
+      if (TOKEN && r.ok && !b.access_token) {
+        say($('g-status'), 'Almost there — we have emailed <b>' + email + '</b> a confirmation link. '
+          + 'Open it, then come back to this page and sign in. Your invite link still works.', 'ok');
+        $('g-go').disabled = false;
+        return;
+      }
+      /* An invited artist who already has a login just signs in instead */
+      if (TOKEN && !r.ok && /already/i.test(b.msg || b.error_description || '')) {
+        r = await auth('/token?grant_type=password', { email, password });
+        b = await r.json();
+      }
+      if (!r.ok || !b.access_token) throw new Error(b.msg || b.error_description || 'that did not work');
+
+      session = b;
+      if (TOKEN) {
+        const c = await api('/rpc/claim_profile', { method: 'POST', body: JSON.stringify({ token: TOKEN }) });
+        if (!c.ok) {
+          const err = await c.json().catch(() => ({}));
+          throw new Error(err.message || 'that invite link is not valid any more');
+        }
+        history.replaceState(null, '', location.pathname);
+      }
+      await load();
+    } catch (err) {
+      $('g-go').disabled = false;
+      say($('g-status'), err.message, 'err');
+    }
+  });
+
+  /* ── the editor ─────────────────────────────────────────────────────── */
+  const samples = MediaPicker.mount({
+    input: $('p-media'), drop: $('p-drop'), list: $('p-list'),
+    say: (m, k) => say($('p-status'), m, k)
+  });
+
+  const FIELDS = ['name', 'city', 'fee_note', 'languages', 'performance_duration', 'links'];
+
+  async function load() {
+    const r = await api('/vendors?select=*');
+    const rows = r.ok ? await r.json() : [];
+    if (!rows.length) {
+      say($('g-status'), 'That login is not linked to a profile yet. Message us on WhatsApp and we will sort it.', 'err');
+      $('g-go').disabled = false;
+      return;
+    }
+    row = rows[0];
+    gate.hidden = true; editor.hidden = false; $('signout').hidden = false;
+    $('who-email').textContent = session.user.email;
+    $('p-name-h').textContent = row.name;
+    $('p-name').value = row.name || '';
+    $('p-city').value = row.city || '';
+    $('p-fee').value = row.fee_note || '';
+    $('p-langs').value = row.languages || '';
+    $('p-dur').value = row.performance_duration || '';
+    $('p-links').value = row.links || '';
+    $('p-bio').value = row.bio_draft ?? row.bio ?? '';
+    const shot = $('p-shot');
+    if (row.photo_path) shot.src = row.photo_path; else shot.hidden = true;
+
+    const waiting = !!row.draft_at;
+    const st = $('draft-state');
+    st.hidden = false;
+    st.classList.toggle('wait', waiting);
+    st.querySelector('span').textContent = waiting ? 'Changes waiting for review' : 'Everything published';
+  }
+
+  editor.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('p-save');
+    btn.disabled = true;
+    say($('p-status'), 'Saving…');
+    try {
+      /* uploads go to a folder named after the login, which is the only place
+         storage lets this artist write */
+      let media = [];
+      if (samples.length) {
+        const folder = session.user.id;
+        media = (await samples.upload(async (name, blob) => (await fetch(
+          `${cfg.url}/storage/v1/object/vendor-pending/${folder}/${Date.now()}-${name}`,
+          { method: 'POST', headers: { apikey: cfg.anonKey, Authorization: 'Bearer ' + session.access_token,
+                                       'Content-Type': blob.type || 'application/octet-stream' }, body: blob }
+        )).ok ? `${folder}/${Date.now()}-${name}` : false))
+          .map(n => `vendor-pending/${n}`);
+        say($('p-status'), 'Saving…');
+      }
+
+      const patch = {};
+      for (const f of FIELDS) {
+        const v = editor.querySelector(`[name="${f}"]`).value.trim();
+        if ((row[f] || '') !== v) patch[f] = v || null;
+      }
+      const bio = $('p-bio').value.trim();
+      if ((row.bio_draft ?? row.bio ?? '') !== bio) patch.bio_draft = bio || null;
+      if (media.length) patch.media_draft = [...(row.media_draft || []), ...media];
+
+      if (!Object.keys(patch).length) { say($('p-status'), 'Nothing had changed.', 'ok'); btn.disabled = false; return; }
+
+      const r = await api('/vendors?id=eq.' + row.id, {
+        method: 'PATCH', headers: { Prefer: 'return=representation' }, body: JSON.stringify(patch)
+      });
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.message || err.hint || 'the database refused that change');
+      }
+      row = (await r.json())[0];
+      btn.disabled = false;
+      const queued = 'bio_draft' in patch || 'media_draft' in patch;
+      say($('p-status'), queued
+        ? 'Saved. Your details are live; the description and photos are with our team for review.'
+        : 'Saved — your profile is updated on the site.', 'ok');
+      await load();
+    } catch (err) {
+      btn.disabled = false;
+      say($('p-status'), err.message, 'err');
+    }
+  });
+
+  $('signout').addEventListener('click', () => { session = null; location.href = location.pathname; });
+
+  if (!cfg || /YOUR-/.test(cfg.url)) say($('g-status'), 'The site is not connected right now.', 'err');
+})();
+</script>
+<script src="site.js" defer></script>
+</body>
+</html>
