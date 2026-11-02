@@ -432,7 +432,10 @@
     const until = new Date(Date.now() + 14 * 864e5).toISOString();
     const saved = await patch(id, { claim_token: token, claim_expires_at: until });
     if (saved.claim_token !== token) throw new Error('the invite did not save');
-    const link = location.origin + location.pathname.replace(/admin\.html$/, '') + 'my-profile.html?t=' + token;
+    /* Resolve against the current page rather than trimming "admin.html": GitHub
+       Pages serves this at /event/admin with no extension, and the old regex left
+       that intact and produced /event/adminmy-profile.html. */
+    const link = new URL('my-profile.html?t=' + token, location.href).href;
 
     /* Open WhatsApp already addressed to them with the message written, so the
        invite is one tap rather than a copy, a search and a paste. Only 23 of
