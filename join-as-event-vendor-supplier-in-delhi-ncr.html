@@ -476,10 +476,26 @@
         headers: { ...h, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify(row)
       });
+      /* Each of these columns arrives with its own migration, so a database that
+         has not caught up rejects the insert naming the column it does not know.
+         Drop only that one and try again: a failure for any other reason must
+         not silently discard what the artist uploaded. */
+      const refusedColumn = async (res) => {
+        try {
+          const e = await res.clone().json();
+          const why = (e.message || '') + ' ' + (e.details || '') + ' ' + (e.hint || '');
+          return ['media', 'roles', 'kind', 'performance_duration', 'skill_path']
+            .find(c => why.includes("'" + c + "'"));
+        } catch (_) { return undefined; }
+      };
+
       let res = await insert();
-      /* media arrives with supabase/media-gallery.sql — until that is run,
-         send the registration without it rather than turning the vendor away */
-      if (!res.ok && row.media) { delete row.media; res = await insert(); }
+      while (!res.ok) {
+        const col = await refusedColumn(res);
+        if (!col || !(col in row)) break;
+        delete row[col];
+        res = await insert();
+      }
       if (!res.ok) throw new Error('insert ' + res.status);
 
       form.hidden = true;
