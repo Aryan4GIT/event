@@ -176,6 +176,9 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .nav-links a::before{content:""; position:absolute; inset:auto 50% .35rem; height:2px; width:0; border-radius:2px; background:var(--grad); transition:width .3s, inset-inline .3s}
 .nav-links a:hover{color:var(--pink)}
 .nav-links a:hover::before{width:46%; inset-inline:27%}
+.nav-alt{padding:.55rem .95rem; font-size:.85rem; white-space:nowrap; flex:0 0 auto}
+/* the same number inside the opened burger menu, where the pill has no room */
+.nav-tel{display:none}
 .burger{display:none; background:none; border:0; padding:.7rem; cursor:pointer}
 .burger i{display:block; width:22px; height:2px; background:var(--mist); border-radius:2px; transition:.3s}
 .burger i+i{margin-top:5px}
@@ -433,6 +436,8 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   .nav:has(.nav-links.open) .nav-in{backdrop-filter:none; -webkit-backdrop-filter:none}
   .nav:has(.nav-links.open) .brand{position:relative; z-index:62}
   .burger{display:block; position:relative; z-index:62}
+  .nav-alt{display:none}
+  .nav-links.open .nav-tel{display:block; color:var(--pink); font-weight:600}
   .ring{--r:clamp(190px,34vw,300px)}
 }
 @media (max-width:620px){
