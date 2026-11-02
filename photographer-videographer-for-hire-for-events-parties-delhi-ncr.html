@@ -78,6 +78,15 @@
         <figure><img width="1280" height="960" src="images/photography-videography1.jpg" alt="corporate event photographers in Delhi" loading="lazy"></figure>
         <figure><img width="500" height="855" src="images/hire-360-degree-camera-photographer-delhi-gurgaon-greater-noida-faridabad-manesar-ghaziabad-2023-02-02.jpeg" alt="hire 360 degree camera photographer delhi gurgaon greater noida faridabad manesar ghaziabad" loading="lazy"></figure>
         <figure><img width="733" height="1100" src="images/india-map.png" alt="Map of India &mdash; we work pan India" loading="lazy"></figure>
+        <section class="roster-live" data-roster hidden>
+          <h2>The photographers and videographers on our roster</h2>
+          <p>Stills and film crews, verified and booked through us.</p>
+          <h3>Photographers</h3>
+          <div class="people" data-people="photographer"></div>
+          <h3>Videographers</h3>
+          <div class="people" data-people="videographer"></div>
+          <p class="roster-join">Work in this line? <a href="vendors.html#register">Register to join the roster</a> — no joining fee.</p>
+        </section>
         <!--related-->
         <nav class="related" aria-labelledby="related-h">
           <h2 id="related-h">More artists &amp; manpower</h2>
@@ -138,6 +147,9 @@
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
 </script>
+<script src="supabase-config.js"></script>
+<script src="artists-data.js"></script>
+<script src="roster.js" defer></script>
 <script src="site.js" defer></script>
 </body>
 </html>

@@ -86,3 +86,13 @@
 .article .related a:hover{color:var(--pink); text-decoration:none}
 
 @media (max-width:620px){.article .tail .btn{flex:1 1 100%}}
+
+/* ── the live roster block on each artist-type page ─────────────────────────
+   roster.js fills the grid and hides this whole section while no one in the
+   category is approved, so the heading never sits over an empty grid. */
+.article .roster-live{margin:2.6rem 0 2.2rem; padding-top:2rem; border-top:1px solid rgba(226,122,170,.22)}
+.article .roster-live[hidden]{display:none}
+.article .roster-live > p{color:var(--dim)}
+.article .roster-live h3{margin:1.6rem 0 .7rem}
+.article .roster-join{font-size:.92rem; margin-top:1.2rem}
+.article .roster-join a{color:var(--pink); font-weight:600}

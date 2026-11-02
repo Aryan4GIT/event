@@ -77,6 +77,12 @@
         <p>Tell us the date, how many people are performing and how many songs you want. We quote per package &mdash; a set number of rehearsal sessions plus the event day &mdash; and send you profiles of choreographers whose style fits, whether that is Bollywood, Punjabi, semi-classical, hip-hop or a mix. Rehearsals usually start three to four weeks out; shorter notice works too, with fewer songs.</p>
         <p>Choreographers who want to work with us register on the <a href="vendors.html#register">artist join page</a> &mdash; tick <em>Choreographer</em>, and every other role you work.</p>
         <figure><img width="733" height="1100" src="images/india-map.png" alt="Map of India &mdash; we work pan India" loading="lazy"></figure>
+        <section class="roster-live" data-roster hidden>
+          <h2>The choreographers on our roster</h2>
+          <p>Sangeet, corporate and school-function choreographers, verified and booked through us.</p>
+          <div class="people" data-people="choreographer"></div>
+          <p class="roster-join">Work in this line? <a href="vendors.html#register">Register to join the roster</a> — no joining fee.</p>
+        </section>
         <!--related-->
         <nav class="related" aria-labelledby="related-h">
           <h2 id="related-h">More artists &amp; manpower</h2>
@@ -137,6 +143,9 @@
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
 </script>
+<script src="supabase-config.js"></script>
+<script src="artists-data.js"></script>
+<script src="roster.js" defer></script>
 <script src="site.js" defer></script>
 </body>
 </html>

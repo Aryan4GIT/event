@@ -78,6 +78,12 @@
         <p>Our artists use organic, chemical-free cones &mdash; no PPD, no black henna &mdash; so there is no risk of a reaction the day before a wedding. Bridal bookings are quoted per bride and include a trial if you book early enough; guest mehendi is quoted per hour per artist, with a minimum of two or three hours depending on the day. Tell us your guest count and the hours you want covered, and we will tell you how many artists that actually needs.</p>
         <p>Mehendi artists who want bookings can register on the <a href="vendors.html#register">artist join page</a> &mdash; tick <em>Mehendi artist</em>, and any other wardrobe role you work.</p>
         <figure><img width="733" height="1100" src="images/india-map.png" alt="Map of India &mdash; we work pan India" loading="lazy"></figure>
+        <section class="roster-live" data-roster hidden>
+          <h2>The mehendi artists on our roster</h2>
+          <p>Bridal and guest mehendi artists, verified and booked through us.</p>
+          <div class="people" data-people="mehendi"></div>
+          <p class="roster-join">Work in this line? <a href="vendors.html#register">Register to join the roster</a> — no joining fee.</p>
+        </section>
         <!--related-->
         <nav class="related" aria-labelledby="related-h">
           <h2 id="related-h">More artists &amp; manpower</h2>
@@ -138,6 +144,9 @@
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
 </script>
+<script src="supabase-config.js"></script>
+<script src="artists-data.js"></script>
+<script src="roster.js" defer></script>
 <script src="site.js" defer></script>
 </body>
 </html>

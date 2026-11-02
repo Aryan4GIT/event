@@ -78,6 +78,12 @@
         <p>Our artists carry their own professional kit and use disposable applicators and sanitised brushes between faces &mdash; on a wedding morning with ten people in one room, that matters. Bridal work is quoted per bride and takes two to three hours; family and guest make-up is quoted per face or per hour. Tell us how many people need doing and the time everyone has to be ready, and we will tell you how many artists it takes.</p>
         <p>Make-up artists looking for event work can register on the <a href="vendors.html#register">artist join page</a> &mdash; tick <em>Make-up artist</em>, and any other role you work.</p>
         <figure><img width="733" height="1100" src="images/india-map.png" alt="Map of India &mdash; we work pan India" loading="lazy"></figure>
+        <section class="roster-live" data-roster hidden>
+          <h2>The make-up artists on our roster</h2>
+          <p>Bridal, party and shoot make-up artists, verified and booked through us.</p>
+          <div class="people" data-people="makeup-artist"></div>
+          <p class="roster-join">Work in this line? <a href="vendors.html#register">Register to join the roster</a> — no joining fee.</p>
+        </section>
         <!--related-->
         <nav class="related" aria-labelledby="related-h">
           <h2 id="related-h">More artists &amp; manpower</h2>
@@ -138,6 +144,9 @@
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
 </script>
+<script src="supabase-config.js"></script>
+<script src="artists-data.js"></script>
+<script src="roster.js" defer></script>
 <script src="site.js" defer></script>
 </body>
 </html>

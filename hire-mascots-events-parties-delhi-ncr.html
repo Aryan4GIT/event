@@ -87,6 +87,12 @@
         <figure><img width="900" height="1600" src="images/new/mascot-puppet-head-couple.jpg" alt="Puppet-head costume pair" loading="lazy"></figure>
         <figure><img width="1024" height="461" src="images/new/mascot-line-up.jpg" alt="A line-up of mascots at an evening event" loading="lazy"></figure>
         <figure><img width="1200" height="1600" src="images/new/mascot-emoji-heads.jpg" alt="Emoji-head mascots with guests" loading="lazy"></figure>
+        <section class="roster-live" data-roster hidden>
+          <h2>The mascot artists on our roster</h2>
+          <p>Costume and character performers, verified and booked through us.</p>
+          <div class="people" data-people="mascots"></div>
+          <p class="roster-join">Work in this line? <a href="vendors.html#register">Register to join the roster</a> — no joining fee.</p>
+        </section>
         <!--related-->
         <nav class="related" aria-labelledby="related-h">
           <h2 id="related-h">More artists &amp; manpower</h2>
@@ -147,6 +153,9 @@
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
 </script>
+<script src="supabase-config.js"></script>
+<script src="artists-data.js"></script>
+<script src="roster.js" defer></script>
 <script src="site.js" defer></script>
 </body>
 </html>
