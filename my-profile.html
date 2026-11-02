@@ -202,7 +202,7 @@
      sent them here, so there is nothing else to verify. */
   if (TOKEN) {
     $('gate-h').textContent = 'Claim your profile';
-    $('gate-lede').textContent = 'Pick an email and a password. You will use them to sign in from now on.';
+    $('gate-lede').textContent = 'Pick an email and a password. If that email already signs in here, use its existing password.';
     $('g-pass').autocomplete = 'new-password';
     $('g-go').textContent = 'Claim my profile';
   }
@@ -217,18 +217,28 @@
       let r = await auth(TOKEN ? '/signup' : '/token?grant_type=password', { email, password });
       let b = await r.json();
 
-      /* A fresh signup on a project that confirms addresses hands back a user
-         and no session. Tell them plainly instead of failing silently. */
-      if (TOKEN && r.ok && !b.access_token) {
-        say($('g-status'), 'Almost there — we have emailed <b>' + email + '</b> a confirmation link. '
-          + 'Open it, then come back to this page and sign in. Your invite link still works.', 'ok');
-        $('g-go').disabled = false;
-        return;
-      }
-      /* An invited artist who already has a login just signs in instead */
-      if (TOKEN && !r.ok && /already/i.test(b.msg || b.error_description || '')) {
-        r = await auth('/token?grant_type=password', { email, password });
-        b = await r.json();
+      /* Supabase answers a signup for an address that already exists exactly as
+         it answers one still awaiting confirmation: 200, a user, no session. So
+         always try signing in before telling anyone to check their inbox. */
+      if (TOKEN && !b.access_token) {
+        const alt = await auth('/token?grant_type=password', { email, password });
+        const ab = await alt.json();
+        if (alt.ok && ab.access_token) {
+          r = alt; b = ab;                       // the address was already registered
+        } else if (/invalid login/i.test(ab.msg || ab.error_description || '')) {
+          /* the address exists but that is not its password, or it is genuinely
+             unconfirmed — both land here, and we cannot tell which */
+          say($('g-status'), 'That email already has a login here. Use its password to sign in, '
+            + 'or claim with a different email. If you have just signed up, open the confirmation '
+            + 'link we emailed you first.', 'err');
+          $('g-go').disabled = false;
+          return;
+        } else if (r.ok) {
+          say($('g-status'), 'Almost there — we have emailed <b>' + email + '</b> a confirmation link. '
+            + 'Open it, then come back to this page. Your invite link still works.', 'ok');
+          $('g-go').disabled = false;
+          return;
+        }
       }
       if (!r.ok || !b.access_token) throw new Error(b.msg || b.error_description || 'that did not work');
 
