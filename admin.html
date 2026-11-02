@@ -50,12 +50,20 @@
 .why:focus{outline:0; box-shadow:inset 0 0 0 1px var(--pink)}
 
 .rows{display:grid; gap:.5rem}
-.row-item{display:flex; gap:.8rem; align-items:center; padding:.6rem .8rem; border-radius:12px;
+.row-item{display:flex; gap:.8rem; align-items:center; padding:.6rem .8rem; border-radius:12px; min-width:0;
   background:rgba(255,255,255,.72); box-shadow:inset 0 0 0 1px rgba(226,122,170,.16)}
 .row-item img{width:38px; height:48px; object-fit:cover; border-radius:8px; background:rgba(226,122,170,.1)}
 .row-item .nm{font-size:.9rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .row-item .tag{font:500 .58rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--dim-2)}
-.row-item .sp{margin-left:auto; display:flex; gap:.5rem; align-items:center}
+.row-item .sp{margin-left:auto; display:flex; gap:.5rem; align-items:center; flex:0 0 auto}
+.row-card{border-radius:12px; min-width:0}
+.row-card>summary{cursor:pointer; list-style:none}
+.row-card>summary::-webkit-details-marker{display:none}
+.row-card>summary .chev{margin-left:.2rem; color:var(--dim-2); font-size:.8rem; transition:rotate .2s}
+.row-card[open]>summary .chev{rotate:90deg}
+.row-detail{padding:.2rem 1rem 1rem 1rem}
+.row-detail .facts{margin:.4rem 0 .8rem}
+.row-detail .bio{font-size:.92rem; color:var(--dim); margin:0; white-space:pre-wrap}
 .note{font-size:.86rem; color:var(--dim-2); margin:.9rem 0 0}
 .note.err{color:var(--pink)} .note.ok{color:#1F8A5B}
 .empty{padding:2.4rem 1.4rem; text-align:center; color:var(--dim)}
@@ -215,12 +223,54 @@
   /* ── data ──────────────────────────────────────────────────────────────── */
   const esc = s => String(s ?? '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
 
+  /* every role they ticked, not just the primary one category_key holds */
+  const rolesText = v => (v.kind === 'vendor' ? 'Vendor \u00b7 ' : '')
+    + (v.roles && v.roles.length ? v.roles : [v.category_key]).join(' \u00b7 ');
+
+  const day = t => t ? new Date(t).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '\u2014';
+  const link = u => u
+    ? `<a href="${esc(/^https?:/.test(u) ? u : 'https://' + u)}" target="_blank" rel="noopener" style="color:var(--pink)">${esc(u)}</a>`
+    : '\u2014';
+
+  /* The full record, shown on the queue card and inside every opened row, so
+     there is one place to add a field when the form grows one. */
+  const factsHtml = v => [
+    ['Roles',        esc(rolesText(v))],
+    ['City',         esc(v.city) || '\u2014'],
+    ['Phone',        v.phone ? `<a href="tel:${esc(v.phone)}" style="color:var(--pink)">${esc(v.phone)}</a>` : '\u2014'],
+    ['Email',        v.email ? `<a href="mailto:${esc(v.email)}" style="color:var(--pink)">${esc(v.email)}</a>` : '\u2014'],
+    ['Experience',   v.years_experience ? v.years_experience + ' years' : '\u2014'],
+    ['Usual fee',    esc(v.fee_note) || '\u2014'],
+    ['Languages',    esc(v.languages) || '\u2014'],
+    ['Performs for', esc(v.performance_duration) || '\u2014'],
+    ['Booked for',   esc(v.event_type) || '\u2014'],
+    ['Link',         link(v.links)],
+    ['Registered',   day(v.created_at)],
+    ['Consent given', day(v.consent_at)],
+    ['Reviewed',     day(v.reviewed_at)],
+    ['Review note',  esc(v.review_note) || '\u2014']
+  ].map(([k, val]) => `<div><dt>${k}</dt><dd>${val}</dd></div>`).join('');
+
+  /* summary = the row as it always looked; the body is what tapping reveals */
+  const rowCard = (v, actions) => `
+      <details class="row-card glass" data-id="${v.id}">
+        <summary class="row-item">
+          ${v.photo_path ? `<img src="${esc(v.photo_path)}" alt="" loading="lazy">` : ''}
+          <span class="nm">${esc(v.name)}<br><span class="tag">${esc(rolesText(v))}${v.city ? ' \u00b7 ' + esc(v.city) : ''}</span></span>
+          <span class="sp">${actions}<span class="chev">\u203a</span></span>
+        </summary>
+        <div class="row-detail">
+          <dl class="facts">${factsHtml(v)}</dl>
+          <p class="bio">${esc(v.bio) || 'No description given.'}</p>
+        </div>
+      </details>`;
+
   async function loadAll() {
     const [p, a, u, x] = await Promise.all([
       api('/vendors?select=*&status=eq.pending&order=created_at.asc').then(r => r.json()),
-      api('/vendors?select=id,name,category_key,photo_path,city&status=eq.approved&order=category_key.asc,sort.asc').then(r => r.json()),
-      api('/vendors?select=id,name,category_key,photo_path,city&status=eq.unlisted&order=reviewed_at.desc').then(r => r.json()),
-      api('/vendors?select=id,name,category_key,review_note&status=eq.rejected&order=reviewed_at.desc').then(r => r.json())
+      api('/vendors?select=*&status=eq.approved&order=category_key.asc,sort.asc').then(r => r.json()),
+      api('/vendors?select=*&status=eq.unlisted&order=reviewed_at.desc').then(r => r.json()),
+      api('/vendors?select=*&status=eq.rejected&order=reviewed_at.desc').then(r => r.json())
     ]);
     $('tab-pending').querySelector('b').textContent = p.length;
     $('tab-listed').querySelector('b').textContent = a.length;
@@ -244,19 +294,9 @@
           ${v.skill_path ? `<div class="clip" id="clip-${v.id}"><small>loading clip…</small></div>` : ''}
         </div>
         <div>
-          <span class="role">${v.kind === 'vendor' ? 'Vendor \u00b7 ' : ''}${esc((v.roles && v.roles.length ? v.roles : [v.category_key]).join(' \u00b7 '))}</span>
+          <span class="role">${esc(rolesText(v))}</span>
           <h3>${esc(v.name)}</h3>
-          <dl class="facts">
-            <div><dt>City</dt><dd>${esc(v.city) || '—'}</dd></div>
-            <div><dt>Phone</dt><dd><a href="tel:${esc(v.phone)}" style="color:var(--pink)">${esc(v.phone) || '—'}</a></dd></div>
-            <div><dt>Email</dt><dd>${esc(v.email) || '—'}</dd></div>
-            <div><dt>Experience</dt><dd>${v.years_experience ? v.years_experience + ' years' : '—'}</dd></div>
-            <div><dt>Usual fee</dt><dd>${esc(v.fee_note) || '—'}</dd></div>
-            <div><dt>Languages</dt><dd>${esc(v.languages) || '—'}</dd></div>
-            <div><dt>Performs for</dt><dd>${esc(v.performance_duration) || '—'}</dd></div>
-            <div><dt>YouTube</dt><dd>${v.links ? `<a href="${esc(v.links.startsWith('http') ? v.links : 'https://' + v.links)}" target="_blank" rel="noopener" style="color:var(--pink)">${esc(v.links)}</a>` : '—'}</dd></div>
-            <div><dt>Sent</dt><dd>${new Date(v.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</dd></div>
-          </dl>
+          <dl class="facts">${factsHtml(v)}</dl>
           <p class="bio">${esc(v.bio)}</p>
           <div class="acts">
             <button class="btn btn--hot mini" data-act="approve">Approve &amp; publish</button>
@@ -300,30 +340,22 @@
   }
 
   function drawListed(list) {
-    $('view-listed').innerHTML = list.length ? list.map(v => `
-      <div class="row-item" data-id="${v.id}">
-        <img src="${esc(v.photo_path)}" alt="" loading="lazy">
-        <span class="nm">${esc(v.name)}<br><span class="tag">${esc(v.category_key)}${v.city ? ' · ' + esc(v.city) : ''}</span></span>
-        <span class="sp"><button class="btn btn--glass mini" data-act="unlist">Take down</button></span>
-      </div>`).join('') : '<p class="note">Nobody is listed yet.</p>';
+    $('view-listed').innerHTML = list.length
+      ? list.map(v => rowCard(v, '<button class="btn btn--glass mini" data-act="unlist">Take down</button>')).join('')
+      : '<p class="note">Nobody is listed yet.</p>';
   }
 
   /* approved once, then taken down — vetted already, so one click puts them back */
   function drawUnlisted(list) {
-    $('view-unlisted').innerHTML = list.length ? list.map(v => `
-      <div class="row-item" data-id="${v.id}">
-        <img src="${esc(v.photo_path)}" alt="" loading="lazy">
-        <span class="nm">${esc(v.name)}<br><span class="tag">${esc(v.category_key)}${v.city ? ' · ' + esc(v.city) : ''}</span></span>
-        <span class="sp"><button class="btn btn--hot mini" data-act="relist">Put back on the roster</button></span>
-      </div>`).join('') : '<p class="note">Nobody has been taken down.</p>';
+    $('view-unlisted').innerHTML = list.length
+      ? list.map(v => rowCard(v, '<button class="btn btn--hot mini" data-act="relist">Put back on the roster</button>')).join('')
+      : '<p class="note">Nobody has been taken down.</p>';
   }
 
   function drawRejected(list) {
-    $('view-rejected').innerHTML = list.length ? list.map(v => `
-      <div class="row-item" data-id="${v.id}">
-        <span class="nm">${esc(v.name)}<br><span class="tag">${esc(v.category_key)}${v.review_note ? ' · ' + esc(v.review_note) : ''}</span></span>
-        <span class="sp"><button class="btn btn--glass mini" data-act="restore">Put back in the queue</button></span>
-      </div>`).join('') : '<p class="note">Nothing rejected.</p>';
+    $('view-rejected').innerHTML = list.length
+      ? list.map(v => rowCard(v, '<button class="btn btn--glass mini" data-act="restore">Put back in the queue</button>')).join('')
+      : '<p class="note">Nothing rejected.</p>';
   }
 
   /* ── actions ───────────────────────────────────────────────────────────── */
@@ -398,6 +430,7 @@
   document.addEventListener('click', async (e) => {
     const btn = e.target.closest('[data-act]');
     if (!btn) return;
+    e.preventDefault();   // the action buttons sit inside <summary>; don't also toggle it
     const card = btn.closest('[data-id]'), id = card.dataset.id, act = btn.dataset.act;
     btn.disabled = true;
     note($('d-note'), 'Working…');
