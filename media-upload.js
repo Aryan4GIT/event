@@ -22,7 +22,7 @@ window.MediaPicker = (() => {
   const RAW_LIMIT = 200 * 1024 * 1024;   // refuse to even decode a 200 MB file
   const OUT_LIMIT = 12 * 1024 * 1024;    // the bucket's own cap
 
-  const IMAGE = /^image\/(jpeg|png|webp)$/;
+  const IMAGE = /^image\/(jpeg|png|webp|heic|heif)$/;
   const VIDEO = /^video\/(mp4|webm|quicktime)$/;
 
   const isVideoPath = p => /\.(mp4|webm|mov)(\?|$)/i.test(p);
@@ -185,8 +185,17 @@ window.MediaPicker = (() => {
             out = await squashImage(p.file);
           } else {
             say(`Converting your video (${n}) — this takes about ten seconds…`);
-            out = await squashVideo(p.file, frac =>
-              say(`Converting your video — ${Math.round(frac * 100)}%…`));
+            try {
+              out = await squashVideo(p.file, frac =>
+                say(`Converting your video — ${Math.round(frac * 100)}%…`));
+            } catch (err) {
+              /* cannot re-encode here. Send the original when it already fits
+                 rather than losing the clip; only give up when it is too big. */
+              if (p.file.size > OUT_LIMIT) throw err;
+              const ext = { 'video/webm': 'webm', 'video/quicktime': 'mov' }[p.file.type] || 'mp4';
+              out = { blob: p.file, ext };
+              console.warn('[media] sent the original clip unconverted:', err.message);
+            }
           }
           if (out.blob.size > OUT_LIMIT) throw new Error('still too large after converting');
           const name = `m${i}.${out.ext}`;
