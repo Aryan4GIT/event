@@ -15,12 +15,20 @@
 <meta name="twitter:title" content="Page not found — SHOWMAQERS">
 <meta name="twitter:description" content="This page has moved or no longer exists.">
 <meta name="twitter:image" content="https://www.showmaqers.com/images/og-showmaqers.jpg">
-<link rel="icon" href="/images/logo-icon.png">
+<script>
+/* A 404 is served for any missing path, at any depth, so the relative paths
+   below need an absolute base. That is the domain root on showmaqers.com and
+   the project segment on a GitHub Pages deploy such as /event/. */
+document.write('<base href="' +
+  (location.hostname.endsWith('github.io') ? '/' + location.pathname.split('/')[1] + '/' : '/')
+  + '">');
+</script>
+<link rel="icon" href="images/logo-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/site.css">
-<link rel="stylesheet" href="/content.css">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="content.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Page not found"}</script>
 </head>
 <body>
@@ -32,19 +40,19 @@
 <header class="nav" id="nav">
   <div class="wrap">
     <div class="nav-in">
-      <a class="brand" href="/index.html">
-        <img width="698" height="682" src="/images/logo-mark.webp" alt="SHOWMAQERS logo">
+      <a class="brand" href="index.html">
+        <img width="698" height="682" src="images/logo-mark.webp" alt="SHOWMAQERS logo">
         <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
       </a>
       <nav class="nav-links" id="menu" aria-label="Main">
-        <a href="/index.html#services">Services</a>
-        <a href="/manpower.html">Artists</a>
-        <a href="/games.html">Games</a>
-        <a href="/blog.html">Blog</a>
-        <a href="/index.html#gallery">Gallery</a>
-        <a href="/index.html#about">About</a>
-        <a href="/vendors.html">Join us</a>
-        <a href="/index.html#contact">Contact</a>
+        <a href="index.html#services">Services</a>
+        <a href="manpower.html">Artists</a>
+        <a href="games.html">Games</a>
+        <a href="blog.html">Blog</a>
+        <a href="index.html#gallery">Gallery</a>
+        <a href="index.html#about">About</a>
+        <a href="vendors.html">Join us</a>
+        <a href="index.html#contact">Contact</a>
         <a class="nav-tel" href="tel:+919627573060" hidden>Call 96275 73060</a>
       </nav>
       <a class="btn btn--hot" href="tel:+919811788643">Call<span class="num">&nbsp;98117 88643</span></a>
@@ -58,13 +66,13 @@
   <section class="band">
     <div class="wrap">
       <article class="article">
-        <p class="crumb"><a href="/index.html">Home</a> &middot; Page not found</p>
+        <p class="crumb"><a href="index.html">Home</a> &middot; Page not found</p>
         <h1>That page is not here.</h1>
         <p>It may have moved when the site was rebuilt. Everything we do is listed on one page, or call us on +91 98117 88643.</p>
-        <p><a href="/sitemap.html">See every page</a> &middot; <a href="/">Go to the home page</a></p>
+        <p><a href="sitemap.html">See every page</a> &middot; <a href="index.html">Go to the home page</a></p>
         <div class="tail">
-          <a class="back" href="/sitemap.html" style="margin:0">&larr; Everything we do</a>
-          <a class="btn btn--hot" href="/index.html#contact">Plan my event</a>
+          <a class="back" href="sitemap.html" style="margin:0">&larr; Everything we do</a>
+          <a class="btn btn--hot" href="index.html#contact">Plan my event</a>
         </div>
       </article>
     </div>
@@ -73,13 +81,13 @@
 
 <footer>
   <div class="wrap foot">
-    <a class="brand" href="/index.html">
-      <img width="698" height="682" src="/images/logo-mark.webp" alt="">
+    <a class="brand" href="index.html">
+      <img width="698" height="682" src="images/logo-mark.webp" alt="">
       <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
     </a>
     <nav aria-label="Footer">
-      <a href="/index.html#services">Services</a><a href="/manpower.html">Artists</a><a href="/games.html">Games</a><a href="/blog.html">Blog</a><a href="/vendors.html">Join us</a>
-      <a href="/index.html#gallery">Gallery</a><a href="/index.html#about">About</a><a href="/index.html#contact">Contact</a><a href="/sitemap.html">All pages</a>
+      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
+      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a>
     </nav>
     <p>SHOWMAQERS &middot; All rights reserved</p>
   </div>
@@ -106,6 +114,6 @@
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
 </script>
-<script src="/site.js" defer></script>
+<script src="site.js" defer></script>
 </body>
 </html>

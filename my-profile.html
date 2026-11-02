@@ -144,7 +144,7 @@
         </div>
         <div class="field">
           <label>Your photo now</label>
-          <img class="shot" id="p-shot" alt="">
+          <img class="shot" id="p-shot" alt="" hidden>
         </div>
         <div class="field">
           <label for="p-media">Add photos and a clip of your work</label>
@@ -276,7 +276,7 @@
     $('p-links').value = row.links || '';
     $('p-bio').value = row.bio_draft ?? row.bio ?? '';
     const shot = $('p-shot');
-    if (row.photo_path) shot.src = row.photo_path; else shot.hidden = true;
+    if (row.photo_path) { shot.src = row.photo_path; shot.hidden = false; }
 
     const waiting = !!row.draft_at;
     const st = $('draft-state');
