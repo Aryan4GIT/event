@@ -233,7 +233,8 @@
     const box = $('view-pending');
     if (!list.length) {
       box.innerHTML = `<div class="empty glass blur"><b>Nothing waiting</b>
-        New registrations from the <a href="vendors.html" style="color:var(--pink)">join page</a> land here.</div>`;
+        New registrations from the <a href="vendors.html" style="color:var(--pink)">artist</a> and
+        <a href="join-as-event-vendor-supplier-in-delhi-ncr.html" style="color:var(--pink)">vendor</a> join pages land here.</div>`;
       return;
     }
     box.innerHTML = list.map(v => `
@@ -243,7 +244,7 @@
           ${v.skill_path ? `<div class="clip" id="clip-${v.id}"><small>loading clip…</small></div>` : ''}
         </div>
         <div>
-          <span class="role">${esc(v.category_key)}</span>
+          <span class="role">${v.kind === 'vendor' ? 'Vendor \u00b7 ' : ''}${esc((v.roles && v.roles.length ? v.roles : [v.category_key]).join(' \u00b7 '))}</span>
           <h3>${esc(v.name)}</h3>
           <dl class="facts">
             <div><dt>City</dt><dd>${esc(v.city) || '—'}</dd></div>
@@ -345,24 +346,27 @@
     const row = (await (await api(`/vendors?select=*&id=eq.${id}`)).json())[0];
     if (!row) throw new Error('that registration has gone');
 
-    // move the photo into the public bucket
+    // Move the photo into the public bucket. A vendor registers without one,
+    // so approving them is a status change and nothing else.
     let publicUrl = row.photo_path;
-    const held = photos[id];
-    const blob = held ? held.blob : await (await fetch(`${STORE}/object/${row.photo_path}`, { headers: authHeaders() })).blob();
-    // a fresh key every time, so this is always a plain insert — no upsert,
-    // and therefore no UPDATE policy needed on the bucket
-    const dest = `${id}/${Date.now()}.jpg`;
-    const up = await fetch(`${STORE}/object/vendor-photos/${dest}`, {
-      method: 'POST',
-      headers: { ...authHeaders(), 'Content-Type': blob.type || 'image/jpeg' },
-      body: blob
-    });
-    if (!up.ok) {
-      let why = '';
-      try { const j = JSON.parse(await up.text()); why = j.message || j.error || ''; } catch (e) {}
-      throw new Error('could not publish the photo — ' + (why || 'HTTP ' + up.status));
+    if (row.photo_path) {
+      const held = photos[id];
+      const blob = held ? held.blob : await (await fetch(`${STORE}/object/${row.photo_path}`, { headers: authHeaders() })).blob();
+      // a fresh key every time, so this is always a plain insert — no upsert,
+      // and therefore no UPDATE policy needed on the bucket
+      const dest = `${id}/${Date.now()}.jpg`;
+      const up = await fetch(`${STORE}/object/vendor-photos/${dest}`, {
+        method: 'POST',
+        headers: { ...authHeaders(), 'Content-Type': blob.type || 'image/jpeg' },
+        body: blob
+      });
+      if (!up.ok) {
+        let why = '';
+        try { const j = JSON.parse(await up.text()); why = j.message || j.error || ''; } catch (e) {}
+        throw new Error('could not publish the photo — ' + (why || 'HTTP ' + up.status));
+      }
+      publicUrl = `${STORE}/object/public/vendor-photos/${dest}`;
     }
-    publicUrl = `${STORE}/object/public/vendor-photos/${dest}`;
 
     // the skill clip rides along, but never blocks the approval
     let publicClip = null;
@@ -386,9 +390,9 @@
                                     ...(publicClip ? { skill_path: publicClip } : {}) });
     if (saved.status !== 'approved') throw new Error('the row did not save as approved');
 
-    fetch(`${STORE}/object/${row.photo_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+    if (row.photo_path) fetch(`${STORE}/object/${row.photo_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
     if (publicClip) fetch(`${STORE}/object/${row.skill_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
-    return row.name + ' is live on the roster.';
+    return row.name + (row.kind === 'vendor' ? ' is verified and on the buying list.' : ' is live on the roster.');
   }
 
   document.addEventListener('click', async (e) => {
