@@ -48,6 +48,21 @@
 .consent label{font-size:.9rem; color:var(--dim); line-height:1.55}
 .vform .status{min-height:1.2em; font-size:.88rem; color:var(--dim-2); position:relative; z-index:2}
 .vform .status.err{color:var(--pink)}
+.drop{display:grid; gap:.7rem; justify-items:center; text-align:center; cursor:pointer; position:relative; z-index:2;
+  padding:1.3rem; border-radius:14px; font-size:.88rem; color:var(--dim);
+  background:linear-gradient(140deg,rgba(255,46,144,.07),rgba(232,62,130,.07));
+  box-shadow:inset 0 0 0 1.5px dashed rgba(226,122,170,.4); transition:.25s}
+.drop:hover,.drop.over{box-shadow:inset 0 0 0 1.5px dashed var(--pink); background:#fff}
+.ms-list{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:.7rem}
+.ms-list:empty{display:none}
+.ms-item{position:relative; margin:0; width:92px; aspect-ratio:3/4; border-radius:12px; overflow:hidden; background:#000}
+.ms-item img,.ms-item video{width:100%; height:100%; object-fit:cover; display:block}
+.ms-tag{position:absolute; left:.3rem; bottom:.3rem; padding:.16rem .4rem; border-radius:99px;
+  background:var(--grad); color:#fff; font:600 .5rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase}
+.ms-x{position:absolute; top:.25rem; right:.25rem; width:22px; height:22px; border:0; border-radius:50%;
+  background:rgba(0,0,0,.6); color:#fff; font-size:.7rem; line-height:1; cursor:pointer}
+.ms-x:hover{background:var(--pink)}
+
 .sent{text-align:center; padding:1rem 0 .4rem}
 .sent b{display:block; font:400 2rem/1.2 var(--display); background:var(--grad);
   -webkit-background-clip:text; background-clip:text; color:transparent; margin-bottom:.5rem}
@@ -259,6 +274,16 @@
           <textarea id="b-about" name="about" required placeholder="German hangar tents and pandals up to 10,000 sq ft, own labour of 20, worked 300-guest weddings in Chattarpur and corporate activations at Ambience Mall. Delivery across Delhi NCR, own transport."></textarea>
         </div>
 
+        <div class="field">
+          <label for="b-media">Your work &mdash; photos and a clip <span style="color:var(--dim-2); font-weight:400">&mdash; optional, but it is what wins the job</span></label>
+          <label class="drop" id="b-drop" for="b-media">
+            <input id="b-media" type="file" multiple accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" hidden>
+            <span class="ms-msg">Add two photos and a video of up to 10 seconds of your work</span>
+          </label>
+          <div class="ms-list" id="b-mlist"></div>
+          <p class="status" style="min-height:0">A setup you are proud of beats a brochure. We shrink everything in your browser before it uploads, so a 4K clip costs you neither the wait nor the data.</p>
+        </div>
+
         <div class="consent">
           <input id="b-consent" name="consent" type="checkbox" required>
           <label for="b-consent">I confirm these details are my business's and I agree that Showmaqers may contact me with enquiries and keep these details on file. <span class="req">*</span></label>
@@ -338,6 +363,7 @@
 </footer>
 
 <script src="supabase-config.js"></script>
+<script src="media-upload.js"></script>
 <script>
 (() => {
   const root = document.documentElement;
@@ -369,6 +395,14 @@
   const WA = '919910772449';
   const say = (msg, kind) => { status.innerHTML = msg; status.className = 'status ' + (kind || ''); };
   const picked = () => [...form.querySelectorAll('input[name="role"]:checked')];
+
+  /* ── work samples — two photos and a clip, compressed before upload ───── */
+  const samples = MediaPicker.mount({
+    input: document.getElementById('b-media'),
+    drop:  document.getElementById('b-drop'),
+    list:  document.getElementById('b-mlist'),
+    say
+  });
 
   const waHref = (get, labels) => 'https://wa.me/' + WA + '?text=' + encodeURIComponent(
     'VENDOR REGISTRATION — Showmaqers'
@@ -414,6 +448,16 @@
 
     try {
       if (!cfg || /YOUR-/.test(cfg.url)) throw new Error('not configured');
+
+      /* the samples go in a folder of their own, same as an artist's */
+      const folder = crypto.randomUUID();
+      const h = { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey };
+      const media = (await samples.upload(async (name, blob) => (await fetch(
+        `${cfg.url}/storage/v1/object/vendor-pending/${folder}/${name}`,
+        { method: 'POST', headers: { ...h, 'Content-Type': blob.type || 'application/octet-stream' }, body: blob }
+      )).ok)).map(name => `vendor-pending/${folder}/${name}`);
+      say('Sending your registration…');
+
       const row = {
         name: get('name'), category_key: roles[0], roles, kind: 'vendor',
         city: get('city'), phone: get('phone'), email: get('email') || null,
@@ -423,12 +467,17 @@
         bio: `Contact: ${get('person')}\n\n${get('about')}`,
         status: 'pending', source: 'self', consent_at: new Date().toISOString()
       };
-      const res = await fetch(`${cfg.url}/rest/v1/vendors`, {
+      if (media.length) row.media = media;
+
+      const insert = () => fetch(`${cfg.url}/rest/v1/vendors`, {
         method: 'POST',
-        headers: { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey,
-                   'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        headers: { ...h, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify(row)
       });
+      let res = await insert();
+      /* media arrives with supabase/media-gallery.sql — until that is run,
+         send the registration without it rather than turning the vendor away */
+      if (!res.ok && row.media) { delete row.media; res = await insert(); }
       if (!res.ok) throw new Error('insert ' + res.status);
 
       form.hidden = true;

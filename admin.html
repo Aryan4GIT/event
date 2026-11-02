@@ -43,6 +43,11 @@
 .facts dt{font:500 .58rem/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--dim-2)}
 .facts dd{margin:0; font-size:.92rem; word-break:break-word}
 .appl .bio{font-size:.92rem; color:var(--dim); margin:0 0 1rem}
+.samples{display:flex; flex-wrap:wrap; gap:.5rem; margin:0 0 1rem}
+.samples figure{margin:0; width:84px; aspect-ratio:3/4; border-radius:10px; overflow:hidden; background:#000; position:relative}
+.samples img,.samples video{width:100%; height:100%; object-fit:cover; display:block}
+.samples small{position:absolute; inset:auto 0 0 0; text-align:center; background:rgba(0,0,0,.55); color:#fff;
+  font:500 .5rem/1.6 var(--mono); letter-spacing:.1em; text-transform:uppercase}
 .acts{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center}
 .mini{padding:.6rem 1.05rem; font-size:.84rem}
 .why{flex:1 1 200px; min-width:0; background:rgba(255,255,255,.86); border:0; border-radius:12px; padding:.6rem .8rem;
@@ -248,6 +253,7 @@
     ['Registered',   day(v.created_at)],
     ['Consent given', day(v.consent_at)],
     ['Reviewed',     day(v.reviewed_at)],
+    ['Work samples', v.media?.length ? v.media.length + ' uploaded' : '\u2014'],
     ['Review note',  esc(v.review_note) || '\u2014']
   ].map(([k, val]) => `<div><dt>${k}</dt><dd>${val}</dd></div>`).join('');
 
@@ -298,6 +304,7 @@
           <h3>${esc(v.name)}</h3>
           <dl class="facts">${factsHtml(v)}</dl>
           <p class="bio">${esc(v.bio)}</p>
+          ${v.media && v.media.length ? `<div class="samples" id="media-${v.id}"></div>` : ''}
           <div class="acts">
             <button class="btn btn--hot mini" data-act="approve">Approve &amp; publish</button>
             <input class="why" placeholder="Reason (optional, kept private)" aria-label="Reason for rejecting">
@@ -305,7 +312,7 @@
           </div>
         </div>
       </article>`).join('');
-    list.forEach(v => { loadPhoto(v); if (v.skill_path) loadClip(v); });
+    list.forEach(v => { loadPhoto(v); if (v.skill_path) loadClip(v); if (v.media?.length) loadMedia(v); });
   }
 
   /* the pending bucket is private, so fetch the bytes with the admin's token */
@@ -320,6 +327,29 @@
       photos[v.id] = { blob, url };
       slot.innerHTML = `<img src="${url}" alt="${esc(v.name)}">`;
     } catch (e) { slot.innerHTML = '<small>photo missing</small>'; }
+  }
+
+  /* the work samples, same private bucket. Held as blobs so approving does
+     not download them a second time. */
+  const mediaBlobs = {};
+  async function loadMedia(v) {
+    const slot = $('media-' + v.id);
+    if (!slot) return;
+    slot.innerHTML = '<small>loading samples…</small>';
+    const held = [];
+    for (const path of v.media) {
+      try {
+        const r = await fetch(`${STORE}/object/${path}`, { headers: authHeaders() });
+        if (!r.ok) throw new Error(r.status);
+        const blob = await r.blob();
+        held.push({ path, blob, url: URL.createObjectURL(blob) });
+      } catch (e) { /* one missing sample must not hide the rest */ }
+    }
+    mediaBlobs[v.id] = held;
+    slot.innerHTML = held.length ? held.map(m => m.blob.type.startsWith('video/')
+      ? `<figure><video src="${m.url}" controls playsinline preload="metadata"></video><small>Video</small></figure>`
+      : `<figure><img src="${m.url}" alt="work sample"></figure>`).join('')
+      : '<small>samples missing</small>';
   }
 
   /* the skill clip, same private bucket — kept as a blob so approving does
@@ -416,14 +446,39 @@
       } catch (e) { console.warn('[approve] clip not published:', e.message); }
     }
 
+    // the work samples go public too, in the order they were sent
+    let publicMedia = null;
+    if (row.media?.length) {
+      const held = mediaBlobs[id] || [];
+      const out = [];
+      for (const path of row.media) {
+        try {
+          const m = held.find(x => x.path === path);
+          const blob = m ? m.blob : await (await fetch(`${STORE}/object/${path}`, { headers: authHeaders() })).blob();
+          const ext = path.split('.').pop().toLowerCase();
+          const dest = `${id}/${Date.now()}-${out.length}.${ext}`;
+          const up = await fetch(`${STORE}/object/vendor-photos/${dest}`, {
+            method: 'POST',
+            headers: { ...authHeaders(), 'Content-Type': blob.type || 'application/octet-stream' },
+            body: blob
+          });
+          if (up.ok) out.push(`${STORE}/object/public/vendor-photos/${dest}`);
+        } catch (e) { console.warn('[approve] sample not published:', e.message); }
+      }
+      if (out.length) publicMedia = out;
+    }
+
     // put them last in their section
     const top = (await (await api(`/vendors?select=sort&category_key=eq.${row.category_key}&status=eq.approved&order=sort.desc&limit=1`)).json())[0];
     const saved = await patch(id, { status: 'approved', photo_path: publicUrl, sort: (top?.sort || 0) + 1,
-                                    ...(publicClip ? { skill_path: publicClip } : {}) });
+                                    ...(publicClip ? { skill_path: publicClip } : {}),
+                                    ...(publicMedia ? { media: publicMedia } : {}) });
     if (saved.status !== 'approved') throw new Error('the row did not save as approved');
 
     if (row.photo_path) fetch(`${STORE}/object/${row.photo_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
     if (publicClip) fetch(`${STORE}/object/${row.skill_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+    if (publicMedia) for (const path of row.media)
+      fetch(`${STORE}/object/${path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
     return row.name + (row.kind === 'vendor' ? ' is verified and on the buying list.' : ' is live on the roster.');
   }
 

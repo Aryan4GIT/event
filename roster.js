@@ -15,6 +15,7 @@
    same cards from the same source rather than a second copy of it. */
 (() => {
   let DATA = window.ARTISTS || {};
+  const isVideoPath = p => /\.(mp4|webm|mov)(\?|$)/i.test(p || '');
 
   /* where a category's own page cannot name the role from a heading */
   const label = {
@@ -29,8 +30,6 @@
   };
 
   const boxes = document.querySelectorAll('[data-people]');
-  if (!boxes.length) return;
-
   const showBtn = document.querySelector('[data-show]');
   const showBox = showBtn && document.querySelector(`[data-people="${showBtn.dataset.show}"]`);
   const faces = document.getElementById('facesTrack');
@@ -41,8 +40,14 @@
       const role = label[kind] || box.closest('.cat')?.querySelector('h2')?.textContent.trim() || '';
       box.innerHTML = list.map(p => {
         const facts = [p.l, p.d, p.e].filter(Boolean).join(' · ');   // fee stays off the public card
-        return `<figure class="person" data-src="${p.i}" data-cap="${p.n}"${p.s ? ` data-clip="${p.s}"` : ''}>` +
-        (p.s ? '<span class="reel">▶ Reel</span>' : '') +
+        /* the gallery the lightbox walks: headshot, then every work sample */
+        const gallery = [p.i, ...(p.m || []), ...(p.s ? [p.s] : [])];
+        const hasVideo = gallery.some(isVideoPath);
+        return `<figure class="person" data-src="${p.i}" data-cap="${p.n}"` +
+        ` data-gallery="${encodeURIComponent(JSON.stringify(gallery))}"` +
+        (p.id ? ` data-id="${p.id}"` : '') +
+        (p.s ? ` data-clip="${p.s}"` : '') + '>' +
+        (hasVideo ? '<span class="reel">▶ Reel</span>' : '') +
         `<img src="${p.i}" alt="${p.n}" loading="lazy">` +
         `<figcaption>${p.n}<b>${role}</b>${facts ? `<small>${facts}</small>` : ''}</figcaption></figure>`;
       }).join('');
@@ -72,7 +77,7 @@
         `<figure><img src="${p.i}" alt="${p.n}" loading="lazy"></figure>`).join('').repeat(2);
     }
   }
-  render();
+  if (boxes.length) render();
 
   if (showBtn) showBtn.addEventListener('click', () => {
     const total = (DATA[showBtn.dataset.show] || []).length;
@@ -82,14 +87,17 @@
   });
 
   (async () => {                                   // live roster, when connected
+    if (!boxes.length) return;                     // nothing on this page wants it
     const cfg = window.SUPABASE;
     if (!cfg || /YOUR-/.test(cfg.url + cfg.anonKey)) return;
     try {
       const h = { headers: { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey } };
       const read = cols => fetch(`${cfg.url}/rest/v1/roster?select=${cols}&order=sort.asc`, h);
-      /* skill_path only exists once supabase/skill-media.sql is run — until
-         then read the roster without it rather than losing the live data */
-      let r = await read('name,category_key,photo_path,skill_path,city,sort');
+      /* Each column arrives with its own migration, so ask for the richest
+         set and fall back rather than losing the live roster:
+         media -> media-gallery.sql, skill_path -> skill-media.sql */
+      let r = await read('id,name,category_key,photo_path,skill_path,media,city,sort');
+      if (!r.ok) r = await read('id,name,category_key,photo_path,skill_path,city,sort');
       if (!r.ok) r = await read('name,category_key,photo_path,city,sort');
       if (!r.ok) return;
       const rows = await r.json();
@@ -102,6 +110,7 @@
            sort order this query asks for */
         const was = (snap[row.category_key] || [])[seen.length] || {};
         seen.push({ n: row.name, i: row.photo_path, s: row.skill_path || null,
+                    m: row.media || null, id: row.id,
                     l: row.city || was.l, d: was.d, e: was.e });
       }
       DATA = live;
@@ -129,13 +138,35 @@
     lbVid.hidden = !isVid; lbImg.hidden = !!isVid;
     if (isVid) { lbVid.src = clip; lbVid.play().catch(() => {}); }
     else { lbVid.removeAttribute('src'); lbImg.src = clip || shot.src; }
-    lbImg.alt = shot.cap; lbCap.textContent = shot.cap;
+    lbImg.alt = shot.cap;
+    const where = shots.length > 1 ? ` <span class="lb-of">${at + 1} of ${shots.length}</span>` : '';
+    lbCap.innerHTML = (shot.cap ? shot.cap.replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c])) : '')
+      + where
+      + (shot.href ? ` <a class="lb-link" href="${shot.href}">Full profile &rarr;</a>` : '');
   };
   const close = () => { lb.classList.remove('on'); lbVid.pause(); opener?.focus?.(); };
 
   document.addEventListener('click', (e) => {
     const fig = e.target.closest('.person, .strip figure:not(.noimg)');
     if (!fig || e.target.closest('.lb')) return;
+
+    /* a roster card steps through that artist's own photos and clip; a strip
+       figure still steps through the strip it sits in */
+    if (fig.dataset.gallery) {
+      const cap = fig.dataset.cap || '';
+      const href = fig.dataset.id ? 'artist.html?id=' + fig.dataset.id : null;
+      shots = JSON.parse(decodeURIComponent(fig.dataset.gallery))
+        .filter(Boolean)
+        .map(src => ({ src, clip: isVideoPath(src) ? src : null, cap, href }));
+      if (shots.length) {
+        opener = fig;
+        show(0);
+        lb.classList.add('on');
+        lb.querySelector('.lb-close').focus();
+        return;
+      }
+    }
+
     const group = fig.closest('.people, .strip');
     shots = [...group.querySelectorAll('figure:not(.noimg)')].map(f => ({
       src: f.dataset.src || f.querySelector('img').getAttribute('src'),

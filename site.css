@@ -507,3 +507,9 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   font:600 .58rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase;
   box-shadow:0 8px 20px -10px rgba(255,61,154,.9)}
 .show-all{display:block; margin:1.6rem auto 0}
+
+/* the lightbox caption carries the position in an artist's gallery and a
+   link through to their profile */
+.lb-of{font:500 .6rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; opacity:.7; margin-left:.5rem}
+.lb-link{margin-left:.7rem; color:#fff; font-weight:600; text-decoration:underline; text-underline-offset:3px}
+.lb-link:hover{color:var(--pink)}

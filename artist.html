@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Artist profile — SHOWMAQERS</title>
+<meta name="description" content="An artist or vendor on the SHOWMAQERS roster — their work samples, where they are based and what they are booked for across Delhi NCR.">
+<!-- Rendered in the browser from the public roster, so there is nothing here
+     for a crawler to index. The category pages carry the indexable copy. -->
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="images/logo-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="content.css">
+<style>
+.prof{max-width:880px; margin-inline:auto}
+.prof .crumb{font:500 .66rem/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2); margin-bottom:1.4rem}
+.prof .crumb a:hover{color:var(--pink)}
+.prof-head{display:grid; grid-template-columns:200px minmax(0,1fr); gap:clamp(1.2rem,3vw,2.4rem); align-items:start}
+.prof-shot{border-radius:20px; overflow:hidden; aspect-ratio:3/4; background:rgba(226,122,170,.1)}
+.prof-shot img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block}
+.prof h1{font:400 clamp(2rem,5vw,3.2rem)/1.05 var(--display); margin:0 0 .5rem; letter-spacing:-.02em; text-wrap:balance}
+.prof .role{font:500 .66rem/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--lav); margin:0 0 1rem}
+.prof dl{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:.6rem 1.2rem; margin:1.2rem 0}
+.prof dt{font:500 .58rem/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--dim-2)}
+.prof dd{margin:0; font-size:.95rem}
+.prof-gallery{margin-top:2.4rem}
+.prof-gallery h2{font:400 clamp(1.4rem,3vw,2rem)/1.15 var(--display); margin:0 0 1rem}
+.prof-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem}
+.prof-grid figure{margin:0; border-radius:16px; overflow:hidden; background:#000; aspect-ratio:3/4; cursor:zoom-in; position:relative}
+.prof-grid img,.prof-grid video{width:100%; height:100%; object-fit:cover; display:block}
+.prof-note{color:var(--dim); font-size:.95rem}
+.prof-cta{display:flex; flex-wrap:wrap; gap:.7rem; margin-top:2rem}
+@media (max-width:640px){ .prof-head{grid-template-columns:1fr} .prof-shot{max-width:220px} }
+</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <div class="nav-in">
+      <a class="brand" href="index.html">
+        <img width="698" height="682" src="images/logo-mark.webp" alt="SHOWMAQERS logo">
+        <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
+      </a>
+      <nav class="nav-links" id="menu" aria-label="Main">
+        <a href="index.html#services">Services</a>
+        <a href="manpower.html">Artists</a>
+        <a href="games.html">Games</a>
+        <a href="blog.html">Blog</a>
+        <a href="index.html#gallery">Gallery</a>
+        <a href="index.html#about">About</a>
+        <a href="vendors.html">Join us</a>
+        <a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a>
+      </nav>
+      <a class="btn btn--hot" href="tel:+919910772449">Call<span class="num">&nbsp;99107 72449</span></a>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="band">
+    <div class="wrap">
+      <article class="prof" id="prof">
+        <p class="crumb"><a href="index.html">Home</a> &middot; <a href="manpower.html">Artists</a> &middot; <span id="crumb-now">Profile</span></p>
+        <p class="prof-note" id="state">Loading this profile…</p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="index.html">
+      <img width="698" height="682" src="images/logo-mark.webp" alt="">
+      <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
+    </a>
+    <nav aria-label="Footer">
+      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
+      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a>
+    </nav>
+    <nav aria-label="Social">
+      <a href="https://www.instagram.com/showmaqerseventplanner" target="_blank" rel="noopener">Instagram · Events</a><a href="https://www.instagram.com/showmaqersweddingplanner" target="_blank" rel="noopener">Instagram · Weddings</a>
+    </nav>
+    <p>SHOWMAQERS · All rights reserved</p>
+  </div>
+</footer>
+
+<script src="supabase-config.js"></script>
+<script>
+(() => {
+  const root = document.documentElement;
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('anim');
+  const nav = document.getElementById('nav'), menu = document.getElementById('menu'),
+        burger = document.getElementById('burger'), bar = document.getElementById('progress');
+  const onScroll = () => {
+    nav.classList.toggle('is-stuck', scrollY > 30);
+    const max = root.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  const setMenu = (open) => { burger.setAttribute('aria-expanded', open); menu.classList.toggle('open', open); };
+  burger.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
+  menu.addEventListener('click', e => { if (e.target.tagName === 'A') setMenu(false); });
+  addEventListener('resize', () => setMenu(false));
+
+  const esc = s => String(s ?? '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+  const isVideo = p => /\.(mp4|webm|mov)(\?|$)/i.test(p || '');
+  const state = document.getElementById('state');
+
+  /* Only approved rows are readable, and only through the two public views —
+     an unapproved registration cannot be reached by guessing its id. */
+  (async () => {
+    const id = new URLSearchParams(location.search).get('id');
+    if (!id || !/^[0-9a-f-]{36}$/i.test(id)) {
+      state.innerHTML = 'No profile was asked for. <a href="manpower.html" style="color:var(--pink)">Browse the roster</a> instead.';
+      return;
+    }
+    const cfg = window.SUPABASE;
+    if (!cfg || /YOUR-/.test(cfg.url)) { state.textContent = 'The roster is not connected right now.'; return; }
+
+    try {
+      const h = { headers: { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey } };
+      const get = view => fetch(`${cfg.url}/rest/v1/${view}?id=eq.${encodeURIComponent(id)}&select=*`, h)
+        .then(r => r.ok ? r.json() : []);
+      /* an artist, or failing that a supplier */
+      const row = (await get('roster'))[0] || (await get('supplier'))[0];
+      if (!row) {
+        state.innerHTML = 'That profile is not on the roster. <a href="manpower.html" style="color:var(--pink)">Browse the roster</a>.';
+        return;
+      }
+
+      document.title = row.name + ' — ' + row.category_label + ' — SHOWMAQERS';
+      document.getElementById('crumb-now').textContent = row.name;
+
+      const gallery = [...(row.media || []), ...(row.skill_path ? [row.skill_path] : [])].filter(Boolean);
+      const facts = [
+        ['Based in', esc(row.city) || '—'],
+        ['Booked as', esc(row.category_label)],
+        ['Work samples', gallery.length ? gallery.length : 'On request']
+      ];
+
+      state.outerHTML = `
+        <div class="prof-head">
+          <div class="prof-shot">${row.photo_path ? `<img src="${esc(row.photo_path)}" alt="${esc(row.name)}">` : ''}</div>
+          <div>
+            <h1>${esc(row.name)}</h1>
+            <p class="role">${esc(row.category_label)}</p>
+            <dl>${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+            <p class="prof-note">Booked through Showmaqers and verified by our team. Rates depend on the event, the date and how long you need them — tell us the brief and we will send availability.</p>
+            <div class="prof-cta">
+              <a class="btn btn--hot" href="tel:+919910772449">Call 99107 72449</a>
+              <a class="btn btn--glass" href="index.html#contact">Send an enquiry</a>
+            </div>
+          </div>
+        </div>
+        ${gallery.length ? `
+        <section class="prof-gallery">
+          <h2>Their work</h2>
+          <div class="prof-grid strip">
+            ${gallery.map(src => isVideo(src)
+              ? `<figure data-src="${esc(src)}" data-clip="${esc(src)}" data-cap="${esc(row.name)}"><video src="${esc(src)}" muted playsinline preload="metadata"></video></figure>`
+              : `<figure data-src="${esc(src)}" data-cap="${esc(row.name)}"><img src="${esc(src)}" alt="${esc(row.name)} at work" loading="lazy"></figure>`).join('')}
+          </div>
+        </section>` : ''}`;
+    } catch (e) {
+      state.textContent = 'We could not load that profile just now. Please try again.';
+    }
+  })();
+})();
+</script>
+<script src="roster.js" defer></script>
+<script src="site.js" defer></script>
+</body>
+</html>
