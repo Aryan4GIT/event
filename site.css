@@ -519,3 +519,8 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
 .lb-of{font:500 .6rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; opacity:.7; margin-left:.5rem}
 .lb-link{margin-left:.7rem; color:#fff; font-weight:600; text-decoration:underline; text-underline-offset:3px}
 .lb-link:hover{color:var(--pink)}
+
+/* the way back into a claimed profile, quiet enough not to compete with the
+   client-facing footer links around it */
+.artist-login{opacity:.75}
+.artist-login:hover{opacity:1; color:var(--pink)}

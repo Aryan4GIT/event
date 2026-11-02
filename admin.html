@@ -449,7 +449,8 @@
         + `Open this link to set it up: ${link}
 
 `
-        + `The link is just for you and works once. Any trouble, reply here.`;
+        + `The link is just for you and works once. After that you can sign in any time from `
+        + `"Artist login" at the bottom of our site. Any trouble, reply here.`;
       window.open('https://wa.me/91' + digits + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
       try { await navigator.clipboard.writeText(link); } catch (e) {}
       return 'WhatsApp opened for ' + saved.name + ' with the invite written — press send. The link is on your clipboard too.';
