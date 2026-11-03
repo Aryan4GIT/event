@@ -64,7 +64,8 @@ WEBSITE = {"@type": "WebSite", "url": SITE + "/", "name": "SHOWMAQERS"}
 
 # written by hand: their titles, descriptions and JSON-LD are left as they are
 HUBS = ["index.html", "manpower.html", "games.html", "blog.html", "vendors.html"]
-SKIP = {"admin.html", "404.html"}
+# and the pages drawn in the browser from Supabase, which carry their own noindex
+SKIP = {"admin.html", "404.html", "artist.html", "my-profile.html"}
 
 # the old WordPress archive pages: a list of post titles with no links and
 # nothing of their own. They keep their URLs, out of the index.
@@ -589,6 +590,9 @@ def main():
             if p in groups:
                 page = put_related(page, related_block(p, groups, names))
             descs[p] = desc
+        if p not in NOINDEX and 'name="robots"' not in page:
+            # the default anyway, but said out loud on every page we want found
+            page = page.replace('<meta name="description"', '<meta name="robots" content="index, follow">\n<meta name="description"', 1)
         if p == "blog.html":
             page = hub_blog(page)
         elif p == "games.html":
