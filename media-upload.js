@@ -27,6 +27,10 @@ window.MediaPicker = (() => {
 
   const isVideoPath = p => /\.(mp4|webm|mov)(\?|$)/i.test(p);
 
+  /* What the storage bucket will actually take. An iPhone HEIC is not on this
+     list, so it has to be converted whatever its size. */
+  const STORABLE = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+
   /* ── photos: downscale, then WebP, which is ~30% smaller than JPEG for the
      same apparent quality. Older browsers get JPEG. ─────────────────────── */
   async function squashImage(file) {
@@ -37,11 +41,24 @@ window.MediaPicker = (() => {
     c.height = Math.round(bmp.height * scale);
     c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
     bmp.close?.();
+
     const webp = await new Promise(r => c.toBlob(r, 'image/webp', 0.82));
-    if (webp && webp.size < file.size) return { blob: webp, ext: 'webp' };
-    const jpg = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.85));
-    if (jpg && jpg.size < file.size) return { blob: jpg, ext: 'jpg' };
-    return { blob: file, ext: (file.type === 'image/png' ? 'png' : 'jpg') };   // already small
+    const jpg  = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.85));
+    const best = webp && jpg ? (webp.size <= jpg.size ? { blob: webp, ext: 'webp' }
+                                                      : { blob: jpg,  ext: 'jpg'  })
+               : webp ? { blob: webp, ext: 'webp' }
+               : jpg  ? { blob: jpg,  ext: 'jpg'  }
+               : null;
+
+    /* Size alone must not decide this. HEIC is efficient enough that our
+       re-encode is often the larger file, and keeping the original then sent
+       the bucket a mime type it refuses — which is how an iPhone photo was
+       silently dropped while the video beside it went through. */
+    const asIs = STORABLE[file.type];
+    if (asIs && (!best || best.blob.size >= file.size)) return { blob: file, ext: asIs };
+    if (best) return best;
+    if (asIs) return { blob: file, ext: asIs };
+    throw new Error('that photo is in a format this browser cannot convert');
   }
 
   /* ── video: play it, draw each frame to a 720p canvas, record the canvas.
