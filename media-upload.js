@@ -198,9 +198,14 @@ window.MediaPicker = (() => {
             }
           }
           if (out.blob.size > OUT_LIMIT) throw new Error('still too large after converting');
+          /* put returns where it stored the file when it knows, so a caller
+             that adds a folder or a timestamp does not have to reconstruct a
+             path and get it wrong. A plain truthy answer means the name was
+             used as given. */
           const name = `m${i}.${out.ext}`;
-          if (await put(name, out.blob)) paths.push(name);
-          else throw new Error('upload refused');
+          const stored = await put(name, out.blob);
+          if (!stored) throw new Error('upload refused');
+          paths.push(typeof stored === 'string' ? stored : name);
         } catch (err) {
           console.warn('[media] skipped a sample:', err.message);
           say(`We could not process ${p.kind} ${n}, so it was left out. Everything else was sent.`, 'err');
