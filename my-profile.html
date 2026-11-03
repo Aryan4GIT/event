@@ -187,6 +187,7 @@
   const say = (el, msg, kind) => { el.innerHTML = msg; el.className = 'status ' + (kind || ''); };
   const TOKEN = new URLSearchParams(location.search).get('t');   // invite link
   let session = null, row = null;
+  let uploaded = [];   // stored but not yet on the row: a refused save must not send them twice
 
   const auth = (path, body) => fetch(`${cfg.url}/auth/v1${path}`, {
     method: 'POST', headers: { apikey: cfg.anonKey, 'Content-Type': 'application/json' },
@@ -292,7 +293,10 @@
     const st = $('draft-state');
     st.hidden = false;
     st.classList.toggle('wait', waiting);
-    st.querySelector('span').textContent = waiting ? 'Changes waiting for review' : 'Everything published';
+    const files = row.media_draft?.length || 0;
+    st.querySelector('span').textContent = waiting
+      ? 'Waiting for review' + (files ? ` — ${files} file${files > 1 ? 's' : ''}` : '')
+      : 'Everything published';
   }
 
   editor.addEventListener('submit', async (e) => {
@@ -303,10 +307,10 @@
     try {
       /* uploads go to a folder named after the login, which is the only place
          storage lets this artist write */
-      let media = [];
+      let lost = 0;
       if (samples.length) {
-        const folder = session.user.id;
-        media = await samples.upload(async (name, blob) => {
+        const folder = session.user.id, tried = samples.length;
+        const stored = await samples.upload(async (name, blob) => {
           /* one path, built once: calling Date.now() again for the value we
              record produced a different millisecond and a path to nothing */
           const path = `${folder}/${Date.now()}-${name}`;
@@ -319,6 +323,9 @@
           if (!r.ok) console.warn('[profile] upload refused:', r.status, await r.text().catch(() => ''));
           return r.ok && `vendor-pending/${path}`;
         });
+        lost = tried - stored.length;
+        uploaded.push(...stored);
+        samples.clear();
         say($('p-status'), 'Saving…');
       }
 
@@ -329,9 +336,16 @@
       }
       const bio = $('p-bio').value.trim();
       if ((row.bio_draft ?? row.bio ?? '') !== bio) patch.bio_draft = bio || null;
-      if (media.length) patch.media_draft = [...(row.media_draft || []), ...media];
+      if (uploaded.length) patch.media_draft = [...(row.media_draft || []), ...uploaded];
 
-      if (!Object.keys(patch).length) { say($('p-status'), 'Nothing had changed.', 'ok'); btn.disabled = false; return; }
+      /* "Saving" and "Saved" used to overwrite the warning that a file failed */
+      const lostNote = lost ? ` ${lost} file${lost > 1 ? 's' : ''} could not be uploaded — please add ${lost > 1 ? 'them' : 'it'} again.` : '';
+
+      if (!Object.keys(patch).length) {
+        say($('p-status'), lostNote.trim() || 'Nothing had changed.', lost ? 'err' : 'ok');
+        btn.disabled = false;
+        return;
+      }
 
       const r = await api('/vendors?id=eq.' + row.id, {
         method: 'PATCH', headers: { Prefer: 'return=representation' }, body: JSON.stringify(patch)
@@ -344,11 +358,13 @@
           + ' — nothing was saved. Fix that and press save again.');
       }
       row = (await r.json())[0];
+      uploaded = [];
       btn.disabled = false;
       const queued = 'bio_draft' in patch || 'media_draft' in patch;
-      say($('p-status'), queued
+      say($('p-status'), (queued
         ? 'Saved. Your details are live; the description and photos are with our team for review.'
-        : 'Saved — your profile is updated on the site.', 'ok');
+        : 'Saved — your profile is updated on the site.'
+        ).concat(lostNote), lost ? 'err' : 'ok');
       await load();
     } catch (err) {
       btn.disabled = false;

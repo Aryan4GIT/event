@@ -231,7 +231,13 @@ window.MediaPicker = (() => {
       return paths;
     }
 
-    return { upload, get length() { return picked.length; } };
+    /* forget the selection once it is stored, or the next save sends it again */
+    function clear() {
+      picked.splice(0).forEach(p => URL.revokeObjectURL(p.url));
+      paint();
+    }
+
+    return { upload, clear, get length() { return picked.length; } };
   }
 
   return { mount, isVideoPath, MAX_PHOTOS, MAX_VIDEOS, MAX_SECONDS };

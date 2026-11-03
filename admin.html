@@ -472,6 +472,37 @@
       + 'It works once and expires in 14 days.';
   }
 
+  /* Copy private samples into the public bucket. Reports what really moved,
+     because a blanket delete afterwards destroyed the only copy of anything
+     that failed to copy. */
+  async function publishFiles(id, paths) {
+    const held = mediaBlobs[id] || [], published = [], moved = [], failed = [];
+    for (const path of paths) {
+      try {
+        let blob = held.find(x => x.path === path)?.blob;
+        if (!blob) {
+          const r = await fetch(`${STORE}/object/${path}`, { headers: authHeaders() });
+          if (!r.ok) throw new Error('could not read it (' + r.status + ')');
+          blob = await r.blob();
+        }
+        const ext = path.split('.').pop().toLowerCase();
+        const dest = `${id}/${Date.now()}-${published.length}.${ext}`;
+        const up = await fetch(`${STORE}/object/vendor-photos/${dest}`, {
+          method: 'POST',
+          headers: { ...authHeaders(), 'Content-Type': blob.type || 'application/octet-stream' },
+          body: blob
+        });
+        if (!up.ok) throw new Error('could not publish it (' + up.status + ')');
+        published.push(`${STORE}/object/public/vendor-photos/${dest}`);
+        moved.push(path);
+      } catch (err) {
+        console.warn('[publish] left in private storage:', path, err.message);
+        failed.push(path);
+      }
+    }
+    return { published, moved, failed };
+  }
+
   async function approve(card) {
     const id = card.dataset.id;
     const row = (await (await api(`/vendors?select=*&id=eq.${id}`)).json())[0];
@@ -516,26 +547,8 @@
     }
 
     // the work samples go public too, in the order they were sent
-    let publicMedia = null;
-    if (row.media?.length) {
-      const held = mediaBlobs[id] || [];
-      const out = [];
-      for (const path of row.media) {
-        try {
-          const m = held.find(x => x.path === path);
-          const blob = m ? m.blob : await (await fetch(`${STORE}/object/${path}`, { headers: authHeaders() })).blob();
-          const ext = path.split('.').pop().toLowerCase();
-          const dest = `${id}/${Date.now()}-${out.length}.${ext}`;
-          const up = await fetch(`${STORE}/object/vendor-photos/${dest}`, {
-            method: 'POST',
-            headers: { ...authHeaders(), 'Content-Type': blob.type || 'application/octet-stream' },
-            body: blob
-          });
-          if (up.ok) out.push(`${STORE}/object/public/vendor-photos/${dest}`);
-        } catch (e) { console.warn('[approve] sample not published:', e.message); }
-      }
-      if (out.length) publicMedia = out;
-    }
+    const samples = row.media?.length ? await publishFiles(id, row.media) : null;
+    const publicMedia = samples?.published.length ? samples.published : null;
 
     // put them last in their section
     const top = (await (await api(`/vendors?select=sort&category_key=eq.${row.category_key}&status=eq.approved&order=sort.desc&limit=1`)).json())[0];
@@ -546,9 +559,10 @@
 
     if (row.photo_path) fetch(`${STORE}/object/${row.photo_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
     if (publicClip) fetch(`${STORE}/object/${row.skill_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
-    if (publicMedia) for (const path of row.media)
+    for (const path of samples?.moved || [])
       fetch(`${STORE}/object/${path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
-    return row.name + (row.kind === 'vendor' ? ' is verified and on the buying list.' : ' is live on the roster.');
+    return row.name + (row.kind === 'vendor' ? ' is verified and on the buying list.' : ' is live on the roster.')
+      + (samples?.failed.length ? ` ${samples.failed.length} work sample(s) could not be copied and stayed in private storage.` : '');
   }
 
   /* Move an artist's submitted bio and samples into the published columns.
@@ -557,35 +571,28 @@
     const id = card.dataset.id;
     const row = (await (await api(`/vendors?select=*&id=eq.${id}`)).json())[0];
     if (!row) throw new Error('that profile has gone');
-    const next = { bio_draft: null, media_draft: null, photo_draft: null, draft_at: null };
+    const { published, moved, failed } = await publishFiles(id, row.media_draft || []);
+    const next = { bio_draft: null, photo_draft: null,
+                   media_draft: failed.length ? failed : null,
+                   draft_at: failed.length ? row.draft_at : null };
     if (row.bio_draft) next.bio = row.bio_draft;
-
-    if (row.media_draft?.length) {
-      const out = [];
-      for (const path of row.media_draft) {
-        try {
-          const blob = await (await fetch(`${STORE}/object/${path}`, { headers: authHeaders() })).blob();
-          const ext = path.split('.').pop().toLowerCase();
-          const dest = `${id}/${Date.now()}-${out.length}.${ext}`;
-          const up = await fetch(`${STORE}/object/vendor-photos/${dest}`, {
-            method: 'POST',
-            headers: { ...authHeaders(), 'Content-Type': blob.type || 'application/octet-stream' },
-            body: blob
-          });
-          if (up.ok) out.push(`${STORE}/object/public/vendor-photos/${dest}`);
-        } catch (err) { console.warn('[draft] sample not published:', err.message); }
-      }
-      if (out.length) next.media = [...(row.media || []), ...out];
-      for (const path of row.media_draft)
-        fetch(`${STORE}/object/${path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
-    }
+    if (published.length) next.media = [...(row.media || []), ...published];
     await patch(id, next);
-    return row.name + "'s changes are live.";
+    // only now: the row is saved, and each of these has a public copy
+    for (const path of moved)
+      fetch(`${STORE}/object/${path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+    return failed.length
+      ? `${row.name}: ${published.length} published, but ${failed.length} could not be copied and stayed in the queue.`
+      : row.name + "'s changes are live.";
   }
 
   async function rejectDraft(card) {
     const id = card.dataset.id;
     const row = (await (await api(`/vendors?select=media_draft,name&id=eq.${id}`)).json())[0];
+    /* one click sat next to Publish and destroyed the artist's only copy */
+    const files = row?.media_draft?.length || 0;
+    if (!confirm(`Discard what ${row?.name || 'they'} submitted?`
+        + (files ? `\n\n${files} uploaded file(s) will be deleted for good.` : ''))) return 'Nothing was discarded.';
     for (const path of row?.media_draft || [])
       fetch(`${STORE}/object/${path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
     await patch(id, { bio_draft: null, media_draft: null, photo_draft: null, draft_at: null });
