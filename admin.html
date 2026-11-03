@@ -438,9 +438,21 @@
     const link = new URL('my-profile.html?t=' + token, location.href).href;
 
     /* Open WhatsApp already addressed to them with the message written, so the
-       invite is one tap rather than a copy, a search and a paste. Only 23 of
-       the roster have a number on file, so fall back to the clipboard. */
-    const digits = (saved.phone || '').replace(/\D/g, '').slice(-10);
+       invite is one tap rather than a copy, a search and a paste. Most of the
+       roster was seeded from the old site with no number, so ask for one and
+       keep it rather than making you go and find them. */
+    let digits = (saved.phone || '').replace(/\D/g, '').slice(-10);
+    if (digits.length !== 10) {
+      const typed = prompt(
+        `No WhatsApp number on file for ${saved.name}.\n\n`
+        + `Type their 10-digit number to save it and send the invite, `
+        + `or leave this empty to just copy the link.`, '');
+      const clean = (typed || '').replace(/\D/g, '').slice(-10);
+      if (clean.length === 10) {
+        const withPhone = await patch(id, { phone: clean });
+        if (withPhone.phone) digits = clean;      // kept, so the next invite is one tap
+      }
+    }
     if (digits.length === 10) {
       const text = `Hi ${saved.name.split(' ')[0]}, this is Showmaqers. `
         + `You can now manage your own profile on our roster — your photos, your clip and your details.
@@ -456,7 +468,8 @@
       return 'WhatsApp opened for ' + saved.name + ' with the invite written — press send. The link is on your clipboard too.';
     }
     try { await navigator.clipboard.writeText(link); } catch (e) {}
-    return 'No number on file for ' + saved.name + ', so the invite link is copied to your clipboard instead. It works once and expires in 14 days.';
+    return 'Invite link for ' + saved.name + ' copied to your clipboard — send it however you reach them. '
+      + 'It works once and expires in 14 days.';
   }
 
   async function approve(card) {
