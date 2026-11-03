@@ -176,10 +176,12 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .nav-links a::before{content:""; position:absolute; inset:auto 50% .35rem; height:2px; width:0; border-radius:2px; background:var(--grad); transition:width .3s, inset-inline .3s}
 .nav-links a:hover{color:var(--pink)}
 .nav-links a:hover::before{width:46%; inset-inline:27%}
-.nav-alt{padding:.55rem .95rem; font-size:.85rem; white-space:nowrap; flex:0 0 auto}
-/* The second number inside the opened burger menu, where the pill has no room.
-   The markup carries `hidden`, so a stale cached copy of this file still hides
-   it rather than spilling a raw link into the nav row. */
+/* Every number on every page, stuck with the nav. The z-index keeps it above
+   the opened burger menu, which carries no numbers of its own. */
+.callbar{position:relative; z-index:62; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:0 1.1rem;
+  margin:0; padding-inline:.5rem; background:var(--lav); color:#fff; font:500 .8rem/1 var(--mono)}
+.callbar a{padding:.55rem .15rem; white-space:nowrap}
+.callbar a:hover{text-decoration:underline}
 .burger{display:none; background:none; border:0; padding:.7rem; cursor:pointer}
 .burger i{display:block; width:22px; height:2px; background:var(--mist); border-radius:2px; transition:.3s}
 .burger i+i{margin-top:5px}
@@ -437,12 +439,11 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   .nav:has(.nav-links.open) .nav-in{backdrop-filter:none; -webkit-backdrop-filter:none}
   .nav:has(.nav-links.open) .brand{position:relative; z-index:62}
   .burger{display:block; position:relative; z-index:62}
-  .nav-alt{display:none}
-  .nav-links.open .nav-tel[hidden]{display:block; color:var(--pink); font-weight:600}
   .ring{--r:clamp(190px,34vw,300px)}
 }
 @media (max-width:620px){
-  .nav-in .btn--hot .num,.scroll-cue{display:none}
+  .nav-in .btn--hot .num,.scroll-cue,.callbar span{display:none}
+  .callbar{gap:0 .55rem; font-size:.74rem}
   .nav-in{padding-left:.75rem; gap:.5rem}
   .nav-in .brand{gap:.5rem}
   .nav-in .brand img{width:34px; height:34px}
@@ -508,6 +509,7 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   box-shadow:0 36px 56px -30px rgba(255,46,144,.6), inset 0 0 0 1px rgba(255,46,144,.4)}
 .person:hover img{transform:scale(1.06)}
 .people.clipped > .person:nth-child(n+25){display:none}
+.person-go{position:absolute; inset:0; z-index:4}
 .person .reel{position:absolute; top:.5rem; right:.5rem; z-index:3; display:flex; align-items:center; gap:.3rem;
   padding:.26rem .55rem .26rem .45rem; border-radius:99px; background:var(--grad); color:#fff;
   font:600 .58rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase;
@@ -517,8 +519,6 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
 /* the lightbox caption carries the position in an artist's gallery and a
    link through to their profile */
 .lb-of{font:500 .6rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; opacity:.7; margin-left:.5rem}
-.lb-link{margin-left:.7rem; color:#fff; font-weight:600; text-decoration:underline; text-underline-offset:3px}
-.lb-link:hover{color:var(--pink)}
 
 /* the way back into a claimed profile, quiet enough not to compete with the
    client-facing footer links around it */

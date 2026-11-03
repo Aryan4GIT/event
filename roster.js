@@ -48,8 +48,8 @@
         const hasVideo = gallery.some(isVideoPath);
         return `<figure class="person" data-src="${p.i}" data-cap="${p.n}"` +
         ` data-gallery="${encodeURIComponent(JSON.stringify(gallery))}"` +
-        (p.id ? ` data-id="${p.id}"` : '') +
         (p.s ? ` data-clip="${p.s}"` : '') + '>' +
+        (p.id ? `<a class="person-go" href="artist.html?id=${p.id}" aria-label="${p.n} profile"></a>` : '') +
         (hasVideo ? '<span class="reel">▶ Reel</span>' : '') +
         `<img src="${p.i}" alt="${p.n}" loading="lazy">` +
         `<figcaption>${p.n}<b>${role}</b>${facts ? `<small>${facts}</small>` : ''}</figcaption></figure>`;
@@ -144,23 +144,21 @@
     lbImg.alt = shot.cap;
     const where = shots.length > 1 ? ` <span class="lb-of">${at + 1} of ${shots.length}</span>` : '';
     lbCap.innerHTML = (shot.cap ? shot.cap.replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c])) : '')
-      + where
-      + (shot.href ? ` <a class="lb-link" href="${shot.href}">Full profile &rarr;</a>` : '');
+      + where;
   };
   const close = () => { lb.classList.remove('on'); lbVid.pause(); opener?.focus?.(); };
 
   document.addEventListener('click', (e) => {
     const fig = e.target.closest('.person, .strip figure:not(.noimg)');
-    if (!fig || e.target.closest('.lb')) return;
+    if (!fig || e.target.closest('.lb, .person-go')) return;
 
     /* a roster card steps through that artist's own photos and clip; a strip
        figure still steps through the strip it sits in */
     if (fig.dataset.gallery) {
       const cap = fig.dataset.cap || '';
-      const href = fig.dataset.id ? 'artist.html?id=' + fig.dataset.id : null;
       shots = JSON.parse(decodeURIComponent(fig.dataset.gallery))
         .filter(Boolean)
-        .map(src => ({ src, clip: isVideoPath(src) ? src : null, cap, href }));
+        .map(src => ({ src, clip: isVideoPath(src) ? src : null, cap }));
       if (shots.length) {
         opener = fig;
         show(0);

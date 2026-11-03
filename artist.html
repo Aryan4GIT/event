@@ -43,6 +43,10 @@
 <div class="progress" id="progress" aria-hidden="true"></div>
 
 <header class="nav" id="nav">
+  <p class="callbar"><span>Enquiry / Call</span>
+    <a href="tel:+919811788643">98117 88643</a>
+    <a href="tel:+919627573060">96275 73060</a>
+    <a href="tel:+919910772449">99107 72449</a></p>
   <div class="wrap">
     <div class="nav-in">
       <a class="brand" href="index.html">
@@ -58,10 +62,8 @@
         <a href="index.html#about">About</a>
         <a href="vendors.html">Join us</a>
         <a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a>
-        <a class="nav-tel" href="tel:+919627573060" hidden>Call 96275 73060</a>
       </nav>
       <a class="btn btn--hot" href="tel:+919811788643">Call<span class="num">&nbsp;98117 88643</span></a>
-      <a class="btn btn--glass nav-alt" href="tel:+919627573060">96275 73060</a>
       <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
     </div>
   </div>
@@ -142,6 +144,8 @@
       document.title = row.name + ' — ' + row.category_label + ' — SHOWMAQERS';
       document.getElementById('crumb-now').textContent = row.name;
 
+      /* anchors are booked on their own line */
+      const line = row.category_key === 'anchors' ? '92202 93876' : '99107 72449';
       const gallery = [...(row.media || []), ...(row.skill_path ? [row.skill_path] : [])].filter(Boolean);
       const facts = [
         ['Based in', esc(row.city) || '—'],
@@ -158,7 +162,7 @@
             <dl>${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
             <p class="prof-note">Booked through Showmaqers and verified by our team. Rates depend on the event, the date and how long you need them — tell us the brief and we will send availability.</p>
             <div class="prof-cta">
-              <a class="btn btn--hot" href="tel:+919910772449">Call 99107 72449</a>
+              <a class="btn btn--hot" href="tel:+91${line.replace(' ', '')}">Call ${line}</a>
               <a class="btn btn--glass" href="index.html#contact">Send an enquiry</a>
             </div>
           </div>

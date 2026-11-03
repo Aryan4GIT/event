@@ -179,6 +179,10 @@ def nav(prefix, here=""):
     link = lambda href, label: '<a href="%s%s"%s>%s</a>' % (
         prefix, href, ' aria-current="page"' if href == here else "", label)
     return """<header class="nav" id="nav">
+  <p class="callbar"><span>Enquiry / Call</span>
+    <a href="tel:+919811788643">98117 88643</a>
+    <a href="tel:+919627573060">96275 73060</a>
+    <a href="tel:+919910772449">99107 72449</a></p>
   <div class="wrap">
     <div class="nav-in">
       <a class="brand" href="{p}index.html">
@@ -188,7 +192,7 @@ def nav(prefix, here=""):
       <nav class="nav-links" id="menu" aria-label="Main">
         {links}
       </nav>
-      <a class="btn btn--hot" href="tel:+919910772449">Call<span class="num">&nbsp;99107 72449</span></a>
+      <a class="btn btn--hot" href="tel:+919811788643">Call<span class="num">&nbsp;98117 88643</span></a>
       <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Menu"><i></i><i></i><i></i></button>
     </div>
   </div>

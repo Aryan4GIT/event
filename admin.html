@@ -249,7 +249,7 @@
     ['Roles',        esc(rolesText(v))],
     ['City',         esc(v.city) || '\u2014'],
     ['Phone',        v.phone ? `<a href="tel:${esc(v.phone)}" style="color:var(--pink)">${esc(v.phone)}</a>` : '\u2014'],
-    ['Email',        v.email ? `<a href="mailto:${esc(v.email)}" style="color:var(--pink)">${esc(v.email)}</a>` : '\u2014'],
+    ['Email',        v.email ? `<a href="mailto:${esc(v.email)}?cc=info@showmaqers.com,support@showmaqers.com,smadhav.singh1@gmail.com" style="color:var(--pink)">${esc(v.email)}</a>` : '\u2014'],
     ['Experience',   v.years_experience ? v.years_experience + ' years' : '\u2014'],
     ['Usual fee',    esc(v.fee_note) || '\u2014'],
     ['Languages',    esc(v.languages) || '\u2014'],
