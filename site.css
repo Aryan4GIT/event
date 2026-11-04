@@ -172,7 +172,9 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .brand b{font:700 1rem/1 var(--body); letter-spacing:.17em}
 .brand small{display:block; font:400 .56rem/1.5 var(--mono); letter-spacing:.22em; color:var(--dim-2); text-transform:uppercase}
 .nav-links{display:flex; gap:.15rem; align-items:center}
-.nav-links a{padding:.6rem .95rem; border-radius:99px; font-size:.9rem; color:var(--dim); position:relative; transition:color .25s}
+.nav-links a{padding:.6rem .95rem; border-radius:99px; font-size:.9rem; font-weight:600; color:var(--lav); white-space:nowrap; position:relative; transition:color .25s}
+/* the call strip carries the numbers, and without this the bar overlaps the logo around 1024px */
+@media (max-width:1180px){.nav-in .btn--hot .num{display:none}}
 .nav-links a::before{content:""; position:absolute; inset:auto 50% .35rem; height:2px; width:0; border-radius:2px; background:var(--grad); transition:width .3s, inset-inline .3s}
 .nav-links a:hover{color:var(--pink)}
 .nav-links a:hover::before{width:46%; inset-inline:27%}
@@ -181,7 +183,13 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .callbar{position:relative; z-index:62; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:0 1.1rem;
   margin:0; padding-inline:.5rem; background:var(--lav); color:#fff; font:500 .8rem/1 var(--mono)}
 .callbar a{padding:.55rem .15rem; white-space:nowrap}
-.callbar a:hover{text-decoration:underline}
+.callbar a{text-decoration:underline; text-underline-offset:.2em}
+.callbar a:hover{text-decoration-thickness:2px}
+.callbar .callbar-ig{display:inline-flex; align-items:center; gap:.35em; margin-block:.2rem; padding:.3rem .7rem;
+  border-radius:99px; background:#fff; color:var(--lav); font-weight:600; text-decoration:none}
+.callbar .callbar-ig:hover{background:var(--mist); color:#fff}
+.callbar-ig svg{width:1.05em; height:1.05em; fill:currentColor}
+/* the label is a span so the phone rule below leaves just the icon and "Weddings" */
 .burger{display:none; background:none; border:0; padding:.7rem; cursor:pointer}
 .burger i{display:block; width:22px; height:2px; background:var(--mist); border-radius:2px; transition:.3s}
 .burger i+i{margin-top:5px}
@@ -279,7 +287,8 @@ h1 .line > span{display:block}
 @media (prefers-reduced-motion:reduce){.roll{height:auto; mask-image:none} .roll ul{animation:none}}
 .more{font:500 .78rem/1 var(--mono); letter-spacing:.16em; text-transform:uppercase;
   display:inline-flex; gap:.55rem; align-items:center; background:var(--grad-foil);
-  -webkit-background-clip:text; background-clip:text; color:transparent}
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-decoration:underline; text-decoration-color:var(--lav); text-underline-offset:.3em}
 .more::after{content:"→"; color:var(--pink); transition:translate .3s}
 .card:hover .more::after{translate:6px 0}
 
@@ -382,7 +391,7 @@ figcaption{position:absolute; inset:auto 0 0; z-index:2; padding:1.8rem .95rem .
 .lines dt{font:500 .64rem/1 var(--mono); letter-spacing:.22em; text-transform:uppercase; color:var(--lav); margin-bottom:.6rem}
 .lines dd{margin:0}
 .lines a{display:block; font-size:1.04rem; width:fit-content; transition:color .25s, transform .25s}
-.lines a:hover{color:var(--pink); transform:translateX(4px)}
+.lines a:hover{transform:translateX(4px)}
 .socials{display:flex; flex-wrap:wrap; gap:.7rem; margin-top:2.2rem}
 .socials a{width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.8);
   box-shadow:inset 0 0 0 1px rgba(226,122,170,.24), 0 10px 24px -18px rgba(196,74,134,.8); transition:.35s cubic-bezier(.2,.8,.2,1)}
@@ -417,7 +426,6 @@ form small{color:var(--dim-2); font-size:.78rem; position:relative; z-index:2}
 footer{border-top:1px solid var(--line); padding-block:2.8rem}
 .foot{display:flex; flex-wrap:wrap; gap:1.4rem 2.5rem; align-items:center; justify-content:space-between}
 .foot nav{display:flex; flex-wrap:wrap; gap:1.3rem; font-size:.88rem; color:var(--dim)}
-.foot nav a:hover{color:var(--pink)}
 .foot p{margin:0; font:400 .74rem/1.6 var(--mono); color:var(--dim-2)}
 
 /* ── reveal (visible by default so a JS failure never blanks the page) ────── */
@@ -451,7 +459,8 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
 }
 @media (max-width:620px){
   .nav-in .btn--hot .num,.scroll-cue,.callbar span{display:none}
-  .callbar{gap:0 .55rem; font-size:.74rem}
+  .callbar{gap:0 .4rem; font-size:.7rem}
+  .callbar .callbar-ig{padding:.2rem .4rem}
   .nav-in{padding-left:.75rem; gap:.5rem}
   .nav-in .brand{gap:.5rem}
   .nav-in .brand img{width:34px; height:34px}
@@ -528,7 +537,14 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
    link through to their profile */
 .lb-of{font:500 .6rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; opacity:.7; margin-left:.5rem}
 
-/* the way back into a claimed profile, quiet enough not to compete with the
-   client-facing footer links around it */
-.artist-login{opacity:.75}
-.artist-login:hover{opacity:1; color:var(--pink)}
+/* ── every text link is marked, on every page ───────────────────────────────
+   Tinted, underlined and in the dark rose, which is 8:1 on this paper where
+   the bright --pink managed about 3:1. Buttons, cards and icon circles are not
+   listed: those already look like what they are.                            */
+main p a:not(.btn),main li a:not(.btn),main dd a,.crumb a,.back,.cat-head h2 a,.cat-index a,.foot nav a,.lines a{
+  color:var(--lav); font-weight:600; text-decoration:underline; text-decoration-thickness:1.5px; text-underline-offset:.18em;
+  background:rgba(255,46,144,.1); border-radius:4px; padding:.05em .3em;
+  -webkit-box-decoration-break:clone; box-decoration-break:clone; transition:background .2s, color .2s}
+main p a:not(.btn):hover,main li a:not(.btn):hover,main dd a:hover,.crumb a:hover,.back:hover,.cat-head h2 a:hover,.cat-index a:hover,.foot nav a:hover,.lines a:hover{
+  background:var(--lav); color:#fff}
+.chips a:not(.btn){color:var(--lav); font-weight:600; text-decoration:underline; text-underline-offset:.18em}

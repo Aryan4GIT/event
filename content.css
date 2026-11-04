@@ -9,12 +9,10 @@
 .page-hero .lede{margin-inline:auto}
 .page-hero .eyebrow{justify-content:center}
 .crumb{font:500 .66rem/1.7 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2); margin-bottom:1.4rem}
-.crumb a:hover{color:var(--pink)}
 
 .article{max-width:760px; margin-inline:auto}
 .article .back{display:inline-block; margin-bottom:1.8rem; font:500 .66rem/1 var(--mono);
   letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2)}
-.article .back:hover{color:var(--pink)}
 .article time{display:block; font:500 .62rem/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--lav); margin-bottom:.9rem}
 .article h1{font:400 clamp(2rem,4.4vw,3.2rem)/1.08 var(--display); margin:0 0 1.6rem; letter-spacing:-.02em; text-wrap:balance}
 .article .hero-shot{width:100%; border-radius:20px; margin-bottom:2rem; aspect-ratio:16/9; object-fit:cover;
@@ -33,9 +31,6 @@
 .article h2{font:600 1.12rem/1.4 var(--body); margin:2.2rem 0 .7rem; letter-spacing:-.005em}
 .article h3{font:600 .98rem/1.45 var(--body); margin:1.5rem 0 .4rem; color:var(--mist)}
 .article p{margin:0 0 1.1rem; color:var(--dim); line-height:1.8}
-/* links inherit the body colour by default, which inside prose reads as plain text */
-.article p a, .article li a{color:var(--pink); font-weight:500}
-.article p a:hover, .article li a:hover{text-decoration:underline}
 .article ul{margin:0 0 1.3rem; padding-left:1.1rem; color:var(--dim); line-height:1.8}
 .article li{margin-bottom:.4rem}
 .article figure{margin:2rem 0}
@@ -48,6 +43,10 @@
   transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s}
 .svc-card:hover{transform:translateY(-4px); box-shadow:0 26px 44px -26px rgba(255,46,144,.7), inset 0 0 0 1px rgba(255,46,144,.35)}
 .svc-card img{width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:var(--line)}
+/* product shots on white: cropping to fill cuts the top off a heater */
+.article .hero-shot.fit,.svc-card img.fit,.photo-grid img.fit{object-fit:contain; background:#fff}
+.photo-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; margin:2rem 0}
+.photo-grid img{width:100%; aspect-ratio:4/3; object-fit:cover; display:block; border-radius:14px; background:var(--line)}
 .svc-card b{padding:.85rem .9rem .1rem; font:600 .88rem/1.35 var(--body); color:var(--mist)}
 .svc-card small{padding:.25rem .9rem 0; font:400 .72rem/1.5 var(--body); color:var(--dim)}
 .svc-card .btn{margin:auto .9rem 1rem; padding:.6rem 1.1rem; font-size:.78rem}
@@ -73,8 +72,7 @@
 .dir h2{font:400 1.5rem/1.2 var(--display); margin:0 0 .9rem; letter-spacing:-.01em}
 .dir ul{margin:0; padding:0; list-style:none}
 .dir li{margin-bottom:.45rem; line-height:1.5}
-.dir a{color:var(--dim); font-size:.92rem}
-.dir a:hover{color:var(--pink)}
+.dir a{font-size:.92rem}
 
 /* "more like this": six pages from the same section, written by tools/seo-pass.py */
 .article .related{margin:3rem 0 0}
@@ -82,8 +80,7 @@
 .article .related ul{margin:0; padding:0; list-style:none;
   display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:.1rem 1.6rem}
 .article .related li{margin-bottom:.45rem; line-height:1.5}
-.article .related a{color:var(--dim); font-size:.92rem; font-weight:400}
-.article .related a:hover{color:var(--pink); text-decoration:none}
+.article .related a{font-size:.92rem}
 
 @media (max-width:620px){.article .tail .btn{flex:1 1 100%}}
 
@@ -95,4 +92,3 @@
 .article .roster-live > p{color:var(--dim)}
 .article .roster-live h3{margin:1.6rem 0 .7rem}
 .article .roster-join{font-size:.92rem; margin-top:1.2rem}
-.article .roster-join a{color:var(--pink); font-weight:600}
