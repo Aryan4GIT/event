@@ -187,7 +187,7 @@
         <span>Catering, food stalls &amp; carts</span><span>Bakery &amp; cakes</span><span>Florist</span>
         <span>AC, cooler, fan &amp; generator</span><span>Transport &amp; logistics</span>
         <span>Venue, farmhouse &amp; banquet</span><span>Manpower, bouncers &amp; security</span>
-        <span>Photo &amp; video studio, 360° booth</span><span>Invites, gifting &amp; favours</span>
+        <span>Photo &amp; video studio, 360° booth</span><span>Invites, gifting &amp; favours</span><span>SFX &amp; special effects</span>
       </div>
       <p class="lede reveal" style="margin-top:1rem; font-size:.92rem">
         Perform at events rather than supply them? DJs, anchors, singers, dancers, choreographers, mehendi,
@@ -237,6 +237,8 @@
             <label><input type="checkbox" name="role" value="v-manpower" data-label="Manpower, bouncers &amp; security"><span>Manpower, bouncers &amp; security</span></label>
             <label><input type="checkbox" name="role" value="v-photo-studio" data-label="Photo &amp; video studio, 360° booth"><span>Photo &amp; video studio, 360° booth</span></label>
             <label><input type="checkbox" name="role" value="v-invites" data-label="Invites, gifting &amp; favours"><span>Invites, gifting &amp; favours</span></label>
+            <!-- shortcut: reuses the artist sfx category, which needs no database change; kind=vendor still keeps them off the roster. Add a v-sfx category if suppliers should be filtered apart from artists. -->
+            <label><input type="checkbox" name="role" value="sfx" data-label="SFX &amp; special effects"><span>SFX &amp; special effects</span></label>
             <label><input type="checkbox" name="role" value="v-other" data-label="Other supplier"><span>Something else — say which below</span></label>
           </div>
         </fieldset>
