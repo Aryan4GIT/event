@@ -1,5 +1,5 @@
 /* Site-wide behaviour that every page shares: the WhatsApp button, the
-   Tawk.to live chat, and whole-card clicking. The scripted desk assistant
+   Tawk.to live chat, whole-card clicking and the booking form. The scripted desk assistant
    this replaces is in git history (chat.js). */
 (() => {
   const WA = '919811788643';
@@ -36,5 +36,97 @@
     const card = e.target.closest('.svc-card, .card');
     const link = card && card.querySelector('a[href]');
     if (link) link.click();
+  });
+
+  /* ── booking form → WhatsApp (no backend to keep alive) ───────────────────
+     One form for every booking: the homepage's contact form, and the dialog
+     that Hire, Book, Plan my event and Send an enquiry open. Those links keep
+     their hrefs, so they still lead somewhere if this script does not run. */
+  const today = new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+  const talk = (to) => `Opens WhatsApp with your details filled in. Prefer to talk? Call +91 ${to.slice(2, 7)} ${to.slice(7)}.`;
+  const bookingFields = (id) => {
+    const field = (name, label, control) => `<div class="field"><label for="${id}-${name}">${label}</label>` +
+      control(`id="${id}-${name}" name="${name}" required`) + '</div>';
+    const input = (attrs) => (a) => `<input ${a} ${attrs}>`;
+    const pick = (options) => (a) => `<select ${a}><option value="">Choose one</option>` +
+      options.map(o => `<option>${o}</option>`).join('') + '</select>';
+    const words = 'pattern=".*\\S.*"';    // required alone accepts a line of spaces
+    return field('name', 'Your name', input(`${words} autocomplete="name"`)) +
+      '<div class="row2">' +
+        field('type', 'Event type', pick(['Social', 'Corporate', 'Wedding', 'Birthday / anniversary',
+          'Brand promotion / road show', 'College / school fest', 'Other'])) +
+        field('date', 'Event date', input(`type="date" min="${today}"`)) +
+      '</div><div class="row2">' +
+        field('timings', 'Timings', input(`${words} placeholder="7 pm to 11 pm"`)) +
+        field('duration', 'Duration of performance / service', pick(['Up to 1 hour', '2 hours', '3 to 4 hours',
+          '5 to 6 hours', 'Full day', 'More than one day'])) +
+      '</div>' +
+      field('location', 'Location', input(`${words} placeholder="Venue or area, city" autocomplete="off"`)) +
+      '<div class="row2">' +
+        field('phone', 'Phone', input('type="tel" pattern="\\+?[0-9 \\-]{10,16}" title="Phone number with at least 10 digits" placeholder="98xxxxxxxx" autocomplete="tel"')) +
+        field('email', 'Email', input('type="email" placeholder="you@example.com" autocomplete="email"')) +
+      '</div>' +
+      '<button class="btn btn--hot" type="submit">Send enquiry</button>' +
+      `<small>${talk(WA)}</small>`;
+  };
+
+  const sendToWhatsApp = (form, booking) => form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = new FormData(form), { item, to } = booking();
+    const text = [
+      'Hi SHOWMAQERS! I would like to book.',
+      item && `For: ${item}`,
+      `Name: ${f.get('name').trim()}`,
+      `Event type: ${f.get('type')}`,
+      `Date: ${new Date(f.get('date') + 'T00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}`,
+      `Timings: ${f.get('timings').trim()}`,
+      `Duration: ${f.get('duration')}`,
+      `Location: ${f.get('location').trim()}`,
+      `Phone: ${f.get('phone').trim()}`,
+      `Email: ${f.get('email').trim()}`,
+      `Page: ${document.title}`            // "For: BASIC" alone does not say basic what
+    ].filter(Boolean).join('\n');
+    window.open('https://wa.me/' + to + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    const note = form.querySelector('small');
+    note.textContent = 'WhatsApp should have opened with your enquiry. Press send there and we will reply shortly.';
+    note.style.color = 'var(--gold)';
+  });
+
+  const enq = document.getElementById('enq');
+  if (enq) {
+    enq.insertAdjacentHTML('afterbegin', bookingFields('enq'));
+    sendToWhatsApp(enq, () => ({ item: '', to: WA }));
+  }
+
+  const dialog = document.createElement('dialog');
+  dialog.className = 'booking';
+  dialog.setAttribute('aria-labelledby', 'booking-title');
+  dialog.innerHTML = '<button type="button" class="booking-x" aria-label="Close">✕</button>' +
+    '<form class="glass"><h2 id="booking-title">Send an enquiry</h2><p class="booking-for" hidden></p>' +
+    bookingFields('booking') + '</form>';
+  document.body.appendChild(dialog);
+  dialog.querySelector('.booking-x').addEventListener('click', () => dialog.close());
+  const dialogFor = dialog.querySelector('.booking-for'), dialogNote = dialog.querySelector('small');
+  let booking = { item: '', to: WA };
+  sendToWhatsApp(dialog.querySelector('form'), () => booking);
+
+  /* What is being booked: the link can say, else the card it sits on, else the
+     page's heading, but only on a page whose heading names a service. */
+  const servicePage = () => /"@type":"Service"/.test(document.querySelector('script[type="application/ld+json"]')?.textContent || '');
+  const bookingItem = (a) => a.dataset.book
+    || a.closest('.svc-card')?.querySelector('b')?.textContent.replace(/^\d+\.\s*/, '').trim()
+    || (servicePage() && document.querySelector('h1')?.textContent.trim()) || '';
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a.btn:not([href^="tel:"])');
+    if (!a || !(/^(hire|book)\b/i.test(a.textContent.trim())
+             || /(contact\.html|index\.html#contact)$/.test(a.getAttribute('href')))) return;
+    e.preventDefault();
+    booking = { item: bookingItem(a), to: a.dataset.wa || a.href.match(/wa\.me\/(\d+)/)?.[1] || WA };
+    dialogFor.textContent = booking.item && 'For: ' + booking.item;
+    dialogFor.hidden = !booking.item;
+    dialogNote.textContent = talk(booking.to);
+    dialogNote.style.color = '';
+    dialog.showModal();
   });
 })();

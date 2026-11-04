@@ -226,6 +226,32 @@
           </div>
           <span class="sheen"></span>
         </article>
+
+        <article class="card glass reveal tilt" style="--i:5">
+          <span class="card-tag">05 &middot; Arranged for you</span>
+          <div class="card-media"><img width="1600" height="1066" src="images/new/wedding-venue-lobby-florals.jpg" alt="Hotel lobby dressed with florals for a wedding" loading="lazy"></div>
+          <div class="card-body">
+            <h3>Venue, Catering &amp; More</h3>
+            <div class="roll">
+              <ul>
+                <li>Hotel, resort &amp; banquet venues</li>
+                <li>Catering service</li>
+                <li>Transportation service</li>
+                <li>Corporate gifting</li>
+                <li>Wedding gifting</li>
+                <li>DJ on wheels</li>
+                <li>Hotel, resort &amp; banquet venues</li>
+                <li>Catering service</li>
+                <li>Transportation service</li>
+                <li>Corporate gifting</li>
+                <li>Wedding gifting</li>
+                <li>DJ on wheels</li>
+              </ul>
+            </div>
+            <a class="more" href="services.html#more">Click here</a>
+          </div>
+          <span class="sheen"></span>
+        </article>
       </div>
 
       <!-- Each of these names something we have a page for, so each is a link.
@@ -233,6 +259,7 @@
            of their own, so they go to the corporate events page, which is
            where they are actually described. -->
       <div class="chips reveal" style="--i:4">
+        <a href="venue-hotel-resort-banquet-booking-for-events-weddings-delhi-ncr.html">Venue booking</a><a href="catering-service-for-events-weddings-parties-delhi-ncr.html">Catering service</a><a href="transportation-service-for-events-weddings-delhi-ncr.html">Transportation service</a><a href="corporate-gifting-for-events-employees-clients-delhi-ncr.html">Corporate gifting</a><a href="wedding-gifting-hampers-return-gifts-delhi-ncr.html">Wedding gifting</a><a href="dj-on-wheels-for-baraat-roadshows-events-delhi-ncr.html">DJ on wheels</a>
         <a href="wedding-decorators-planners-south-delhi-gurgaon-noida.html">Wedding decoration</a><a href="flower-decorator-for-events-parties-delhi-ncr.html">Flower decoration</a><a href="stage-fabrication-decoration-for-events-parties-delhi-ncr.html">Stage fabrication</a>
         <a href="games.html">Games &amp; activities</a><a href="manpower.html">Manpower</a><a href="corporate-event-planner-organizer-delhi-ncr.html">Exhibitions</a>
         <a href="corporate-event-planner-organizer-delhi-ncr.html">Consumer shows</a><a href="corporate-event-planner-organizer-delhi-ncr.html">Sports events</a><a href="corporate-event-planner-organizer-delhi-ncr.html">Road shows</a>
@@ -405,40 +432,7 @@
         </div>
       </div>
 
-      <form class="glass blur reveal" style="--i:2" id="enq" novalidate>
-        <div class="field">
-          <label for="f-name">Your name</label>
-          <input id="f-name" name="name" required placeholder="Aryan Singh">
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label for="f-phone">Phone</label>
-            <input id="f-phone" name="phone" type="tel" required placeholder="98xxxxxxxx">
-          </div>
-          <div class="field">
-            <label for="f-date">Event date</label>
-            <input id="f-date" name="date" type="date">
-          </div>
-        </div>
-        <div class="field">
-          <label for="f-type">What are we planning?</label>
-          <select id="f-type" name="type">
-            <option>Wedding / destination wedding</option>
-            <option>Birthday or anniversary party</option>
-            <option>Corporate event / product launch</option>
-            <option>Brand promotion / road show</option>
-            <option>College fest</option>
-            <option>Artists &amp; manpower only</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="f-msg">Guest count, city, anything else</label>
-          <textarea id="f-msg" name="msg" placeholder="350 guests, Chattarpur farmhouse, need mandap décor + anchor + dhol"></textarea>
-        </div>
-        <button class="btn btn--hot" type="submit">Send enquiry on WhatsApp</button>
-        <small id="enq-note">Opens WhatsApp with your details filled in. Prefer to talk? Call +91 98117 88643.</small>
-        <span class="sheen"></span>
-      </form>
+      <form class="glass blur reveal" style="--i:2" id="enq"><span class="sheen"></span></form>
     </div>
   </section>
 
@@ -741,25 +735,6 @@
     if (!document.hidden && !calm) raf = requestAnimationFrame(paint);
   });
 
-  /* ── enquiry form → WhatsApp (no backend to keep alive) ────────────────── */
-  const form = document.getElementById('enq'), note = document.getElementById('enq-note');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const f = new FormData(form), name = (f.get('name') || '').trim(), phone = (f.get('phone') || '').trim();
-    if (!name || !phone) {
-      note.textContent = 'Please add your name and phone number so we can call you back.';
-      note.style.color = 'var(--pink)';
-      (name ? form.phone : form.name).focus();
-      return;
-    }
-    const text = `Hi SHOWMAQERS! I'm ${name} (${phone}).`
-      + `\nEvent: ${f.get('type')}`
-      + (f.get('date') ? `\nDate: ${f.get('date')}` : '')
-      + (f.get('msg')?.trim() ? `\nDetails: ${f.get('msg').trim()}` : '');
-    window.open('https://wa.me/919811788643?text=' + encodeURIComponent(text), '_blank', 'noopener');
-    note.textContent = 'WhatsApp should have opened with your enquiry — send it and we will reply shortly.';
-    note.style.color = 'var(--gold)';
-  });
 })();
 </script>
 <script src="site.js" defer></script>

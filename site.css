@@ -393,14 +393,22 @@ figcaption{position:absolute; inset:auto 0 0; z-index:2; padding:1.8rem .95rem .
 form{padding:clamp(1.5rem,2.8vw,2.4rem); display:grid; gap:1.1rem; min-width:0}
 .field{display:grid; gap:.5rem; min-width:0; position:relative; z-index:2}
 .field label{font:500 .64rem/1 var(--mono); letter-spacing:.2em; text-transform:uppercase; color:var(--dim-2)}
-.field input,.field select,.field textarea{background:rgba(255,255,255,.86); border:0; border-radius:14px; padding:.9rem 1rem; font-size:.96rem; width:100%;
+.field input,.field select,.field textarea{background:rgba(255,255,255,.86); border:0; border-radius:14px; padding:.9rem 1rem; font-size:1rem; width:100%;
   box-shadow:inset 0 0 0 1px rgba(226,122,170,.26); transition:box-shadow .3s, background .3s}
 .field input::placeholder,.field textarea::placeholder{color:#48303C}
 .field input:focus,.field select:focus,.field textarea:focus{outline:0; background:#fff;
   box-shadow:inset 0 0 0 1px var(--pink), 0 0 0 4px rgba(255,46,144,.16)}
 .field textarea{resize:vertical; min-height:96px}
-.row2{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; align-items:end}
 form small{color:var(--dim-2); font-size:.78rem; position:relative; z-index:2}
+.booking{width:min(600px,calc(100vw - 2rem)); max-height:calc(100dvh - 2rem); padding:0; border:0; border-radius:var(--r); overflow:auto;
+  background:var(--void); color:var(--mist); overscroll-behavior:contain}
+.booking::backdrop{background:rgba(13,2,6,.6)}
+.booking h2{margin:0; padding-right:2.6rem; font:400 clamp(1.5rem,4vw,1.9rem)/1.15 var(--display)}
+.booking-for{margin:-.6rem 0 0; color:var(--lav); font-weight:600; font-size:.92rem}
+.booking-x{position:absolute; top:.8rem; right:.8rem; z-index:3; width:40px; height:40px; border:0; border-radius:50%; background:#fff; color:var(--mist); cursor:pointer;
+  box-shadow:inset 0 0 0 1px var(--line)}
+.booking-x:hover{background:var(--grad); color:#fff}
 
 /* ── lights divider + footer ──────────────────────────────────────────────── */
 .lights{display:block; width:100%; height:60px; overflow:visible}
