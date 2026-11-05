@@ -8,7 +8,7 @@ const load = (file, name) => {
   vm.runInNewContext(fs.readFileSync(file, 'utf8'), sandbox);
   return sandbox.window[name];
 };
-const { kindOf, originalClip } = load('media-upload.js', 'MediaPicker');
+const { kindOf, originalClip, isPendingPath } = load('media-upload.js', 'MediaPicker');
 const { cleanBio, coverOf, group } = load('vendor-directory.js', 'VendorDirectory');
 const file = (name, type) => ({ name, type, size: 10, slice: (a, b, t) => ({ type: t }) });
 
@@ -57,5 +57,29 @@ assert.deepStrictEqual(Array.from(sections, s => s.key), ['v-decor', 'v-florist'
 assert.strictEqual(sections[0].vendors[0].name, 'Both');
 assert.strictEqual(sections[1].vendors[0].name, 'Both');
 assert.strictEqual(sections[2].vendors[0].name, 'Old view', 'works before vendor-directory.sql runs');
+
+/* admin.html sends these with the admin's token, so only our own uploads may pass */
+assert.strictEqual(isPendingPath('vendor-pending/1c9e-44/photo.jpg'), true);
+assert.strictEqual(isPendingPath('vendor-pending/1c9e-44/1730000-m0.webp'), true);
+assert.strictEqual(isPendingPath('vendor-pending/old.jpg'), true, 'early registrations had no folder');
+assert.strictEqual(isPendingPath('vendor-photos/a/photo.jpg'), false, 'approving would copy then delete a live photo');
+assert.strictEqual(isPendingPath('../../rest/v1/vendors?status=eq.approved'), false);
+assert.strictEqual(isPendingPath('vendor-pending/../../rest/v1/vendors'), false);
+assert.strictEqual(isPendingPath('vendor-pending/a/b.jpg?x=1'), false);
+assert.strictEqual(isPendingPath('vendor-pending/a/%2e%2e/b.jpg'), false);
+assert.strictEqual(isPendingPath('https://example.com/x.jpg'), false);
+assert.strictEqual(isPendingPath(null), false);
+
+/* Both registration forms require a photo and send it */
+for (const page of ['vendors.html', 'join-as-event-vendor-supplier-in-delhi-ncr.html']) {
+  const html = fs.readFileSync(page, 'utf8');
+  assert.ok(html.includes('if (!photo.file)'), page + ' must refuse a registration with no photo');
+  assert.ok(html.includes('photo_path: `vendor-pending/${folder}/photo.jpg`'), page + ' must send the photo path');
+}
+
+/* The database and the admin page must agree on what an upload path is */
+const sqlRule = fs.readFileSync('supabase/registration-safety.sql', 'utf8').match(/p ~ '([^']+)'/)[1];
+for (const p of ['vendor-pending/1c9e-44/photo.jpg', 'vendor-photos/a/b.jpg', 'vendor-pending/a/b.jpg?x=1', '../x'])
+  assert.strictEqual(new RegExp(sqlRule).test(p), isPendingPath(p), p);
 
 console.log('all upload and vendor rules hold');

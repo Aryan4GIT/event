@@ -25,8 +25,8 @@ window.VendorDirectory = (() => {
 
   const samplesOf = row => [...(row.media || []), ...(row.skill_path ? [row.skill_path] : [])].filter(Boolean);
 
-  /* The picture on a card. A vendor registers without a headshot, so their
-     first work photo stands in, then their clip. */
+  /* The picture on a card. A vendor who registered before the photo became
+     required has none, so their first work photo stands in, then their clip. */
   const coverOf = row => {
     const all = samplesOf(row);
     return { photo: row.photo_path || all.find(p => !isVideo(p)) || null, clip: all.find(isVideo) || null };

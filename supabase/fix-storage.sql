@@ -19,6 +19,9 @@ drop policy if exists "artist removes own folder"  on storage.objects;
 drop policy if exists "staff publish photo"        on storage.objects;
 drop policy if exists "staff unpublish photo"      on storage.objects;
 drop policy if exists "public may upload a photo"  on storage.objects;
+drop policy if exists "staff reads pending"        on storage.objects;
+drop policy if exists "staff removes pending"      on storage.objects;
+drop policy if exists "staff replace photo"        on storage.objects;
 
 -- the public drops a registration photo into the private bucket
 create policy "public may upload a photo"

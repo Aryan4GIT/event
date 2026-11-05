@@ -295,6 +295,57 @@ window.MediaPicker = (() => {
     return { upload, clear, failures, get length() { return picked.length; } };
   }
 
+  /* ── the one picture a profile must have. Any photo a phone can make is fine:
+     it leaves here as a small JPEG, or as it came when it is already small. ── */
+  async function shrinkPhoto(file, max = 1200) {
+    try {
+      const bmp = await openImage(file);
+      const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
+      if (scale === 1 && file.size < 900000 && file.type in STORABLE) return file;
+      const c = document.createElement('canvas');
+      c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
+      c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+      return await new Promise(r => c.toBlob(b => r(b || file), 'image/jpeg', .85));
+    } catch (e) { return file; }
+  }
+
+  function mountPhoto({ input, drop, preview, msg, say }) {
+    let chosen = null;
+    const blank = msg.textContent;
+
+    async function take(file) {
+      if (!file) return;
+      if (kindOf(file) !== 'photo') return say('Please choose a photo.', 'err');
+      if (file.size > 60 * 1024 * 1024) return say('That photo is over 60 MB — please pick a smaller one.', 'err');
+      if (!await readable(file)) return say(esc(cannotOpen(file)), 'err');
+      chosen = file;
+      preview.src = URL.createObjectURL(file);
+      drop.classList.add('has');
+      msg.textContent = file.name;
+      say('');
+    }
+
+    input.addEventListener('change', e => { take(e.target.files[0]); input.value = ''; });
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+    drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); take(e.dataTransfer.files[0]); });
+    /* the real input is hidden, and a required field must work without a mouse */
+    drop.tabIndex = 0;
+    drop.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+    });
+
+    return {
+      get file() { return chosen; },
+      shrunk: () => shrinkPhoto(chosen),
+      clear() { chosen = null; drop.classList.remove('has'); msg.textContent = blank; }
+    };
+  }
+
+  /* A row's file paths came from a public form. This is the only shape that is
+     one of our private uploads: no "..", no query string, no other bucket. */
+  const isPendingPath = p => /^vendor-pending(\/[\w.-]+)+$/.test(p || '') && !p.includes('..');
+
   /* why storage said no, in words someone can act on */
   async function refusal(res) {
     const body = await res.json().catch(() => ({}));
@@ -312,6 +363,6 @@ window.MediaPicker = (() => {
     + `<a href="https://wa.me/${waNumber}?text=${encodeURIComponent('Hi Showmaqers, I registered as ' + who + '. Here are the files that would not upload.')}" `
     + 'target="_blank" rel="noopener" style="font-weight:600">Send them to us on WhatsApp</a> and we will add them.</p>';
 
-  return { mount, kindOf, originalClip, openImage, readable, cannotOpen, refusal, failureList, lostNote, esc,
+  return { mount, mountPhoto, isPendingPath, kindOf, originalClip, openImage, readable, cannotOpen, refusal, failureList, lostNote, esc,
            isVideoPath, MAX_PHOTOS, MAX_VIDEOS, MAX_SECONDS };
 })();

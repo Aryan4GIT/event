@@ -194,3 +194,15 @@ the live data stops arriving, check in this order:
 Run [`vendor-directory.sql`](vendor-directory.sql) in the SQL Editor. It lists a vendor under every category
 they ticked and raises the upload cap to 30 MB. The vendors page works without it, showing each vendor under
 their first category.
+
+---
+
+## Registration photo and safety rules
+
+Publish the website first, then run [`registration-safety.sql`](registration-safety.sql) in the SQL Editor.
+
+A public registration then has to carry a photo and can set only the fields the forms send. Saving a profile
+checks only the fields that changed, so an Instagram link or a price like `20000-50000` no longer blocks an upload.
+
+The last result is one row. `anon_can_set_invites` and `logins_can_create_rows` should read 0. Reject any row
+counted in `rows_with_odd_paths`: its file paths did not come from our forms, and `admin.html` refuses to open them.

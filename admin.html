@@ -151,6 +151,7 @@
 </main>
 
 <script src="supabase-config.js"></script>
+<script src="media-upload.js"></script>
 <script>
 (() => {
   const cfg = window.SUPABASE || {};
@@ -185,6 +186,15 @@
   async function api(path, opts = {}) {
     if (!await fresh()) throw new Error('signed out');
     return fetch(REST + path, { ...opts, headers: { ...authHeaders(), ...(opts.headers || {}) } });
+  }
+
+  /* Paths on a row arrived from a public form, and this page sends them with the
+     admin's token, DELETEs included. Only a plain path inside the private bucket
+     goes out; anything else could aim that token at the whole project. */
+  async function privateFile(path, opts = {}) {
+    if (!MediaPicker.isPendingPath(path)) throw new Error('that file path is not one of our uploads');
+    if (!await fresh()) throw new Error('signed out');
+    return fetch(`${STORE}/object/${path}`, { ...opts, headers: authHeaders() });
   }
 
   function signOut() {
@@ -269,7 +279,7 @@
   const rowCard = (v, actions) => `
       <details class="row-card glass" data-id="${v.id}">
         <summary class="row-item">
-          ${v.photo_path ? `<img src="${esc(v.photo_path)}" alt="" loading="lazy">` : ''}
+          ${/^(https:|images\/)/.test(v.photo_path || '') ? `<img src="${esc(v.photo_path)}" alt="" loading="lazy">` : ''}
           <span class="nm">${esc(v.name)}<br><span class="tag">${esc(rolesText(v))}${v.city ? ' \u00b7 ' + esc(v.city) : ''}</span></span>
           <span class="sp">${actions}<span class="chev">\u203a</span></span>
         </summary>
@@ -278,6 +288,7 @@
           <div class="drafts">
             <h4>Submitted by the artist &mdash; not public yet</h4>
             ${v.bio_draft ? `<p>${esc(v.bio_draft)}</p>` : ''}
+            ${v.photo_draft ? `<small>New profile photo</small><div class="samples" id="draft-photo-${v.id}"></div>` : ''}
             ${v.media_draft && v.media_draft.length ? `<div class="samples" id="draft-${v.id}"></div>` : ''}
             <button class="btn btn--hot mini" data-act="publish">Publish this</button>
             <button class="btn btn--glass mini" data-act="discard">Discard</button>
@@ -336,7 +347,7 @@
     const slot = $('shot-' + v.id);
     if (!v.photo_path) { slot.innerHTML = '<small>no photo</small>'; return; }
     try {
-      const r = await fetch(`${STORE}/object/${v.photo_path}`, { headers: authHeaders() });
+      const r = await privateFile(v.photo_path);
       if (!r.ok) throw new Error(r.status);
       const blob = await r.blob();
       const url = URL.createObjectURL(blob);
@@ -355,7 +366,7 @@
     const held = [];
     for (const path of v.media) {
       try {
-        const r = await fetch(`${STORE}/object/${path}`, { headers: authHeaders() });
+        const r = await privateFile(path);
         if (!r.ok) throw new Error(r.status);
         const blob = await r.blob();
         held.push({ path, blob, url: URL.createObjectURL(blob) });
@@ -374,7 +385,7 @@
     const slot = $('clip-' + v.id);
     if (!slot) return;
     try {
-      const r = await fetch(`${STORE}/object/${v.skill_path}`, { headers: authHeaders() });
+      const r = await privateFile(v.skill_path);
       if (!r.ok) throw new Error(r.status);
       const blob = await r.blob();
       const url = URL.createObjectURL(blob);
@@ -392,8 +403,14 @@
                      : '<button class="btn btn--glass mini" data-act="invite">Invite</button>')
           + '<button class="btn btn--glass mini" data-act="unlist">Take down</button>')).join('')
       : '<p class="note">Nobody is listed yet.</p>';
-    list.filter(v => v.media_draft && v.media_draft.length)
-        .forEach(v => loadMedia({ id: v.id, media: v.media_draft }, 'draft-' + v.id));
+    loadDrafts(list);
+  }
+
+  function loadDrafts(list) {
+    for (const v of list) {
+      if (v.media_draft?.length) loadMedia({ id: v.id, media: v.media_draft }, 'draft-' + v.id);
+      if (v.photo_draft) loadMedia({ id: v.id, media: [v.photo_draft] }, 'draft-photo-' + v.id);
+    }
   }
 
   /* approved once, then taken down — vetted already, so one click puts them back */
@@ -401,6 +418,7 @@
     $('view-unlisted').innerHTML = list.length
       ? list.map(v => rowCard(v, '<button class="btn btn--hot mini" data-act="relist">Put back on the roster</button>')).join('')
       : '<p class="note">Nobody has been taken down.</p>';
+    loadDrafts(list);
   }
 
   function drawRejected(list) {
@@ -481,7 +499,7 @@
       try {
         let blob = held.find(x => x.path === path)?.blob;
         if (!blob) {
-          const r = await fetch(`${STORE}/object/${path}`, { headers: authHeaders() });
+          const r = await privateFile(path);
           if (!r.ok) throw new Error('could not read it (' + r.status + ')');
           blob = await r.blob();
         }
@@ -508,12 +526,16 @@
     const row = (await (await api(`/vendors?select=*&id=eq.${id}`)).json())[0];
     if (!row) throw new Error('that registration has gone');
 
-    // Move the photo into the public bucket. A vendor registers without one,
-    // so approving them is a status change and nothing else.
+    // Move the photo into the public bucket. A vendor who registered before the
+    // photo became required has none, and approving them changes the status only.
     let publicUrl = row.photo_path;
     if (row.photo_path) {
-      const held = photos[id];
-      const blob = held ? held.blob : await (await fetch(`${STORE}/object/${row.photo_path}`, { headers: authHeaders() })).blob();
+      let blob = photos[id]?.blob;
+      if (!blob) {
+        const r = await privateFile(row.photo_path);
+        if (!r.ok) throw new Error('could not read the photo (' + r.status + ') — reject this one and ask them to register again');
+        blob = await r.blob();
+      }
       // a fresh key every time, so this is always a plain insert — no upsert,
       // and therefore no UPDATE policy needed on the bucket
       const dest = `${id}/${Date.now()}.jpg`;
@@ -534,7 +556,7 @@
     let publicClip = null;
     if (row.skill_path) {
       try {
-        const c = clips[id] || { blob: await (await fetch(`${STORE}/object/${row.skill_path}`, { headers: authHeaders() })).blob() };
+        const c = clips[id] || { blob: await (await privateFile(row.skill_path)).blob() };
         const ext = row.skill_path.split('.').pop().toLowerCase();
         const cdest = `${id}/${Date.now()}-skill.${ext}`;
         const cup = await fetch(`${STORE}/object/vendor-photos/${cdest}`, {
@@ -548,39 +570,48 @@
 
     // the work samples go public too, in the order they were sent
     const samples = row.media?.length ? await publishFiles(id, row.media) : null;
-    const publicMedia = samples?.published.length ? samples.published : null;
+    // any that would not copy wait in the drafts, because the public page must
+    // never point at a private file and the row is the only record of where they are
+    const sampleFields = !samples ? {} : { media: samples.published.length ? samples.published : null,
+      ...(samples.failed.length ? { media_draft: samples.failed, draft_at: new Date().toISOString() } : {}) };
 
     // put them last in their section
     const top = (await (await api(`/vendors?select=sort&category_key=eq.${row.category_key}&status=eq.approved&order=sort.desc&limit=1`)).json())[0];
     const saved = await patch(id, { status: 'approved', photo_path: publicUrl, sort: (top?.sort || 0) + 1,
                                     ...(publicClip ? { skill_path: publicClip } : {}),
-                                    ...(publicMedia ? { media: publicMedia } : {}) });
+                                    ...sampleFields });
     if (saved.status !== 'approved') throw new Error('the row did not save as approved');
 
-    if (row.photo_path) fetch(`${STORE}/object/${row.photo_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
-    if (publicClip) fetch(`${STORE}/object/${row.skill_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+    if (row.photo_path) privateFile(row.photo_path, { method: 'DELETE' }).catch(() => {});
+    if (publicClip) privateFile(row.skill_path, { method: 'DELETE' }).catch(() => {});
     for (const path of samples?.moved || [])
-      fetch(`${STORE}/object/${path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+      privateFile(path, { method: 'DELETE' }).catch(() => {});
     return row.name + (row.kind === 'vendor' ? ' is live on the vendors page.' : ' is live on the roster.')
-      + (samples?.failed.length ? ` ${samples.failed.length} work sample(s) could not be copied and stayed in private storage.` : '');
+      + (samples?.failed.length ? ` ${samples.failed.length} work sample(s) could not be copied. They are in that row's drafts on the Listed tab, to publish again or discard.` : '');
   }
 
-  /* Move an artist's submitted bio and samples into the published columns.
+  /* Move an artist's submitted bio, photo and samples into the published columns.
      The media files move buckets exactly as they do on first approval. */
   async function publishDraft(card) {
     const id = card.dataset.id;
     const row = (await (await api(`/vendors?select=*&id=eq.${id}`)).json())[0];
     if (!row) throw new Error('that profile has gone');
-    const { published, moved, failed } = await publishFiles(id, row.media_draft || []);
-    const next = { bio_draft: null, photo_draft: null,
-                   media_draft: failed.length ? failed : null,
+    const photo = row.photo_draft;
+    const { published, moved, failed } = await publishFiles(id, [...(photo ? [photo] : []), ...(row.media_draft || [])]);
+    const stuck = failed.filter(p => p !== photo);
+    const next = { bio_draft: null, photo_draft: failed.includes(photo) ? photo : null,
+                   media_draft: stuck.length ? stuck : null,
                    draft_at: failed.length ? row.draft_at : null };
     if (row.bio_draft) next.bio = row.bio_draft;
-    if (published.length) next.media = [...(row.media || []), ...published];
+    /* published and moved line up, so the photo is found by where it went */
+    const at = moved.indexOf(photo);
+    if (at >= 0) next.photo_path = published[at];
+    const samples = published.filter((_, i) => i !== at);
+    if (samples.length) next.media = [...(row.media || []), ...samples];
     await patch(id, next);
     // only now: the row is saved, and each of these has a public copy
     for (const path of moved)
-      fetch(`${STORE}/object/${path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+      privateFile(path, { method: 'DELETE' }).catch(() => {});
     return failed.length
       ? `${row.name}: ${published.length} published, but ${failed.length} could not be copied and stayed in the queue.`
       : row.name + "'s changes are live.";
@@ -588,13 +619,14 @@
 
   async function rejectDraft(card) {
     const id = card.dataset.id;
-    const row = (await (await api(`/vendors?select=media_draft,name&id=eq.${id}`)).json())[0];
+    const row = (await (await api(`/vendors?select=media_draft,photo_draft,name&id=eq.${id}`)).json())[0];
     /* one click sat next to Publish and destroyed the artist's only copy */
-    const files = row?.media_draft?.length || 0;
+    const drafts = [...(row?.photo_draft ? [row.photo_draft] : []), ...(row?.media_draft || [])];
+    const files = drafts.length;
     if (!confirm(`Discard what ${row?.name || 'they'} submitted?`
         + (files ? `\n\n${files} uploaded file(s) will be deleted for good.` : ''))) return 'Nothing was discarded.';
-    for (const path of row?.media_draft || [])
-      fetch(`${STORE}/object/${path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+    for (const path of drafts)
+      privateFile(path, { method: 'DELETE' }).catch(() => {});
     await patch(id, { bio_draft: null, media_draft: null, photo_draft: null, draft_at: null });
     return 'Discarded what ' + (row?.name || 'they') + ' submitted. Their published profile is unchanged.';
   }

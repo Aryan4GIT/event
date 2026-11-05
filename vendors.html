@@ -275,7 +275,7 @@
         <div class="pair">
           <div class="field">
             <label for="v-email">Email</label>
-            <input id="v-email" name="email" type="email" placeholder="you@example.com">
+            <input id="v-email" name="email" type="email" maxlength="254" placeholder="you@example.com">
           </div>
           <div class="field">
             <label for="v-exp">Years of experience</label>
@@ -286,11 +286,11 @@
         <div class="pair">
           <div class="field">
             <label for="v-fee">Usual fee per event (₹)</label>
-            <input id="v-fee" name="fee" placeholder="15,000 — negotiable by event">
+            <input id="v-fee" name="fee" maxlength="200" placeholder="15,000 — negotiable by event">
           </div>
           <div class="field">
             <label for="v-langs">Languages you work in</label>
-            <input id="v-langs" name="langs" placeholder="Hindi, English, Punjabi">
+            <input id="v-langs" name="langs" maxlength="200" placeholder="Hindi, English, Punjabi">
           </div>
         </div>
 
@@ -460,28 +460,14 @@
      No account needed. The form posts one pending row and one photo; the
      public can write but never read, so nobody can browse the queue.     */
   const form = document.getElementById('vendor'), status = document.getElementById('v-status');
-  const drop = document.getElementById('v-drop'), fileInput = document.getElementById('v-photo');
   const WA = '919910772449';
   const say = (msg, kind) => { status.innerHTML = msg; status.className = 'status ' + (kind || ''); };
   const picked = () => [...form.querySelectorAll('input[name="role"]:checked')];
-  let photo = null;
-
-  /* any photo a phone can make is fine: shrink() turns it into a small JPEG */
-  const takeFile = async (file) => {
-    if (!file) return;
-    if (MediaPicker.kindOf(file) !== 'photo') return say('Please choose a photo.', 'err');
-    if (file.size > 60 * 1024 * 1024) return say('That photo is over 60 MB — please pick a smaller one.', 'err');
-    if (!await MediaPicker.readable(file)) return say(MediaPicker.esc(MediaPicker.cannotOpen(file)), 'err');
-    photo = file;
-    document.getElementById('v-prev').src = URL.createObjectURL(file);
-    drop.classList.add('has');
-    document.getElementById('v-dropmsg').textContent = file.name;
-    say('');
-  };
-  fileInput.addEventListener('change', e => takeFile(e.target.files[0]));
-  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
-  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
-  drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); takeFile(e.dataTransfer.files[0]); });
+  const drop = document.getElementById('v-drop');
+  const photo = MediaPicker.mountPhoto({
+    input: document.getElementById('v-photo'), drop,
+    preview: document.getElementById('v-prev'), msg: document.getElementById('v-dropmsg'), say
+  });
 
   /* ── work samples — two photos and a clip, compressed before upload ───── */
   const samples = MediaPicker.mount({
@@ -490,19 +476,6 @@
     list:  document.getElementById('v-slist'),
     say
   });
-
-  /* phone cameras make 4 MB photos; shrink before sending over mobile data */
-  async function shrink(file, max = 1200) {
-    try {
-      const bmp = await MediaPicker.openImage(file);
-      const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
-      if (scale === 1 && file.size < 900000 && /^image\/(jpeg|png|webp)$/.test(file.type)) return file;
-      const c = document.createElement('canvas');
-      c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
-      c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-      return await new Promise(r => c.toBlob(b => r(b || file), 'image/jpeg', .85));
-    } catch (e) { return file; }
-  }
 
   const waHref = (get) => 'https://wa.me/' + WA + '?text=' + encodeURIComponent(
     'ARTIST REGISTRATION — Showmaqers'
@@ -537,6 +510,12 @@
       return;
     }
     /* the database refuses a row past these, and the whole registration with it */
+    if (get('name').length < 2) { say('Please add your full name.', 'err'); form.name.focus(); return; }
+    if (get('exp') && !(Number.isInteger(+get('exp')) && +get('exp') >= 0 && +get('exp') <= 70)) {
+      say('Please give your experience as whole years, from 0 to 70.', 'err');
+      form.exp.focus();
+      return;
+    }
     if (roles.length > 8) { say('Please tick no more than 8 roles, the ones you are strongest in.', 'err'); return; }
     if (get('about').length > 2000) {
       say(`Please shorten your description by ${get('about').length - 2000} characters.`, 'err');
@@ -548,7 +527,7 @@
       form.links.focus();
       return;
     }
-    if (!photo) { say('Please add a photo — it is what clients see on the roster.', 'err'); drop.focus(); return; }
+    if (!photo.file) { say('Please add a photo — it is what clients see on the roster.', 'err'); drop.focus(); return; }
     if (!form.consent.checked) {
       say('Please tick the consent box so we may list your name and photo.', 'err');
       form.consent.focus();
@@ -568,8 +547,7 @@
       const put = (name, body) => fetch(`${cfg.url}/storage/v1/object/vendor-pending/${folder}/${name}`,
         { method: 'POST', headers: { ...h, 'Content-Type': body.type || 'application/octet-stream' }, body });
 
-      const blob = await shrink(photo);
-      const up = await put('photo.jpg', blob);
+      const up = await put('photo.jpg', await photo.shrunk());
       if (!up.ok) throw new Error('upload ' + up.status);
 
       /* each sample is compressed then stored; the names come back in order */
