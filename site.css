@@ -172,9 +172,9 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .brand b{font:700 1rem/1 var(--body); letter-spacing:.17em}
 .brand small{display:block; font:400 .56rem/1.5 var(--mono); letter-spacing:.22em; color:var(--dim-2); text-transform:uppercase}
 .nav-links{display:flex; gap:.15rem; align-items:center}
-.nav-links a{padding:.6rem .95rem; border-radius:99px; font-size:.9rem; font-weight:600; color:var(--lav); white-space:nowrap; position:relative; transition:color .25s}
+.nav-links a{padding:.6rem .75rem; border-radius:99px; font-size:.9rem; font-weight:600; color:var(--lav); white-space:nowrap; position:relative; transition:color .25s}
 /* the call strip carries the numbers, and without this the bar overlaps the logo around 1024px */
-@media (max-width:1240px){.nav-in .btn--hot .num{display:none} .nav-links a{padding-inline:.5rem; font-size:.84rem}}
+@media (max-width:1240px){.nav-in .btn--hot .num{display:none} .nav-links a{padding-inline:.4rem; font-size:.84rem}}
 .nav-links a::before{content:""; position:absolute; inset:auto 50% .35rem; height:2px; width:0; border-radius:2px; background:var(--grad); transition:width .3s, inset-inline .3s}
 .nav-links a:hover{color:var(--pink)}
 .nav-links a:hover::before{width:46%; inset-inline:27%}
