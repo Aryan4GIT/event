@@ -20,7 +20,11 @@
 .prof .crumb a:hover{color:var(--pink)}
 .prof-head{display:grid; grid-template-columns:200px minmax(0,1fr); gap:clamp(1.2rem,3vw,2.4rem); align-items:start}
 .prof-shot{border-radius:20px; overflow:hidden; aspect-ratio:3/4; background:rgba(226,122,170,.1)}
-.prof-shot img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block}
+.prof-shot img,.prof-shot video{width:100%; height:100%; object-fit:cover; object-position:top center; display:block}
+.prof-shot .person-blank{height:100%}
+.prof-bio{margin-top:2.4rem}
+.prof-bio h2{font:400 clamp(1.4rem,3vw,2rem)/1.15 var(--display); margin:0 0 .8rem}
+.prof-bio p{white-space:pre-line; color:var(--dim); line-height:1.75; margin:0; max-width:70ch}
 .prof h1{font:400 clamp(2rem,5vw,3.2rem)/1.05 var(--display); margin:0 0 .5rem; letter-spacing:-.02em; text-wrap:balance}
 .prof .role{font:500 .66rem/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--lav); margin:0 0 1rem}
 .prof dl{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:.6rem 1.2rem; margin:1.2rem 0}
@@ -56,7 +60,7 @@
       </a>
       <nav class="nav-links" id="menu" aria-label="Main">
         <a href="index.html#services">Services</a>
-        <a href="manpower.html">Artists</a>
+        <a href="manpower.html">Artists</a><a href="event-vendors-suppliers-delhi-ncr.html">Vendors</a>
         <a href="games.html">Games</a>
         <a href="blog.html">Blog</a>
         <a href="index.html#gallery">Gallery</a>
@@ -88,8 +92,8 @@
       <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
     </a>
     <nav aria-label="Footer">
-      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
-      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a><a class="artist-login" href="my-profile.html">Artist login</a>
+      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="event-vendors-suppliers-delhi-ncr.html">Vendors</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
+      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a><a class="artist-login" href="my-profile.html">Artist &amp; vendor login</a>
     </nav>
     <nav aria-label="Social">
       <a href="https://www.instagram.com/showmaqerseventplanner" target="_blank" rel="noopener">Instagram · Events</a><a href="https://www.instagram.com/showmaqersweddingplanner" target="_blank" rel="noopener">Instagram · Weddings</a>
@@ -99,6 +103,7 @@
 </footer>
 
 <script src="supabase-config.js"></script>
+<script src="vendor-directory.js"></script>
 <script>
 (() => {
   const root = document.documentElement;
@@ -136,7 +141,9 @@
       const get = view => fetch(`${cfg.url}/rest/v1/${view}?id=eq.${encodeURIComponent(id)}&select=*`, h)
         .then(r => r.ok ? r.json() : []);
       /* an artist, or failing that a supplier */
-      const row = (await get('roster'))[0] || (await get('supplier'))[0];
+      let row = (await get('roster'))[0];
+      const isVendor = !row;
+      if (isVendor) row = (await get('supplier'))[0];
       if (!row) {
         state.innerHTML = 'That profile is not on the roster. <a href="manpower.html" style="color:var(--pink)">Browse the roster</a>.';
         return;
@@ -144,19 +151,28 @@
 
       document.title = row.name + ' — ' + row.category_label + ' — SHOWMAQERS';
       document.getElementById('crumb-now').textContent = row.name;
+      if (isVendor) {
+        const up = document.querySelector('.crumb a[href="manpower.html"]');
+        up.href = VendorDirectory.PAGE;
+        up.textContent = 'Vendors';
+      }
 
       /* anchors are booked on their own line */
       const line = row.category_key === 'anchors' ? '92202 93876' : '99107 72449';
-      const gallery = [...(row.media || []), ...(row.skill_path ? [row.skill_path] : [])].filter(Boolean);
+      const gallery = VendorDirectory.samplesOf(row);
+      const about = VendorDirectory.cleanBio(row.bio);
+      const cover = VendorDirectory.coverOf(row);
       const facts = [
         ['Based in', esc(row.city) || '—'],
-        ['Booked as', esc(row.category_label)],
+        [isVendor ? 'Supplies' : 'Booked as', esc(row.category_label)],
         ['Work samples', gallery.length ? gallery.length : 'On request']
       ];
 
       state.outerHTML = `
         <div class="prof-head">
-          <div class="prof-shot">${row.photo_path ? `<img src="${esc(row.photo_path)}" alt="${esc(row.name)}">` : ''}</div>
+          <div class="prof-shot">${cover.photo ? `<img src="${esc(cover.photo)}" alt="${esc(row.name)}">`
+            : cover.clip ? `<video src="${esc(cover.clip)}${VendorDirectory.FRAME}" muted playsinline preload="metadata"></video>`
+            : `<span class="person-blank" aria-hidden="true">${esc(String(row.name).trim().charAt(0).toUpperCase())}</span>`}</div>
           <div>
             <h1>${esc(row.name)}</h1>
             <p class="role">${esc(row.category_label)}</p>
@@ -168,12 +184,13 @@
             </div>
           </div>
         </div>
+        ${about ? `<section class="prof-bio"><h2>About</h2><p>${esc(about)}</p></section>` : ''}
         ${gallery.length ? `
         <section class="prof-gallery">
           <h2>Their work</h2>
           <div class="prof-grid strip">
             ${gallery.map(src => isVideo(src)
-              ? `<figure data-src="${esc(src)}" data-clip="${esc(src)}" data-cap="${esc(row.name)}"><video src="${esc(src)}" muted playsinline preload="metadata"></video></figure>`
+              ? `<figure data-src="${esc(src)}" data-clip="${esc(src)}" data-cap="${esc(row.name)}"><video src="${esc(src)}${VendorDirectory.FRAME}" muted playsinline preload="metadata"></video></figure>`
               : `<figure data-src="${esc(src)}" data-cap="${esc(row.name)}"><img src="${esc(src)}" alt="${esc(row.name)} at work" loading="lazy"></figure>`).join('')}
           </div>
         </section>` : ''}`;

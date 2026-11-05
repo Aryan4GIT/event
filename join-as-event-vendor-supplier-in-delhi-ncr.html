@@ -117,7 +117,7 @@
       </a>
       <nav class="nav-links" id="menu" aria-label="Main">
         <a href="index.html#services">Services</a>
-        <a href="manpower.html">Artists</a>
+        <a href="manpower.html">Artists</a><a href="event-vendors-suppliers-delhi-ncr.html">Vendors</a>
         <a href="games.html">Games</a>
         <a href="blog.html">Blog</a>
         <a href="index.html#gallery">Gallery</a>
@@ -175,7 +175,7 @@
         <article class="step glass blur reveal" style="--i:3">
           <b>03</b>
           <h3>You get enquiries</h3>
-          <p>Once approved, you go on our buying list and we come to you when an event needs what you supply.</p>
+          <p>Once approved, your business, photos and videos go on our <a href="event-vendors-suppliers-delhi-ncr.html">vendors page</a>, and we come to you when an event needs what you supply.</p>
           <span class="sheen"></span>
         </article>
       </div>
@@ -212,11 +212,11 @@
         <div class="pair">
           <div class="field">
             <label for="b-name">Business name <span class="req">*</span></label>
-            <input id="b-name" name="name" required placeholder="Shree Tent House / Bright Sound &amp; Light">
+            <input id="b-name" name="name" required maxlength="80" placeholder="Shree Tent House / Bright Sound &amp; Light">
           </div>
           <div class="field">
             <label for="b-person">Person we should speak to <span class="req">*</span></label>
-            <input id="b-person" name="person" required placeholder="Rakesh Kumar, owner">
+            <input id="b-person" name="person" required maxlength="60" placeholder="Rakesh Kumar, owner">
           </div>
         </div>
 
@@ -247,11 +247,11 @@
         <div class="pair">
           <div class="field">
             <label for="b-city">Where you are based <span class="req">*</span></label>
-            <input id="b-city" name="city" required placeholder="Gurugram, Sector 54 — city and area">
+            <input id="b-city" name="city" required maxlength="80" placeholder="Gurugram, Sector 54 — city and area">
           </div>
           <div class="field">
             <label for="b-phone">WhatsApp number <span class="req">*</span></label>
-            <input id="b-phone" name="phone" type="tel" required placeholder="98xxxxxxxx">
+            <input id="b-phone" name="phone" type="tel" required maxlength="30" placeholder="98xxxxxxxx">
           </div>
         </div>
 
@@ -273,7 +273,7 @@
           </div>
           <div class="field">
             <label for="b-links">Website, Instagram or catalogue link</label>
-            <input id="b-links" name="links" placeholder="instagram.com/yourbusiness">
+            <input id="b-links" name="links" maxlength="300" placeholder="instagram.com/yourbusiness">
           </div>
         </div>
 
@@ -285,7 +285,7 @@
         <div class="field">
           <label for="b-media">Your work &mdash; photos and a clip <span style="color:var(--dim-2); font-weight:400">&mdash; optional, but it is what wins the job</span></label>
           <label class="drop" id="b-drop" for="b-media">
-            <input id="b-media" type="file" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/webm,video/quicktime" hidden>
+            <input id="b-media" type="file" multiple accept="image/*,video/*" hidden>
             <span class="ms-msg">Add two photos and a video of up to 10 seconds of your work</span>
           </label>
           <div class="ms-list" id="b-mlist"></div>
@@ -294,7 +294,7 @@
 
         <div class="consent">
           <input id="b-consent" name="consent" type="checkbox" required>
-          <label for="b-consent">I confirm these details are my business's and I agree that Showmaqers may contact me with enquiries and keep these details on file. <span class="req">*</span></label>
+          <label for="b-consent">I confirm these details are my business's and I agree that Showmaqers may contact me with enquiries, keep these details on file, and show my business name, city, description, photos and videos on its vendors page. <span class="req">*</span></label>
         </div>
 
         <button class="btn btn--hot" type="submit">Send my registration</button>
@@ -304,7 +304,7 @@
 
       <div class="vform glass blur sent" id="b-done" hidden>
         <b>Registration received</b>
-        <p>Your business is in the queue. We check new vendors within a few working days and call you on the number you gave. Once verified you go on our buying list for the categories you ticked.</p>
+        <p>Your business is in the queue. We check new vendors within a few working days and call you on the number you gave. Once verified, your profile goes on our <a href="event-vendors-suppliers-delhi-ncr.html">vendors page</a> under the categories you ticked.</p>
         <p style="margin-top:1.4rem"><a class="btn btn--glass" href="index.html#services">See what we plan</a></p>
       </div>
     </div>
@@ -360,8 +360,8 @@
       <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
     </a>
     <nav aria-label="Footer">
-      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
-      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a><a class="artist-login" href="my-profile.html">Artist login</a>
+      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="event-vendors-suppliers-delhi-ncr.html">Vendors</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
+      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a><a class="artist-login" href="my-profile.html">Artist &amp; vendor login</a>
     </nav>
     <nav aria-label="Social">
       <a href="https://www.instagram.com/showmaqerseventplanner" target="_blank" rel="noopener">Instagram · Events</a><a href="https://www.instagram.com/showmaqersweddingplanner" target="_blank" rel="noopener">Instagram · Weddings</a>
@@ -442,8 +442,12 @@
       form.querySelector(`[name="${missing[0]}"]`).focus();
       return;
     }
+    /* the database refuses a row past these, and the whole registration with it */
+    if (roles.length > 8) { say('Please tick no more than 8 categories, the ones you are strongest in.', 'err'); return; }
+    const extra = `Contact: ${get('person')}\n\n${get('about')}`.length - 2000;
+    if (extra > 0) { say(`Please shorten your description by ${extra} characters.`, 'err'); form.about.focus(); return; }
     if (!form.consent.checked) {
-      say('Please tick the box so we may keep your details and call you.', 'err');
+      say('Please tick the box so we may keep your details and list your business.', 'err');
       form.consent.focus();
       return;
     }
@@ -460,10 +464,12 @@
       /* the samples go in a folder of their own, same as an artist's */
       const folder = crypto.randomUUID();
       const h = { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey };
-      const media = (await samples.upload(async (name, blob) => (await fetch(
-        `${cfg.url}/storage/v1/object/vendor-pending/${folder}/${name}`,
-        { method: 'POST', headers: { ...h, 'Content-Type': blob.type || 'application/octet-stream' }, body: blob }
-      )).ok)).map(name => `vendor-pending/${folder}/${name}`);
+      const media = (await samples.upload(async (name, blob) => {
+        const r = await fetch(`${cfg.url}/storage/v1/object/vendor-pending/${folder}/${name}`,
+          { method: 'POST', headers: { ...h, 'Content-Type': blob.type || 'application/octet-stream' }, body: blob });
+        if (!r.ok) throw new Error(await MediaPicker.refusal(r));
+        return true;
+      })).map(name => `vendor-pending/${folder}/${name}`);
       say('Sending your registration…');
 
       const row = {
@@ -507,6 +513,7 @@
       form.hidden = true;
       const done = document.getElementById('b-done');
       done.hidden = false;
+      if (samples.failures.length) done.insertAdjacentHTML('beforeend', MediaPicker.lostNote(samples.failures, WA, get('name')));
       done.scrollIntoView({ block: 'center' });
     } catch (err) {
       console.warn('[vendor registration] could not save:', err.message);

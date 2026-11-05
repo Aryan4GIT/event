@@ -186,3 +186,11 @@ the live data stops arriving, check in this order:
 3. Run `select count(*) from public.roster;` — if it is 0, re-run `seed-roster.sql`.
 4. From **30 Oct 2026** Supabase requires explicit table grants. They are in
    `schema.sql` section 6; re-running that section fixes a silent empty result.
+
+---
+
+## Vendor directory
+
+Run [`vendor-directory.sql`](vendor-directory.sql) in the SQL Editor. It lists a vendor under every category
+they ticked and raises the upload cap to 30 MB. The vendors page works without it, showing each vendor under
+their first category.

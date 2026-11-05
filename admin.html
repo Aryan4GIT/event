@@ -561,7 +561,7 @@
     if (publicClip) fetch(`${STORE}/object/${row.skill_path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
     for (const path of samples?.moved || [])
       fetch(`${STORE}/object/${path}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
-    return row.name + (row.kind === 'vendor' ? ' is verified and on the buying list.' : ' is live on the roster.')
+    return row.name + (row.kind === 'vendor' ? ' is live on the vendors page.' : ' is live on the roster.')
       + (samples?.failed.length ? ` ${samples.failed.length} work sample(s) could not be copied and stayed in private storage.` : '');
   }
 

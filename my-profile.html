@@ -149,7 +149,7 @@
         <div class="field">
           <label for="p-media">Add photos and a clip of your work</label>
           <label class="drop" id="p-drop" for="p-media">
-            <input id="p-media" type="file" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/webm,video/quicktime" hidden>
+            <input id="p-media" type="file" multiple accept="image/*,video/*" hidden>
             <span class="ms-msg">Add two photos and a video of up to 10 seconds of your work</span>
           </label>
           <div class="ms-list" id="p-list"></div>
@@ -320,8 +320,8 @@
                        'Content-Type': blob.type || 'application/octet-stream' },
             body: blob
           });
-          if (!r.ok) console.warn('[profile] upload refused:', r.status, await r.text().catch(() => ''));
-          return r.ok && `vendor-pending/${path}`;
+          if (!r.ok) throw new Error(await MediaPicker.refusal(r));
+          return `vendor-pending/${path}`;
         });
         lost = tried - stored.length;
         uploaded.push(...stored);
@@ -339,7 +339,7 @@
       if (uploaded.length) patch.media_draft = [...(row.media_draft || []), ...uploaded];
 
       /* "Saving" and "Saved" used to overwrite the warning that a file failed */
-      const lostNote = lost ? ` ${lost} file${lost > 1 ? 's' : ''} could not be uploaded — please add ${lost > 1 ? 'them' : 'it'} again.` : '';
+      const lostNote = lost ? `<br>Not uploaded, so please add ${lost > 1 ? 'these' : 'it'} again:<br>${MediaPicker.failureList(samples.failures)}` : '';
 
       if (!Object.keys(patch).length) {
         say($('p-status'), lostNote.trim() || 'Nothing had changed.', lost ? 'err' : 'ok');

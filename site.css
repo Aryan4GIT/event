@@ -174,7 +174,7 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .nav-links{display:flex; gap:.15rem; align-items:center}
 .nav-links a{padding:.6rem .95rem; border-radius:99px; font-size:.9rem; font-weight:600; color:var(--lav); white-space:nowrap; position:relative; transition:color .25s}
 /* the call strip carries the numbers, and without this the bar overlaps the logo around 1024px */
-@media (max-width:1180px){.nav-in .btn--hot .num{display:none}}
+@media (max-width:1240px){.nav-in .btn--hot .num{display:none} .nav-links a{padding-inline:.5rem; font-size:.84rem}}
 .nav-links a::before{content:""; position:absolute; inset:auto 50% .35rem; height:2px; width:0; border-radius:2px; background:var(--grad); transition:width .3s, inset-inline .3s}
 .nav-links a:hover{color:var(--pink)}
 .nav-links a:hover::before{width:46%; inset-inline:27%}
@@ -527,6 +527,9 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
 .person:hover img{transform:scale(1.06)}
 .people.clipped > .person:nth-child(n+25){display:none}
 .person-go{position:absolute; inset:0; z-index:4}
+.person video,.person-blank{width:100%; aspect-ratio:3/4; object-fit:cover; display:block}
+/* a vendor who has sent no photo yet still gets a card */
+.person-blank{display:grid; place-items:center; background:var(--grad); color:#fff; font:400 3.4rem/1 var(--display)}
 .person .reel{position:absolute; top:.5rem; right:.5rem; z-index:3; display:flex; align-items:center; gap:.3rem;
   padding:.26rem .55rem .26rem .45rem; border-radius:99px; background:var(--grad); color:#fff;
   font:600 .58rem/1 var(--mono); letter-spacing:.1em; text-transform:uppercase;

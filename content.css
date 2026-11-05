@@ -45,6 +45,10 @@
 .svc-card img{width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:var(--line)}
 /* product shots on white: cropping to fill cuts the top off a heater */
 .article .hero-shot.fit,.svc-card img.fit,.photo-grid img.fit{object-fit:contain; background:#fff}
+.vendor-cat{margin-top:2.6rem; scroll-margin-top:7rem}
+.vendor-cat h2{font:400 1.7rem/1.2 var(--display); margin:0 0 1rem}
+/* two across on a phone: one full-width letter tile fills the whole screen */
+.vendor-cat .people{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
 .photo-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; margin:2rem 0}
 .photo-grid img{width:100%; aspect-ratio:4/3; object-fit:cover; display:block; border-radius:14px; background:var(--line)}
 .svc-card b{padding:.85rem .9rem .1rem; font:600 .88rem/1.35 var(--body); color:var(--mist)}

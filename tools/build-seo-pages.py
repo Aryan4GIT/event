@@ -200,6 +200,7 @@ def nav(prefix, here=""):
 </header>""".format(p=prefix, links="\n        ".join([
         link("index.html#services", "Services"),
         link("manpower.html", "Artists"),
+        link("event-vendors-suppliers-delhi-ncr.html", "Vendors"),
         link("games.html", "Games"),
         link("blog.html", "Blog"),
         link("index.html#gallery", "Gallery"),
@@ -217,7 +218,7 @@ def footer(prefix):
       <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
     </a>
     <nav aria-label="Footer">
-      <a href="{p}index.html#services">Services</a><a href="{p}manpower.html">Artists</a><a href="{p}games.html">Games</a><a href="{p}blog.html">Blog</a><a href="{p}vendors.html">Join us</a>
+      <a href="{p}index.html#services">Services</a><a href="{p}manpower.html">Artists</a><a href="{p}event-vendors-suppliers-delhi-ncr.html">Vendors</a><a href="{p}games.html">Games</a><a href="{p}blog.html">Blog</a><a href="{p}vendors.html">Join us</a>
       <a href="{p}index.html#gallery">Gallery</a><a href="{p}index.html#about">About</a><a href="{p}index.html#contact">Contact</a><a href="{p}sitemap.html">All pages</a>
     </nav>
     <p>SHOWMAQERS &middot; All rights reserved</p>

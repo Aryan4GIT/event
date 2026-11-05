@@ -124,7 +124,7 @@
       </a>
       <nav class="nav-links" id="menu" aria-label="Main">
         <a href="index.html#services">Services</a>
-        <a href="manpower.html">Artists</a>
+        <a href="manpower.html">Artists</a><a href="event-vendors-suppliers-delhi-ncr.html">Vendors</a>
         <a href="games.html">Games</a>
         <a href="blog.html">Blog</a>
         <a href="index.html#gallery">Gallery</a>
@@ -222,7 +222,7 @@
       <form class="vform glass blur reveal" id="vendor" novalidate>
         <div class="field">
           <label for="v-name">Full name or stage name <span class="req">*</span></label>
-          <input id="v-name" name="name" required placeholder="DJ Karan / Anchor Ritu">
+          <input id="v-name" name="name" required maxlength="80" placeholder="DJ Karan / Anchor Ritu">
         </div>
 
         <fieldset class="field rolepick">
@@ -264,11 +264,11 @@
         <div class="pair">
           <div class="field">
             <label for="v-city">Where you are based <span class="req">*</span></label>
-            <input id="v-city" name="city" required placeholder="Gurugram, Sector 54 — city and area">
+            <input id="v-city" name="city" required maxlength="80" placeholder="Gurugram, Sector 54 — city and area">
           </div>
           <div class="field">
             <label for="v-phone">WhatsApp number <span class="req">*</span></label>
-            <input id="v-phone" name="phone" type="tel" required placeholder="98xxxxxxxx">
+            <input id="v-phone" name="phone" type="tel" required maxlength="30" placeholder="98xxxxxxxx">
           </div>
         </div>
 
@@ -297,11 +297,11 @@
         <div class="pair">
           <div class="field">
             <label for="v-dur">How long you perform <span class="req">*</span></label>
-            <input id="v-dur" name="dur" required placeholder="45 minutes / 2 hours / 3 sets of 20 min">
+            <input id="v-dur" name="dur" required maxlength="80" placeholder="45 minutes / 2 hours / 3 sets of 20 min">
           </div>
           <div class="field">
             <label for="v-links">YouTube link of your performance</label>
-            <input id="v-links" name="links" placeholder="youtube.com/watch?v=…">
+            <input id="v-links" name="links" maxlength="300" placeholder="youtube.com/watch?v=…">
           </div>
         </div>
 
@@ -313,7 +313,7 @@
         <div class="field">
           <label for="v-photo">Your photo <span class="req">*</span></label>
           <label class="drop" id="v-drop" for="v-photo">
-            <input id="v-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+            <input id="v-photo" name="photo" type="file" accept="image/*" hidden>
             <img id="v-prev" alt="">
             <span id="v-dropmsg">Click or drop a clear, recent photo — this is what clients see</span>
           </label>
@@ -322,7 +322,7 @@
         <div class="field">
           <label for="v-skill">Your work &mdash; photos and a clip <span style="color:var(--dim-2); font-weight:400">&mdash; optional, but this is what gets you booked</span></label>
           <label class="drop" id="v-sdrop" for="v-skill">
-            <input id="v-skill" type="file" multiple accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/webm,video/quicktime" hidden>
+            <input id="v-skill" type="file" multiple accept="image/*,video/*" hidden>
             <span class="ms-msg">Add two photos and a video of up to 10 seconds of your work</span>
           </label>
           <div class="ms-list" id="v-slist"></div>
@@ -417,8 +417,8 @@
       <span><b>SHOWMAQERS</b><small>Wedding &amp; Event Planner</small></span>
     </a>
     <nav aria-label="Footer">
-      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
-      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a><a class="artist-login" href="my-profile.html">Artist login</a>
+      <a href="index.html#services">Services</a><a href="manpower.html">Artists</a><a href="event-vendors-suppliers-delhi-ncr.html">Vendors</a><a href="games.html">Games</a><a href="blog.html">Blog</a><a href="vendors.html">Join us</a>
+      <a href="index.html#gallery">Gallery</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a><a href="sitemap.html">All pages</a><a class="artist-login" href="my-profile.html">Artist &amp; vendor login</a>
     </nav>
     <nav aria-label="Social">
       <a href="https://www.instagram.com/showmaqerseventplanner" target="_blank" rel="noopener">Instagram · Events</a><a href="https://www.instagram.com/showmaqersweddingplanner" target="_blank" rel="noopener">Instagram · Weddings</a>
@@ -466,10 +466,12 @@
   const picked = () => [...form.querySelectorAll('input[name="role"]:checked')];
   let photo = null;
 
-  const takeFile = (file) => {
+  /* any photo a phone can make is fine: shrink() turns it into a small JPEG */
+  const takeFile = async (file) => {
     if (!file) return;
-    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return say('Please choose a JPG, PNG or WebP image.', 'err');
-    if (file.size > 10 * 1024 * 1024) return say('That photo is over 10 MB — please pick a smaller one.', 'err');
+    if (MediaPicker.kindOf(file) !== 'photo') return say('Please choose a photo.', 'err');
+    if (file.size > 60 * 1024 * 1024) return say('That photo is over 60 MB — please pick a smaller one.', 'err');
+    if (!await MediaPicker.readable(file)) return say(MediaPicker.esc(MediaPicker.cannotOpen(file)), 'err');
     photo = file;
     document.getElementById('v-prev').src = URL.createObjectURL(file);
     drop.classList.add('has');
@@ -492,9 +494,9 @@
   /* phone cameras make 4 MB photos; shrink before sending over mobile data */
   async function shrink(file, max = 1200) {
     try {
-      const bmp = await createImageBitmap(file);
+      const bmp = await MediaPicker.openImage(file);
       const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
-      if (scale === 1 && file.size < 900000) return file;
+      if (scale === 1 && file.size < 900000 && /^image\/(jpeg|png|webp)$/.test(file.type)) return file;
       const c = document.createElement('canvas');
       c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
       c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
@@ -534,6 +536,13 @@
       form.querySelector(`[name="${missing[0]}"]`).focus();
       return;
     }
+    /* the database refuses a row past these, and the whole registration with it */
+    if (roles.length > 8) { say('Please tick no more than 8 roles, the ones you are strongest in.', 'err'); return; }
+    if (get('about').length > 2000) {
+      say(`Please shorten your description by ${get('about').length - 2000} characters.`, 'err');
+      form.about.focus();
+      return;
+    }
     if (/instagram\.com/i.test(get('links'))) {
       say('We list a YouTube link of your performance, not an Instagram one.', 'err');
       form.links.focus();
@@ -564,8 +573,11 @@
       if (!up.ok) throw new Error('upload ' + up.status);
 
       /* each sample is compressed then stored; the names come back in order */
-      const media = (await samples.upload(async (name, blob) => (await put(name, blob)).ok))
-        .map(name => `vendor-pending/${folder}/${name}`);
+      const media = (await samples.upload(async (name, blob) => {
+        const r = await put(name, blob);
+        if (!r.ok) throw new Error(await MediaPicker.refusal(r));
+        return true;
+      })).map(name => `vendor-pending/${folder}/${name}`);
       say('Sending your registration…');
 
       const row = {
@@ -609,6 +621,7 @@
       form.hidden = true;
       const done = document.getElementById('v-done');
       done.hidden = false;
+      if (samples.failures.length) done.insertAdjacentHTML('beforeend', MediaPicker.lostNote(samples.failures, WA, get('name')));
       done.scrollIntoView({ block: 'center' });
     } catch (err) {
       console.warn('[registration] could not save:', err.message);   // for debugging a failed send
