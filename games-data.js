@@ -276,6 +276,18 @@ window.GAMES = {
   "label": "Table games",
   "items": [
    {
+    "s": "beer-pong-table-game-on-rent-for-events-parties-delhi-ncr",
+    "n": "Beer Pong Table",
+    "b": "Two teams, ten cups a side. A beer pong table with cups and balls, set up for house parties, fests and office parties.",
+    "d": [],
+    "i": [
+     "images/games/beer-pong-table-game-on-rent-delhi-ncr-1.jpg",
+     "images/games/beer-pong-table-game-on-rent-delhi-ncr-2.jpg",
+     "images/games/beer-pong-table-game-on-rent-delhi-ncr-3.jpg"
+    ],
+    "u": "https://www.showmaqers.com/beer-pong-table-game-on-rent-for-events-parties-delhi-ncr.html"
+   },
+   {
     "s": "casino-table",
     "n": "Casino Tables",
     "b": "Also in Faridabad, Manesar, Jaipur, Udaipur, Jodhpur, Nainital, Jim Corbett, Kolkata, Hyderabad, Mumbai, Goa, Chennai.",
@@ -371,6 +383,18 @@ window.GAMES = {
      "images/games/pool-table-game-1.jpg"
     ],
     "u": "https://www.showmaqers.com/pool-table-game-on-rent-for-events-parties-delhi-ncr.html"
+   },
+   {
+    "s": "wooden-games-on-rent-for-events-parties-delhi-ncr",
+    "n": "Wooden Games",
+    "b": "Giant Jenga, wooden ring toss, foosball and wooden table games. Quiet, no power needed, and played by every age.",
+    "d": [],
+    "i": [
+     "images/games/wooden-games-on-rent-delhi-ncr-1.jpg",
+     "images/games/wooden-games-on-rent-delhi-ncr-2.jpg",
+     "images/games/wooden-games-on-rent-delhi-ncr-3.jpg"
+    ],
+    "u": "https://www.showmaqers.com/wooden-games-on-rent-for-events-parties-delhi-ncr.html"
    }
   ]
  },
@@ -422,6 +446,39 @@ window.GAMES = {
     "u": "https://www.showmaqers.com/break-the-pyramid-game-on-rent-for-events-parties-delhi-ncr.html"
    },
    {
+    "s": "carnival-games-on-rent-for-events-parties-delhi-ncr",
+    "n": "Carnival Games",
+    "b": "Complete carnival game stalls with props, prizes and a coordinator on each: ring toss, knock-down bottles, spin the wheel, balloon shooting and more.",
+    "d": [],
+    "i": [
+     "images/games/carnival-games-on-rent-delhi-ncr-1.jpg",
+     "images/games/carnival-games-on-rent-delhi-ncr-2.jpg",
+     "images/games/carnival-games-on-rent-delhi-ncr-3.jpg",
+     "images/games/carnival-games-on-rent-delhi-ncr-4.jpg"
+    ],
+    "u": "https://www.showmaqers.com/carnival-games-on-rent-for-events-parties-delhi-ncr.html"
+   },
+   {
+    "s": "catch-the-stick-batten-game-on-rent-for-events-parties-delhi-ncr",
+    "n": "Catch the Stick",
+    "b": "Also called the batten game. Sticks hang from a frame and drop one at a time, at random; catch as many as you can.",
+    "d": [],
+    "i": [
+     "images/games/catch-the-stick-game.svg"
+    ],
+    "u": "https://www.showmaqers.com/catch-the-stick-batten-game-on-rent-for-events-parties-delhi-ncr.html"
+   },
+   {
+    "s": "catch-the-striker-game-on-rent-for-events-parties-delhi-ncr",
+    "n": "Catch the Striker",
+    "b": "A one-shot reflex game: the striker drops without warning and the player has a split second to catch it.",
+    "d": [],
+    "i": [
+     "images/games/catch-the-striker-game.svg"
+    ],
+    "u": "https://www.showmaqers.com/catch-the-striker-game-on-rent-for-events-parties-delhi-ncr.html"
+   },
+   {
     "s": "dart-football-game",
     "n": "Dart Football",
     "b": "Dart Football Inflatable dart football was invented in UK. It’s played like a dart board with arrow where at the place inflatable dart board and Velcro balls took place of arrows.",
@@ -430,6 +487,19 @@ window.GAMES = {
      "images/games/dart-football-game-1.jpg"
     ],
     "u": "https://www.showmaqers.com/dart-football-game-on-rent-for-events-parties-delhi-ncr.html"
+   },
+   {
+    "s": "games-on-rent-for-corporate-events-delhi-ncr",
+    "n": "Games for Corporate Events",
+    "b": "Carnival stalls, team games, reflex games and wooden games for family days, offsites and annual days, run by our coordinators.",
+    "d": [],
+    "i": [
+     "images/games/games-on-rent-for-corporate-events-delhi-ncr-1.jpg",
+     "images/games/games-on-rent-for-corporate-events-delhi-ncr-2.jpg",
+     "images/games/games-on-rent-for-corporate-events-delhi-ncr-3.jpg",
+     "images/games/games-on-rent-for-corporate-events-delhi-ncr-4.jpg"
+    ],
+    "u": "https://www.showmaqers.com/games-on-rent-for-corporate-events-delhi-ncr.html"
    },
    {
     "s": "hoopla-game",

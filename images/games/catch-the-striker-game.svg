@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img" aria-labelledby="t">
+  <title id="t">Catch the striker game: a striker drops down a tall clear tube towards a waiting hand</title>
+  <rect width="1200" height="675" fill="#FFF4EC"/>
+  <circle cx="1040" cy="140" r="200" fill="#FFE1EE"/>
+  <circle cx="150" cy="560" r="220" fill="#FFE9D6"/>
+  <rect y="600" width="1200" height="75" fill="#F7DCCB"/>
+  <!-- stand -->
+  <rect x="440" y="566" width="320" height="40" rx="10" fill="#2E1620"/>
+  <rect x="580" y="470" width="40" height="100" fill="#4A2A38"/>
+  <rect x="520" y="456" width="160" height="22" rx="8" fill="#4A2A38"/>
+  <!-- release box with lights -->
+  <rect x="500" y="60" width="200" height="74" rx="14" fill="#FF2E90"/>
+  <g fill="#FFF4B8" stroke="#FFC400" stroke-width="3"><circle cx="530" cy="97" r="10"/><circle cx="570" cy="97" r="10"/><circle cx="610" cy="97" r="10"/><circle cx="650" cy="97" r="10"/><circle cx="680" cy="97" r="8"/></g>
+  <!-- clear tube -->
+  <rect x="548" y="134" width="104" height="250" fill="#BFE8F5" opacity=".55"/>
+  <path d="M548 134 v250 M652 134 v250" stroke="#7CC6DE" stroke-width="5"/>
+  <path d="M566 150 v220" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+  <!-- the striker, dropping -->
+  <g stroke="#FF2E90" stroke-width="5" stroke-linecap="round" opacity=".5"><path d="M580 200 v40"/><path d="M600 186 v50"/><path d="M620 200 v40"/></g>
+  <rect x="560" y="262" width="80" height="22" fill="#B0123F"/>
+  <ellipse cx="600" cy="284" rx="40" ry="11" fill="#B0123F"/>
+  <ellipse cx="600" cy="262" rx="40" ry="11" fill="#E3263F"/>
+  <ellipse cx="600" cy="262" rx="18" ry="5" fill="#FF8AA8"/>
+  <!-- open catching gap: marks where the tube ends -->
+  <path d="M540 384 h120" stroke="#7CC6DE" stroke-width="8" stroke-linecap="round"/>
+  <path d="M560 440 h80" stroke="#E3263F" stroke-width="4" stroke-dasharray="10 8" opacity=".6"/>
+  <!-- the waiting hand -->
+  <rect x="760" y="388" width="260" height="46" rx="23" fill="#2E1620"/>
+  <path d="M690 390 q-14 22 0 44 h80 v-44z" fill="#C98B5E"/>
+  <g fill="#D99C6E" stroke="#B5774A" stroke-width="2">
+    <rect x="636" y="384" width="70" height="15" rx="7.5" transform="rotate(-14 706 391)"/>
+    <rect x="628" y="402" width="76" height="15" rx="7.5" transform="rotate(-6 704 409)"/>
+    <rect x="630" y="420" width="74" height="15" rx="7.5"/>
+    <rect x="640" y="437" width="62" height="13" rx="6.5" transform="rotate(8 702 443)"/>
+  </g>
+  <rect x="700" y="356" width="20" height="44" rx="10" fill="#D99C6E" stroke="#B5774A" stroke-width="2" transform="rotate(-35 710 378)"/>
+  <!-- confetti -->
+  <g fill="#FF2E90"><circle cx="300" cy="200" r="7"/><circle cx="880" cy="250" r="6"/><circle cx="380" cy="420" r="5"/></g>
+  <g fill="#FFC400"><circle cx="240" cy="300" r="6"/><circle cx="930" cy="520" r="5"/><circle cx="860" cy="150" r="7"/></g>
+</svg>
