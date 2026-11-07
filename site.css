@@ -541,16 +541,17 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
 .lb-of{font:500 .6rem/1 var(--mono); letter-spacing:.14em; text-transform:uppercase; opacity:.7; margin-left:.5rem}
 
 /* ── every text link is a button, on every page ─────────────────────────────
-   A white pill with a rose ring, in the dark rose that is 8:1 on this paper,
-   so a link reads as something to press rather than as highlighted words.
-   The hover only tints: some links carry an inline colour that white text on
-   a filled pill would lose. Buttons, cards and icon circles are not listed:
-   those already look like what they are.                                   */
-main p a:not(.btn),main li a:not(.btn),main dd a:not(.btn),.crumb a,.back,.cat-head h2 a,.cat-index a,.foot nav a,.lines a{
-  display:inline-block; color:var(--lav); font-weight:600; text-decoration:none; line-height:1.35;
-  background:#fff; border-radius:1em; padding:.3em .85em; margin-block:.12em;
-  box-shadow:inset 0 0 0 1.5px rgba(255,46,144,.4), 0 6px 14px -10px rgba(196,74,134,.7);
-  transition:background .2s, box-shadow .2s, transform .2s}
-main p a:not(.btn):hover,main li a:not(.btn):hover,main dd a:not(.btn):hover,.crumb a:hover,.back:hover,.cat-head h2 a:hover,.cat-index a:hover,.foot nav a:hover,.lines a:hover{
-  background:#ffeaf4; box-shadow:inset 0 0 0 1.5px var(--lav), 0 10px 18px -10px rgba(196,74,134,.8); transform:translateY(-1px)}
+   The same pink pill as the Call button (.btn--hot), so a link reads as
+   something to press rather than as highlighted words. Buttons, cards and
+   icon circles are not listed: those already look like what they are.     */
+main p a:not(.btn),main li a:not(.btn),main dd a:not(.btn),.crumb a,.back,.cat-head h2 a,.foot nav a,.lines a{
+  display:inline-block; font-weight:600; text-decoration:none; line-height:1.35;
+  /* !important: twenty links carry an inline pink, and .article .back a grey,
+     that would vanish on the pink */
+  color:#fff !important;
+  background:var(--grad); background-size:200% 100%; border-radius:1em; padding:.35em .95em; margin-block:.12em;
+  box-shadow:0 10px 24px -12px rgba(255,61,154,.95), inset 0 1px 0 rgba(255,255,255,.4);
+  transition:background-position .3s, filter .3s, transform .3s}
+main p a:not(.btn):hover,main li a:not(.btn):hover,main dd a:not(.btn):hover,.crumb a:hover,.back:hover,.cat-head h2 a:hover,.foot nav a:hover,.lines a:hover{
+  background-position:100% 0; filter:brightness(1.08); transform:translateY(-2px)}
 .chips a:not(.btn){color:var(--lav); font-weight:600}
