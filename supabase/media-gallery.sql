@@ -20,7 +20,7 @@ comment on column public.vendors.media is
   'Ordered work samples: storage paths. Private bucket while pending, copied to the public one on approval. .mp4/.webm/.mov are videos, the rest photos. photo_path stays the headshot the roster card shows.';
 
 -- 2. The public letterbox accepts a gallery, within reason ------------------
---    Three paths, because the form allows two photos and one video.
+--    Six paths, because the form allows four photos and two videos.
 drop policy if exists "public may register" on public.vendors;
 create policy "public may register"
   on public.vendors for insert to anon
@@ -31,7 +31,7 @@ create policy "public may register"
     and consent_at is not null       -- they ticked the box
     and kind in ('artist','vendor')
     and coalesce(array_length(roles, 1), 1) between 1 and 8
-    and coalesce(array_length(media, 1), 0) <= 3
+    and coalesce(array_length(media, 1), 0) <= 6   -- four photos and two videos
     and char_length(name) between 2 and 80
     and char_length(coalesce(bio, '')) <= 2000
     and char_length(coalesce(phone, '')) <= 30

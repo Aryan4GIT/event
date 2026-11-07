@@ -47,7 +47,7 @@ create policy "public may register"
     and consent_at is not null       -- they ticked the box
     and kind in ('artist','vendor')
     and coalesce(array_length(roles, 1), 1) between 1 and 8
-    and coalesce(array_length(media, 1), 0) <= 3
+    and coalesce(array_length(media, 1), 0) <= 6   -- four photos and two videos
     and public.pending_path_ok(photo_path)   -- required, and null fails this
     and not exists (select 1 from unnest(media) as m where not public.pending_path_ok(m))
     and char_length(name) between 2 and 80

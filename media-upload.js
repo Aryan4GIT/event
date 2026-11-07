@@ -1,6 +1,6 @@
 /* Work-sample picker and compressor, shared by the artist and vendor forms.
 
-   Two photos and one video of at most 10 seconds. Everything is re-encoded in
+   Four photos and two videos of at most 10 seconds each. Everything is re-encoded in
    the browser before it is uploaded, because a phone shoots 4K: a raw 10s clip
    is 15-25 MB and the same clip at 720p is a little over 1 MB. Compressing
    here rather than on a server means no server, and the artist on mobile data
@@ -13,8 +13,8 @@
    putFn(name, blob) must store the blob and resolve truthy on success; the
    caller owns the bucket and the folder. */
 window.MediaPicker = (() => {
-  const MAX_PHOTOS = 2;
-  const MAX_VIDEOS = 1;
+  const MAX_PHOTOS = 4;   // the database allows 6 samples in all: supabase/more-roles-and-samples.sql
+  const MAX_VIDEOS = 2;
   const MAX_SECONDS = 10;
   const PHOTO_EDGE = 1600;          // long edge after downscaling
   const VIDEO_EDGE = 720;
@@ -204,8 +204,9 @@ window.MediaPicker = (() => {
         </figure>`).join('');
       drop.classList.toggle('has', picked.length > 0);
       const room = [];
-      if (count('photo') < MAX_PHOTOS) room.push(`${MAX_PHOTOS - count('photo')} more photo${MAX_PHOTOS - count('photo') > 1 ? 's' : ''}`);
-      if (count('video') < MAX_VIDEOS) room.push('a video up to 10 seconds');
+      const left = (kind, max) => `${max - count(kind)} ${count(kind) ? 'more ' : ''}${kind}${max - count(kind) > 1 ? 's' : ''}`;
+      if (count('photo') < MAX_PHOTOS) room.push(left('photo', MAX_PHOTOS));
+      if (count('video') < MAX_VIDEOS) room.push(left('video', MAX_VIDEOS) + ` of up to ${MAX_SECONDS} seconds`);
       drop.querySelector('.ms-msg').textContent = room.length
         ? 'Add ' + room.join(' and ') + ' of your work'
         : 'That is the lot — remove one to swap it';
@@ -217,8 +218,8 @@ window.MediaPicker = (() => {
         const kind = kindOf(file);
         if (!kind) { say(`${esc(file.name)} is not a photo or a video, so it was not added.`, 'err'); continue; }
         if (file.size > RAW_LIMIT) { say('That file is enormous — please pick a smaller one.', 'err'); continue; }
-        if (kind === 'photo' && count('photo') >= MAX_PHOTOS) { say(`Two photos is the limit — remove one to swap it.`, 'err'); continue; }
-        if (kind === 'video' && count('video') >= MAX_VIDEOS) { say('One video is the limit — remove it to swap it.', 'err'); continue; }
+        if (kind === 'photo' && count('photo') >= MAX_PHOTOS) { say(`${MAX_PHOTOS} photos is the limit — remove one to swap it.`, 'err'); continue; }
+        if (kind === 'video' && count('video') >= MAX_VIDEOS) { say(`${MAX_VIDEOS} videos is the limit — remove one to swap it.`, 'err'); continue; }
         /* find out now, while they can still pick another, not after they press send */
         if (kind === 'photo' && !await readable(file)) { say(esc(cannotOpen(file)), 'err'); continue; }
         picked.push({ file, kind, url: URL.createObjectURL(file) });

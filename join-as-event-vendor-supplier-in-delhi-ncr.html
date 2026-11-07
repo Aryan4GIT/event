@@ -297,7 +297,7 @@
           <label for="b-media">Your work &mdash; photos and a clip <span style="color:var(--dim-2); font-weight:400">&mdash; optional, but it is what wins the job</span></label>
           <label class="drop" id="b-drop" for="b-media">
             <input id="b-media" type="file" multiple accept="image/*,video/*" hidden>
-            <span class="ms-msg">Add two photos and a video of up to 10 seconds of your work</span>
+            <span class="ms-msg">Add up to four photos and two videos of up to 10 seconds each</span>
           </label>
           <div class="ms-list" id="b-mlist"></div>
           <p class="status" style="min-height:0">A setup you are proud of beats a brochure. We shrink everything in your browser before it uploads, so a 4K clip costs you neither the wait nor the data.</p>
@@ -421,7 +421,7 @@
     preview: document.getElementById('b-prev'), msg: document.getElementById('b-pmsg'), say
   });
 
-  /* ── work samples — two photos and a clip, compressed before upload ───── */
+  /* ── work samples — four photos and two clips, compressed before upload ─ */
   const samples = MediaPicker.mount({
     input: document.getElementById('b-media'),
     drop:  document.getElementById('b-drop'),

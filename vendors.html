@@ -192,11 +192,11 @@
 
       <p class="eyebrow reveal" style="margin-top:2.6rem">Artists we book</p>
       <div class="chips reveal" style="margin-top:0">
-        <span>DJ</span><span>Female Emcee Anchors</span><span>Male Emcee Anchors</span><span>Singers</span>
+        <span>DJ</span><span>Female Emcee Anchors</span><span>Male Emcee Anchors</span><span>Singers</span><span>Live Band</span>
         <span>Dancers</span><span>Choreographer</span><span>SFX / Special Effects Artist</span>
         <span>Photographer</span><span>Videographer</span><span>Game Coordinator</span>
         <span>Russian Promoters</span><span>Tarot Card Reader</span><span>Pottery Maker</span><span>Puppet Show Performers</span>
-        <span>Magician</span><span>Stilt Walker (longman)</span><span>Joker / Clown / Charlie</span><span>Juggler</span><span>Mascots</span>
+        <span>Magician</span><span>Comedians</span><span>Mimicry Artists</span><span>Stilt Walker (longman)</span><span>Joker / Clown / Charlie</span><span>Juggler</span><span>Mascots</span>
       </div>
 
       <p class="eyebrow reveal" style="margin-top:2.2rem">Wardrobe we book</p>
@@ -232,6 +232,7 @@
             <label><input type="checkbox" name="role" value="dj" data-label="DJ"><span>DJ</span></label>
             <label><input type="checkbox" name="role" value="anchors" data-label="Emcee / Anchor"><span>Emcee / Anchor</span></label>
             <label><input type="checkbox" name="role" value="singers" data-label="Singer"><span>Singer</span></label>
+            <label><input type="checkbox" name="role" value="live-band" data-label="Live Band"><span>Live band</span></label>
             <label><input type="checkbox" name="role" value="dancers" data-label="Dancer"><span>Dancer</span></label>
             <label><input type="checkbox" name="role" value="choreographer" data-label="Choreographer"><span>Choreographer</span></label>
             <label><input type="checkbox" name="role" value="sfx" data-label="SFX / Special Effects Artist"><span>SFX / Special effects</span></label>
@@ -243,6 +244,8 @@
             <label><input type="checkbox" name="role" value="pottery" data-label="Pottery Maker"><span>Pottery maker</span></label>
             <label><input type="checkbox" name="role" value="puppet" data-label="Puppet Show Performer"><span>Puppet show performer</span></label>
             <label><input type="checkbox" name="role" value="magician" data-label="Magician"><span>Magician</span></label>
+            <label><input type="checkbox" name="role" value="comedian" data-label="Comedian"><span>Comedian</span></label>
+            <label><input type="checkbox" name="role" value="mimicry" data-label="Mimicry Artist"><span>Mimicry artist</span></label>
             <label><input type="checkbox" name="role" value="stilt-walker" data-label="Stilt Walker (longman)"><span>Stilt walker (longman)</span></label>
             <label><input type="checkbox" name="role" value="joker" data-label="Joker / Clown / Charlie"><span>Joker / clown / charlie</span></label>
             <label><input type="checkbox" name="role" value="juggler" data-label="Juggler"><span>Juggler</span></label>
@@ -323,7 +326,7 @@
           <label for="v-skill">Your work &mdash; photos and a clip <span style="color:var(--dim-2); font-weight:400">&mdash; optional, but this is what gets you booked</span></label>
           <label class="drop" id="v-sdrop" for="v-skill">
             <input id="v-skill" type="file" multiple accept="image/*,video/*" hidden>
-            <span class="ms-msg">Add two photos and a video of up to 10 seconds of your work</span>
+            <span class="ms-msg">Add up to four photos and two videos of up to 10 seconds each</span>
           </label>
           <div class="ms-list" id="v-slist"></div>
           <p class="status" style="min-height:0">Shot on a phone is fine. We shrink everything in your browser before it uploads, so a 4K clip costs you neither the wait nor the data.</p>
@@ -469,7 +472,7 @@
     preview: document.getElementById('v-prev'), msg: document.getElementById('v-dropmsg'), say
   });
 
-  /* ── work samples — two photos and a clip, compressed before upload ───── */
+  /* ── work samples — four photos and two clips, compressed before upload ─ */
   const samples = MediaPicker.mount({
     input: document.getElementById('v-skill'),
     drop:  document.getElementById('v-sdrop'),

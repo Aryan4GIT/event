@@ -26,8 +26,10 @@
     puppet: 'Puppet Show Performer', magician: 'Magician', 'stilt-walker': 'Stilt Walker',
     joker: 'Joker / Clown', juggler: 'Juggler', mascots: 'Mascot Artist',
     mehendi: 'Mehendi Artist', 'makeup-artist': 'Make-up Artist', tattoo: 'Tattoo Artist',
-    'face-painter': 'Face Painter', 'nail-artist': 'Nail Artist', parlour: 'Parlour Beautician'
+    'face-painter': 'Face Painter', 'nail-artist': 'Nail Artist', parlour: 'Parlour Beautician',
+    'live-band': 'Live Band', comedian: 'Comedian', mimicry: 'Mimicry Artist'
   };
+  const esc = s => String(s ?? '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
 
   const boxes = document.querySelectorAll('[data-people]');
   const showBtn = document.querySelector('[data-show]');
@@ -39,20 +41,23 @@
       const kind = box.dataset.people, list = DATA[kind] || [];
       const role = label[kind] || box.closest('.cat')?.querySelector('h2')?.textContent.trim() || '';
       /* An approved artist with no photo rendered <img src="null"> — a broken
-         tile on the public roster. Leave them out until a photo exists. */
-      const shown = list.filter(p => p.i);
+         tile on the public roster. Leave them out until a photo exists. A
+         supplier (p.v) keeps the letter tile the vendors page gives them. */
+      const shown = list.filter(p => p.i || p.v);
       box.innerHTML = shown.map(p => {
         const facts = [p.l, p.d, p.e].filter(Boolean).join(' · ');   // fee stays off the public card
         /* the gallery the lightbox walks: headshot, then every work sample */
-        const gallery = [p.i, ...(p.m || []), ...(p.s ? [p.s] : [])];
+        const gallery = [p.i, ...(p.m || []), ...(p.s ? [p.s] : [])].filter(Boolean);
         const hasVideo = gallery.some(isVideoPath);
-        return `<figure class="person" data-src="${p.i}" data-cap="${p.n}"` +
+        const n = esc(p.n);
+        return `<figure class="person" data-src="${esc(p.i || '')}" data-cap="${n}"` +
         ` data-gallery="${encodeURIComponent(JSON.stringify(gallery))}"` +
-        (p.s ? ` data-clip="${p.s}"` : '') + '>' +
-        (p.id ? `<a class="person-go" href="artist.html?id=${p.id}" aria-label="${p.n} profile"></a>` : '') +
+        (p.s ? ` data-clip="${esc(p.s)}"` : '') + '>' +
+        (p.id ? `<a class="person-go" href="artist.html?id=${esc(p.id)}" aria-label="${n} profile"></a>` : '') +
         (hasVideo ? '<span class="reel">▶ Reel</span>' : '') +
-        `<img src="${p.i}" alt="${p.n}" loading="lazy">` +
-        `<figcaption>${p.n}<b>${role}</b>${facts ? `<small>${facts}</small>` : ''}</figcaption></figure>`;
+        (p.i ? `<img src="${esc(p.i)}" alt="${n}" loading="lazy">`
+             : `<span class="person-blank" aria-hidden="true">${esc(String(p.n || '?').trim().charAt(0).toUpperCase())}</span>`) +
+        `<figcaption>${n}<b>${role}</b>${facts ? `<small>${esc(facts)}</small>` : ''}</figcaption></figure>`;
       }).join('');
       box.style.marginBottom = shown.length ? '1.1rem' : '0';
       /* An artist page says "our DJs" above the grid. With nobody approved in
@@ -116,6 +121,18 @@
                     m: row.media || null, id: row.id,
                     l: row.city || was.l, d: was.d, e: was.e });
       }
+      /* SFX crews register as suppliers, so they live in the supplier view,
+         but clients look for them under artists */
+      try {
+        const s = await fetch(`${cfg.url}/rest/v1/supplier?select=*&order=sort.asc`, h);
+        const sup = s.ok ? await s.json() : [];
+        for (const row of sup) {
+          if (row.category_key !== 'sfx' && !(row.roles || []).includes('sfx')) continue;
+          const media = (row.media || []).filter(Boolean);
+          (live.sfx ||= []).push({ n: row.name, i: row.photo_path || media.find(p => !isVideoPath(p)) || null,
+                                   m: media, id: row.id, l: row.city, v: true });
+        }
+      } catch (e) { /* the artists still show */ }
       DATA = live;
       render();
     } catch (e) { /* offline or project paused — the snapshot stays up */ }
