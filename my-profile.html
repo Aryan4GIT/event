@@ -230,6 +230,10 @@
          it answers one still awaiting confirmation: 200, a user, no session. So
          always try signing in before telling anyone to check their inbox. */
       if (TOKEN && !b.access_token) {
+        /* a refused signup (weak password, rate limit) made no login: say why,
+           instead of trying to sign in and blaming an account that does not exist */
+        if (!r.ok && b.error_code !== 'user_already_exists' && !/already registered/i.test(b.msg || ''))
+          throw new Error(b.msg || b.error_description || 'we could not create your login');
         const alt = await auth('/token?grant_type=password', { email, password });
         const ab = await alt.json();
         if (alt.ok && ab.access_token) {
@@ -249,7 +253,13 @@
           return;
         }
       }
-      if (!r.ok || !b.access_token) throw new Error(b.msg || b.error_description || 'that did not work');
+      if (!r.ok || !b.access_token) {
+        const why = b.msg || b.error_description || 'that did not work';
+        if (!/invalid login/i.test(why)) throw new Error(why);
+        throw new Error('That email and password do not match a login here. Check the email for typos. '
+          + 'If you never finished claiming your profile, or forgot the password, message us on WhatsApp '
+          + 'and we will sort it.');
+      }
 
       session = b;
       if (TOKEN) {
