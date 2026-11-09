@@ -27,7 +27,8 @@
     joker: 'Joker / Clown', juggler: 'Juggler', mascots: 'Mascot Artist',
     mehendi: 'Mehendi Artist', 'makeup-artist': 'Make-up Artist', tattoo: 'Tattoo Artist',
     'face-painter': 'Face Painter', 'nail-artist': 'Nail Artist', parlour: 'Parlour Beautician',
-    'live-band': 'Live Band', comedian: 'Comedian', mimicry: 'Mimicry Artist'
+    'live-band': 'Live Band', comedian: 'Comedian', mimicry: 'Mimicry Artist',
+    dhol: 'Dhol Player', 'digital-caricature': 'Digital Caricature Artist'
   };
   const esc = s => String(s ?? '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
 
