@@ -35,6 +35,12 @@
 .prof-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem}
 .prof-grid figure{margin:0; border-radius:16px; overflow:hidden; background:#000; aspect-ratio:3/4; cursor:zoom-in; position:relative}
 .prof-grid img,.prof-grid video{width:100%; height:100%; object-fit:cover; display:block}
+.prof-yt{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1rem}
+.prof-yt a{position:relative; display:block; border-radius:16px; overflow:hidden; aspect-ratio:16/9; background:#000}
+.prof-yt img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s}
+.prof-yt a:hover img{transform:scale(1.04)}
+.prof-yt a::after{content:"\25B6\FE0E"; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:64px; height:44px; border-radius:12px; background:#f00; color:#fff; display:grid; place-items:center; font-size:1.1rem}
 .prof-note{color:var(--dim); font-size:.95rem}
 .prof-cta{display:flex; flex-wrap:wrap; gap:.7rem; margin-top:2rem}
 @media (max-width:640px){ .prof-head{grid-template-columns:1fr} .prof-shot{max-width:220px} }
@@ -162,6 +168,8 @@
       const gallery = VendorDirectory.samplesOf(row);
       const about = VendorDirectory.cleanBio(row.bio);
       const cover = VendorDirectory.coverOf(row);
+      /* video ids only (supabase/youtube-on-profiles.sql); absent until that runs */
+      const tubes = [...new Set((row.youtube || []).filter(v => /^[\w-]{11}$/.test(v)))];
       const facts = [
         ['Based in', esc(row.city) || '—'],
         [isVendor ? 'Supplies' : 'Booked as', esc(row.category_label)],
@@ -192,6 +200,13 @@
             ${gallery.map(src => isVideo(src)
               ? `<figure data-src="${esc(src)}" data-clip="${esc(src)}" data-cap="${esc(row.name)}"><video src="${esc(src)}${VendorDirectory.FRAME}" muted playsinline preload="metadata"></video></figure>`
               : `<figure data-src="${esc(src)}" data-cap="${esc(row.name)}"><img src="${esc(src)}" alt="${esc(row.name)} at work" loading="lazy"></figure>`).join('')}
+          </div>
+        </section>` : ''}
+        ${tubes.length ? `
+        <section class="prof-gallery">
+          <h2>Watch on YouTube</h2>
+          <div class="prof-yt">
+            ${tubes.map((v, i) => `<a href="https://www.youtube.com/watch?v=${v}" target="_blank" rel="noopener" aria-label="Watch ${esc(row.name)} on YouTube${tubes.length > 1 ? ', video ' + (i + 1) : ''}"><img src="https://i.ytimg.com/vi/${v}/hqdefault.jpg" alt="" loading="lazy"></a>`).join('')}
           </div>
         </section>` : ''}`;
     } catch (e) {
