@@ -52,7 +52,10 @@ window.GAMES = {
     "n": "Foam & Fog Pit",
     "b": "Inflatable foam pit rentals have quickly become one of the most sought after party items which keeps all the guests entertained.",
     "d": [],
-    "i": [],
+    "i": [
+     "images/games/foam-fog-pit-bouncy-on-rent-delhi-ncr-1.jpg",
+     "images/live/fog-bouncy.jpg"
+    ],
     "u": "https://www.showmaqers.com/fog-bouncy-on-rent-for-events-parties-delhi-ncr.html"
    },
    {
@@ -215,7 +218,9 @@ window.GAMES = {
     "n": "Cricket Bowling Machine",
     "b": "Cricket Bowling Machine on rent in Delhi NCR. at very reasonable price. It is an Indoor Cricket facilities including Net\u0001 wicket\u0001 bat and ball etc. So hire us for Cricket Bowling Machine\u0001.",
     "d": [],
-    "i": [],
+    "i": [
+     "images/live/cricket-machine.jpg"
+    ],
     "u": "https://www.showmaqers.com/cricket-machine-on-rent-for-events-parties-delhi-ncr.html"
    },
    {
@@ -235,7 +240,8 @@ window.GAMES = {
     "d": [],
     "i": [
      "images/games/hammer-game-1.jpg",
-     "images/games/hammer-game-2.jpg"
+     "images/games/hammer-game-2.jpg",
+     "images/games/hammer-game-on-rent-delhi-ncr-3.jpg"
     ],
     "u": "https://www.showmaqers.com/hammer-game-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -296,7 +302,8 @@ window.GAMES = {
      "images/games/casino-table-1.jpg",
      "images/games/casino-table-2.jpg",
      "images/games/casino-table-3.jpg",
-     "images/games/casino-table-4.jpg"
+     "images/games/casino-table-4.jpg",
+     "images/games/poker-casino-table-on-rent-delhi-ncr-1.jpg"
     ],
     "u": "https://www.showmaqers.com/casino-table-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -306,7 +313,8 @@ window.GAMES = {
     "b": "SHOWMAQERS has Foosball tables of different sizes available for rent, one is 3 ft by 1.5 ft and the other one is 2 ft by 1.5 ft in size.",
     "d": [],
     "i": [
-     "images/games/foosball-table-game-1.jpg"
+     "images/games/foosball-table-game-1.jpg",
+     "images/games/foosball-table-game-on-rent-delhi-ncr-2.jpg"
     ],
     "u": "https://www.showmaqers.com/foosball-table-game-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -316,7 +324,8 @@ window.GAMES = {
     "b": "Showmaqers provides Giant Jenga game on rent in Delhi, Gurgaon, Noida, faridabad, greater Noida, Manesar. Please call us for more details.",
     "d": [],
     "i": [
-     "images/games/giant-jenga-game-1.jpg"
+     "images/games/giant-jenga-game-1.jpg",
+     "images/games/giant-jenga-game-on-rent-delhi-ncr-2.jpg"
     ],
     "u": "https://www.showmaqers.com/giant-jenga-game-on-rent-in-delhi-gurgaon-noida.html"
    },
@@ -337,7 +346,8 @@ window.GAMES = {
     "b": "Showmaqers provides Mega Wire or “Don’t buzz the wire” game on rent in Delhi & NCR for your next event or birthday party, corporate events\u0001 This game is very funny and easy to play but very difficult to win.",
     "d": [],
     "i": [
-     "images/games/mega-wire-game-1.jpg"
+     "images/games/mega-wire-game-1.jpg",
+     "images/games/mega-wire-buzz-game-on-rent-delhi-ncr-2.jpg"
     ],
     "u": "https://www.showmaqers.com/mega-wire-game-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -350,7 +360,8 @@ window.GAMES = {
      "Player – Minimum four player"
     ],
     "i": [
-     "images/games/mini-golf-game-1.jpg"
+     "images/games/mini-golf-game-1.jpg",
+     "images/games/mini-golf-game-on-rent-delhi-ncr-2.jpg"
     ],
     "u": "https://www.showmaqers.com/mini-golf-game-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -370,7 +381,10 @@ window.GAMES = {
     "b": "Casino night for party,poker bridge tables, poker chips for rent,.",
     "d": [],
     "i": [
-     "images/games/poker-game-1.jpg"
+     "images/games/poker-game-1.jpg",
+     "images/games/poker-casino-table-on-rent-delhi-ncr-1.jpg",
+     "images/games/poker-table-game-on-rent-delhi-ncr-2.jpg",
+     "images/games/poker-table-game-on-rent-delhi-ncr-3.jpg"
     ],
     "u": "https://www.showmaqers.com/poker-game-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -421,7 +435,9 @@ window.GAMES = {
     "d": [],
     "i": [
      "images/games/balloon-shooting-1.jpg",
-     "images/games/balloon-shooting-2.jpg"
+     "images/games/balloon-shooting-2.jpg",
+     "images/games/balloon-shooting-game-on-rent-delhi-ncr-3.jpg",
+     "images/games/balloon-shooting-game-on-rent-delhi-ncr-4.jpg"
     ],
     "u": "https://www.showmaqers.com/balloon-shooting-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -464,7 +480,7 @@ window.GAMES = {
     "b": "Also called the batten game. Sticks hang from a frame and drop one at a time, at random; catch as many as you can.",
     "d": [],
     "i": [
-     "images/games/catch-the-stick-game.svg"
+     "images/games/catch-the-stick-game-on-rent-delhi-ncr-1.jpg"
     ],
     "u": "https://www.showmaqers.com/catch-the-stick-batten-game-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -474,7 +490,7 @@ window.GAMES = {
     "b": "A one-shot reflex game: the striker drops without warning and the player has a split second to catch it.",
     "d": [],
     "i": [
-     "images/games/catch-the-striker-game.svg"
+     "images/games/catch-the-striker-game-on-rent-delhi-ncr-1.jpg"
     ],
     "u": "https://www.showmaqers.com/catch-the-striker-game-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -507,7 +523,8 @@ window.GAMES = {
     "b": "Hoopla Games in different styles like Hoopla, Ring the Octopus, Nosy the character, Ring the Butterfly, we provide all these on rent with the set up.",
     "d": [],
     "i": [
-     "images/games/hoopla-game-1.jpg"
+     "images/games/hoopla-game-1.jpg",
+     "images/games/ring-toss-hoopla-game-on-rent-delhi-ncr-1.jpg"
     ],
     "u": "https://www.showmaqers.com/hoopla-game-on-rent-for-events-parties-delhi-ncr.html"
    },
@@ -516,7 +533,9 @@ window.GAMES = {
     "n": "Meltdown",
     "b": "SHOWMAQERS provides Meltdown game on rent in Delhi NCR. The Meltdown is Just like the big Sweeper from the popular game show “Wipeout”, The Meltdown’s giant mechanical arm goes around taking.",
     "d": [],
-    "i": [],
+    "i": [
+     "images/live/meltdown-gameb.jpg"
+    ],
     "u": "https://www.showmaqers.com/meltdown-game-on-rent-for-events-parties-delhi-ncr.html"
    }
   ]
@@ -591,7 +610,9 @@ window.GAMES = {
     "n": "Bubble Show",
     "b": "Bubble Show is incredible and most creative show these days. It is bilateral stage show first and one of its kind having fantastic light effect, lasers and different formation of bubbles.",
     "d": [],
-    "i": [],
+    "i": [
+     "images/live/bubble-show.jpg"
+    ],
     "u": "https://www.showmaqers.com/bubble-show-for-events-parties-delhi-ncr.html"
    },
    {
@@ -612,7 +633,10 @@ window.GAMES = {
     "n": "Snow Machine",
     "b": "Showmaqers provides snow machine on rent in Delhi for events and parties Snow machine creates flakes with no freezing temperature but looks like real snowfall.",
     "d": [],
-    "i": [],
+    "i": [
+     "images/live/snow-fall-machine.jpg",
+     "images/videos/snow-machine-kids-party.jpg"
+    ],
     "u": "https://www.showmaqers.com/snow-fall-machine-on-rent-for-events-parties-delhi-ncr.html"
    }
   ]
