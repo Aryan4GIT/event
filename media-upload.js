@@ -1,8 +1,8 @@
 /* Work-sample picker and compressor, shared by the artist and vendor forms.
 
-   Four photos and two videos of at most 10 seconds each. Everything is re-encoded in
-   the browser before it is uploaded, because a phone shoots 4K: a raw 10s clip
-   is 15-25 MB and the same clip at 720p is a little over 1 MB. Compressing
+   Four photos and two videos of at most 20 seconds each. Everything is re-encoded in
+   the browser before it is uploaded, because a phone shoots 4K: a raw 20s clip
+   is 30-50 MB and the same clip at 720p is about 3 MB. Compressing
    here rather than on a server means no server, and the artist on mobile data
    uploads the small file, not the big one.
 
@@ -15,13 +15,12 @@
 window.MediaPicker = (() => {
   const MAX_PHOTOS = 4;   // the database allows 6 samples in all: supabase/more-roles-and-samples.sql
   const MAX_VIDEOS = 2;
-  const MAX_SECONDS = 10;
+  const MAX_SECONDS = 20;
   const PHOTO_EDGE = 1600;          // long edge after downscaling
   const VIDEO_EDGE = 720;
   const VIDEO_BITRATE = 1200000;    // ~1.2 Mbps — fine for a 720p work sample
   const RAW_LIMIT = 200 * 1024 * 1024;   // refuse to even decode a 200 MB file
-  const OUT_LIMIT = 30 * 1024 * 1024;    // the bucket's cap, after vendor-directory.sql
-  const KEEP_ORIGINAL = 12 * 1024 * 1024;   // fits the bucket whether or not that has run
+  const OUT_LIMIT = 30 * 1024 * 1024;    // the bucket's cap, since vendor-directory.sql was run on 5 Nov 2026
 
   const esc = s => String(s).replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
 
@@ -67,6 +66,8 @@ window.MediaPicker = (() => {
      the bytes at once, while the file is known to be readable. */
   const held = async file =>
     new File([await file.arrayBuffer()], file.name, { type: file.type, lastModified: file.lastModified });
+  /* what Chrome, Firefox and Safari each call a request that never arrived */
+  const dropped = err => /fetch|network|load failed/i.test(err.message);
   const cannotRead = file => `${file.name} could not be read from your phone. Please choose it again.`;
 
   const cannotOpen = file => /hei[cf]/i.test(file.type + file.name)
@@ -102,8 +103,8 @@ window.MediaPicker = (() => {
   }
 
   /* ── video: play it, draw each frame to a 720p canvas, record the canvas.
-     Real time, so a 10s clip takes about 10s. That is the price of having no
-     server; it is why the cap is 10 seconds. ───────────────────────────── */
+     Real time, so a 20s clip takes about 20s. That is the price of having no
+     server; it is why the cap is 20 seconds. ───────────────────────────── */
   function recorderType() {
     if (typeof MediaRecorder === 'undefined') return null;
     return ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus',
@@ -126,7 +127,7 @@ window.MediaPicker = (() => {
     /* Safari cannot capture a video's sound, so converting there leaves a silent
        clip. Keep the original when the bucket will take it. */
     const keepsSound = 'captureStream' in HTMLMediaElement.prototype || 'mozCaptureStream' in HTMLMediaElement.prototype;
-    if (!keepsSound && file.size <= KEEP_ORIGINAL) throw new Error('converting here would lose the sound');
+    if (!keepsSound && file.size <= OUT_LIMIT) throw new Error('converting here would lose the sound');
 
     const v = document.createElement('video');
     v.muted = true; v.playsInline = true; v.preload = 'auto';
@@ -230,11 +231,12 @@ window.MediaPicker = (() => {
         if (kind === 'video' && count('video') >= MAX_VIDEOS) { say(`${MAX_VIDEOS} videos is the limit — remove one to swap it.`, 'err'); continue; }
         /* find out now, while they can still pick another, not after they press send */
         if (kind === 'photo' && !await readable(file)) { say(esc(cannotOpen(file)), 'err'); continue; }
-        /* shortcut: a clip over the bucket's cap stays a pointer, since it can only
-           leave here converted; copy those too if big clips start failing */
+        /* a 20s phone clip is often over the bucket's cap, so those are copied
+           too. A phone short of memory for a big one keeps the pointer instead:
+           that clip is converted before it leaves, never sent as it is. */
         let kept = file;
-        if (file.size <= OUT_LIMIT) {
-          try { kept = await held(file); } catch (e) { say(esc(cannotRead(file)), 'err'); continue; }
+        try { kept = await held(file); } catch (e) {
+          if (file.size <= OUT_LIMIT) { say(esc(cannotRead(file)), 'err'); continue; }
         }
         picked.push({ file: kept, kind, url: URL.createObjectURL(kept) });
       }
@@ -270,7 +272,7 @@ window.MediaPicker = (() => {
             say(`Shrinking photo ${n}…`);
             out = await squashImage(p.file);
           } else {
-            say(`Converting your video (${n}) — this takes about ten seconds…`);
+            say(`Converting your video (${n}) — this takes as long as the clip, up to ${MAX_SECONDS} seconds…`);
             try {
               out = await squashVideo(p.file, frac =>
                 say(`Converting your video — ${Math.round(frac * 100)}%…`));
@@ -290,12 +292,13 @@ window.MediaPicker = (() => {
              path and get it wrong. A plain truthy answer means the name was
              used as given. */
           const name = `m${i}.${out.ext}`;
-          const stored = await put(name, out.blob);
+          /* mobile data drops for a moment often enough to be worth one more go */
+          const stored = await put(name, out.blob).catch(e => dropped(e) ? put(name, out.blob) : Promise.reject(e));
           if (!stored) throw new Error('our storage refused it');
           paths.push(typeof stored === 'string' ? stored : name);
         } catch (err) {
           console.warn('[media] skipped a sample:', err.message);
-          failures.push({ name: p.file.name, why: err.message });
+          failures.push({ name: p.file.name, why: dropped(err) ? 'the connection dropped while it was uploading' : err.message });
         }
       }
       return paths;
