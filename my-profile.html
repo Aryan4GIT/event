@@ -410,7 +410,9 @@
       await load();
     } catch (err) {
       btn.disabled = false;
-      say($('p-status'), err.message, 'err');
+      /* the browser's word for a dropped connection tells an artist nothing */
+      say($('p-status'), /fetch|network|load failed/i.test(err.message)
+        ? 'We could not reach our server. Check your connection and press Save again.' : err.message, 'err');
     }
   });
 

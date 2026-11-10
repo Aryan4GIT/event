@@ -61,6 +61,14 @@ window.MediaPicker = (() => {
     try { (await openImage(file)).close?.(); return true; } catch (e) { return false; }
   }
 
+  /* A picker hands over a pointer to a file, not its bytes. When the gallery or
+     cloud app behind it touches the file before Save is pressed, the browser
+     refuses to read it and the upload dies as a bare "Failed to fetch". Take
+     the bytes at once, while the file is known to be readable. */
+  const held = async file =>
+    new File([await file.arrayBuffer()], file.name, { type: file.type, lastModified: file.lastModified });
+  const cannotRead = file => `${file.name} could not be read from your phone. Please choose it again.`;
+
   const cannotOpen = file => /hei[cf]/i.test(file.type + file.name)
     ? `${file.name} is an iPhone HEIC photo, which this browser cannot open. Share it from your phone as a JPG, or take a screenshot of it.`
     : `${file.name} could not be opened as a photo. Please try a JPG or PNG.`;
@@ -222,7 +230,13 @@ window.MediaPicker = (() => {
         if (kind === 'video' && count('video') >= MAX_VIDEOS) { say(`${MAX_VIDEOS} videos is the limit — remove one to swap it.`, 'err'); continue; }
         /* find out now, while they can still pick another, not after they press send */
         if (kind === 'photo' && !await readable(file)) { say(esc(cannotOpen(file)), 'err'); continue; }
-        picked.push({ file, kind, url: URL.createObjectURL(file) });
+        /* shortcut: a clip over the bucket's cap stays a pointer, since it can only
+           leave here converted; copy those too if big clips start failing */
+        let kept = file;
+        if (file.size <= OUT_LIMIT) {
+          try { kept = await held(file); } catch (e) { say(esc(cannotRead(file)), 'err'); continue; }
+        }
+        picked.push({ file: kept, kind, url: URL.createObjectURL(kept) });
       }
       paint();
     }
@@ -319,8 +333,8 @@ window.MediaPicker = (() => {
       if (kindOf(file) !== 'photo') return say('Please choose a photo.', 'err');
       if (file.size > 60 * 1024 * 1024) return say('That photo is over 60 MB — please pick a smaller one.', 'err');
       if (!await readable(file)) return say(esc(cannotOpen(file)), 'err');
-      chosen = file;
-      preview.src = URL.createObjectURL(file);
+      try { chosen = await held(file); } catch (e) { return say(esc(cannotRead(file)), 'err'); }
+      preview.src = URL.createObjectURL(chosen);
       drop.classList.add('has');
       msg.textContent = file.name;
       say('');
