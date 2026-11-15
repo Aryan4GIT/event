@@ -513,7 +513,10 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
 .svc-card,.card{cursor:pointer}
 
 /* ── roster cards — manpower.html and every artist page ─────────────────── */
-.people{display:grid; grid-template-columns:repeat(auto-fill,minmax(166px,1fr)); gap:clamp(.7rem,1.3vw,1.1rem); perspective:1200px}
+.people{display:grid; grid-template-columns:repeat(auto-fill,minmax(166px,1fr)); gap:clamp(.7rem,1.3vw,1.1rem)}
+/* perspective lives in the card's own transform, not on the grid: a grid of 98
+   anchors is 10,000px tall, and a shared vanishing point at its centre threw
+   the hovered card 145px off its slot and sheared it */
 .person{margin:0; border-radius:18px; overflow:hidden; background:#fff; cursor:zoom-in; position:relative;
   box-shadow:0 16px 34px -24px rgba(196,74,134,.85), inset 0 0 0 1px rgba(226,122,170,.14);
   transition:transform .45s cubic-bezier(.2,.7,.3,1), box-shadow .45s}
@@ -522,7 +525,7 @@ footer{border-top:1px solid var(--line); padding-block:2.8rem}
   font:600 .82rem/1.25 var(--body); letter-spacing:0; text-transform:none}
 .person figcaption b{display:block; font:500 .58rem/1.4 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--dim-2)}
 .person figcaption small{display:block; margin-top:.3rem; font:400 .7rem/1.45 var(--body); color:var(--dim)}
-.person:hover{transform:translateZ(40px) rotateX(5deg) rotateY(-5deg); z-index:2;
+.person:hover{transform:perspective(1200px) translateZ(40px) rotateX(5deg) rotateY(-5deg); z-index:2;
   box-shadow:0 36px 56px -30px rgba(255,46,144,.6), inset 0 0 0 1px rgba(255,46,144,.4)}
 .person:hover img{transform:scale(1.06)}
 .people.clipped > .person:nth-child(n+25){display:none}
