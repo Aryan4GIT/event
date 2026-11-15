@@ -28,7 +28,14 @@
     mehendi: 'Mehendi Artist', 'makeup-artist': 'Make-up Artist', tattoo: 'Tattoo Artist',
     'face-painter': 'Face Painter', 'nail-artist': 'Nail Artist', parlour: 'Parlour Beautician',
     'live-band': 'Live Band', comedian: 'Comedian', mimicry: 'Mimicry Artist',
-    dhol: 'Dhol Player', 'digital-caricature': 'Digital Caricature Artist'
+    dhol: 'Dhol Player', 'digital-caricature': 'Digital Caricature Artist',
+    other: 'Speciality Act'
+  };
+  /* "Other" names no role, so the card says what they do in their own words.
+     cleanBio keeps a number or handle typed into the description off the card. */
+  const blurb = bio => {
+    const t = (window.VendorDirectory ? VendorDirectory.cleanBio(bio) : '').replace(/\s+/g, ' ');
+    return t.length > 120 ? t.slice(0, 117).trimEnd() + '…' : t;
   };
   const esc = s => String(s ?? '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
 
@@ -46,7 +53,8 @@
          supplier (p.v) keeps the letter tile the vendors page gives them. */
       const shown = list.filter(p => p.i || p.v);
       box.innerHTML = shown.map(p => {
-        const facts = [p.l, p.d, p.e].filter(Boolean).join(' · ');   // fee stays off the public card
+        const facts = (kind === 'other' && blurb(p.b)) ||
+          [p.l, p.d, p.e].filter(Boolean).join(' · ');   // fee stays off the public card
         /* the gallery the lightbox walks: headshot, then every work sample */
         const gallery = [p.i, ...(p.m || []), ...(p.s ? [p.s] : [])].filter(Boolean);
         const hasVideo = gallery.some(isVideoPath);
@@ -104,8 +112,11 @@
       const read = cols => fetch(`${cfg.url}/rest/v1/roster?select=${cols}&order=sort.asc`, h);
       /* Each column arrives with its own migration, so ask for the richest
          set and fall back rather than losing the live roster:
+         claimed -> self-managed-first.sql, bio -> artist-login.sql,
          media -> media-gallery.sql, skill_path -> skill-media.sql */
-      let r = await read('id,name,category_key,photo_path,skill_path,media,city,sort');
+      let r = await read('id,name,category_key,photo_path,skill_path,media,bio,claimed,city,sort');
+      if (!r.ok) r = await read('id,name,category_key,photo_path,skill_path,media,bio,city,sort');
+      if (!r.ok) r = await read('id,name,category_key,photo_path,skill_path,media,city,sort');
       if (!r.ok) r = await read('id,name,category_key,photo_path,skill_path,city,sort');
       if (!r.ok) r = await read('name,category_key,photo_path,city,sort');
       if (!r.ok) return;
@@ -119,9 +130,12 @@
            sort order this query asks for */
         const was = (snap[row.category_key] || [])[seen.length] || {};
         seen.push({ n: row.name, i: row.photo_path, s: row.skill_path || null,
-                    m: row.media || null, id: row.id,
+                    m: row.media || null, id: row.id, b: row.bio, c: !!row.claimed,
                     l: row.city || was.l, d: was.d, e: was.e });
       }
+      /* Artists who run their own profile lead their category: they are the
+         active ones. The sort is stable, so staff order holds within each group. */
+      for (const key in live) live[key].sort((a, b) => b.c - a.c);
       /* SFX crews register as suppliers, so they live in the supplier view,
          but clients look for them under artists */
       try {
