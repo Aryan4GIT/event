@@ -2,6 +2,16 @@
 // Photos live in images/blog/. blog.html is only a renderer for this.
 window.POSTS = [
  {
+  "s": "best-wedding-decorators-in-gurgaon",
+  "t": "Best Wedding Decorators in Gurgaon",
+  "d": "2026-11-25",
+  "w": "November 25, 2026",
+  "x": "A wedding is one of the most beautiful and memorable occasions in life. It is a celebration of love, happiness, family, and togetherness. From the wedding ceremony to the grand reception, every moment deserves a beautifu",
+  "i": [
+   "images/blog/best-wedding-decorators-in-gurgaon-1.jpg"
+  ]
+ },
+ {
   "s": "best-card-party-decorators-in-delhi-ncr",
   "t": "Best Card Party Decorators in Delhi NCR",
   "d": "2025-08-27",
